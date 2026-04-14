@@ -767,3 +767,7 @@ Should版：
   - Rails の has_secure_token を使用してトークンを生成・検証する
   - わからないことがあれば、その都度質問する
   - シンプルな実装から始めて、段階的に理解を深める
+
+
+## 画面遷移図
+https://www.figma.com/design/l7iMFlNTgmaJq9XJATtulr/%E3%83%9F%E3%82%BA%E3%83%A2-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%E3%80%802026-4-11?node-id=0-1&t=PYLIOmpPA1Hozcp2-1
