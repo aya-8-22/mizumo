@@ -1,0 +1,71 @@
+# Docker Compose のバージョンを指定
+version: '3.8'
+
+# 複数のサービス（コンテナ）を定義
+services:
+  # Rails アプリケーション用のサービス
+  web:
+    # Dockerfile からイメージをビルド（カレントディレクトリの Dockerfile を使用）
+    build: .
+    
+    # コンテナ起動時に実行するコマンド（Rails サーバーを起動）
+    # -b 0.0.0.0 でホストからアクセス可能にする
+    command: bundle exec rails server -b 0.0.0.0
+    
+    # ホストとコンテナ間でファイルを共有（マウント）
+    # カレントディレクトリ(.)をコンテナ内の /app にマウント
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle #【変更】gem を永続化するためのボリュームをマウント
+    
+    # ポートのマッピング（ホスト:コンテナ）
+    # ホストの 3000 番ポートをコンテナの 3000 番ポートに接続
+    ports:
+      - "3000:3000"
+    
+    # 依存関係の設定（db サービスが起動してから web を起動）
+    depends_on:
+      - db
+    
+    # 環境変数の設定（Rails から DB に接続するための情報）
+    environment:
+      # データベースのホスト名（サービス名 db を指定）
+      DATABASE_HOST: db
+      # データベースのユーザー名
+      DATABASE_USER: postgres
+      # データベースのパスワード
+      DATABASE_PASSWORD: password
+    
+    # ターミナルを有効化（pry や byebug などのデバッグツールを使えるようにする）
+    tty: true
+    # 標準入力を有効化（対話的な操作を可能にする）
+    stdin_open: true
+
+  # PostgreSQL データベース用のサービス
+  db:
+    # Docker Hub から PostgreSQL 14 の公式イメージを取得
+    image: postgres:14
+    
+    # PostgreSQL の環境変数を設定
+    environment:
+      # データベースのユーザー名
+      POSTGRES_USER: postgres
+      # データベースのパスワード
+      POSTGRES_PASSWORD: password
+    
+    # データベースのデータを永続化（コンテナを削除してもデータが残る）
+    # 名前付きボリューム postgres_data をコンテナ内の /var/lib/postgresql/data にマウント
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    # ポートのマッピング（ホスト:コンテナ）
+    # ホストの 5432 番ポートをコンテナの 5432 番ポートに接続
+    # これにより、ホストから直接 PostgreSQL に接続できる
+    ports:
+      - "5432:5432"
+
+# 名前付きボリュームの定義（データを永続化するための領域）
+volumes:
+  # PostgreSQL のデータを保存するボリューム
+  postgres_data:
+  bundle: #【変更】gem を永続化するためのボリューム
