@@ -1,5 +1,6 @@
+# docker-compose.yml 
 # Docker Compose のバージョンを指定
-version: '3.8'
+# version: '3.8' 
 
 # 複数のサービス（コンテナ）を定義
 services:
@@ -8,9 +9,11 @@ services:
     # Dockerfile からイメージをビルド（カレントディレクトリの Dockerfile を使用）
     build: .
     
-    # コンテナ起動時に実行するコマンド（Rails サーバーを起動）
-    # -b 0.0.0.0 でホストからアクセス可能にする
-    command: bundle exec rails server -b 0.0.0.0
+    # 修正 コンテナ起動時に実行するコマンド
+    # rm -f tmp/pids/server.pid : 前回起動時のプロセスIDファイルを削除（エラー防止）
+    # -p 3000 : ポート番号を明示的に指定
+    # -b '0.0.0.0' : 外部からのアクセスを許可
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     
     # ホストとコンテナ間でファイルを共有（マウント）
     # カレントディレクトリ(.)をコンテナ内の /app にマウント
