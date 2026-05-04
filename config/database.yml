@@ -1,3 +1,4 @@
+# config/database.yml
 # PostgreSQL. Versions 9.3 and up are supported.
 #
 # Install the pg driver:
@@ -14,9 +15,13 @@
 # Configure Using Gemfile
 # gem "pg"
 #
+
+# ========================================
+# 共通設定(development, test, productionで共有)
+# ========================================
 default: &default
-  adapter: postgresql
-  encoding: unicode
+  adapter: postgresql # PostgreSQLを使用
+  encoding: unicode # 文字エンコーディングをUnicodeに設定
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -24,10 +29,12 @@ default: &default
   username: <%= ENV.fetch("DATABASE_USER", "postgres") %> # 変更 データベースのユーザー名を環境変数から取得
   password: <%= ENV.fetch("DATABASE_PASSWORD", "password") %> # 変更 データベースのパスワードを環境変数から取得
 
-
+# ========================================
+# 開発環境(ローカルでの開発時に使用)
+# ========================================
 development:
-  <<: *default
-  database: app_development
+  <<: *default # 上記のdefault設定を継承
+  database: app_development # 開発環境用のデータベース名
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -59,10 +66,17 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: app_test
 
+# ========================================
+# テスト環境(RSpecなどのテスト実行時に使用)
+# ========================================
+test:
+  <<: *default # 上記のdefault設定を継承
+  database: app_test # テスト環境用のデータベース名
+
+# ========================================
+# 本番環境(Renderなどのクラウドサービスで使用)
+# ========================================
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -84,7 +98,5 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: app_production
-  username: app
-  password: <%= ENV["APP_DATABASE_PASSWORD"] %>
+  <<: *default  # 上記のdefault設定を継承
+  url: <%= ENV['DATABASE_URL'] %>  # 【変更】Renderが自動設定するDATABASE_URL環境変数を使用(host, username, password, databaseなどの情報がすべて含まれる)
