@@ -1,0 +1,50 @@
+# 【追加】.rubocop.yml RuboCopの設定ファイル
+
+# 【修正】必要なライブラリを読み込む
+plugins:
+  - rubocop-rails
+
+# 全体の設定
+AllCops:
+  # 新しいルールを自動的に有効にする
+  NewCops: enable
+  # 使用しているRubyのバージョン
+  TargetRubyVersion: 3.2
+  # チェック対象から除外するファイル
+  Exclude:
+    - 'bin/**/*'          # 実行ファイル
+    - 'db/schema.rb'      # データベーススキーマ(自動生成)
+    - 'db/migrate/**/*'   # マイグレーションファイル
+    - 'node_modules/**/*' # Node.jsのパッケージ
+    - 'vendor/**/*'       # Gemのパッケージ
+    - 'tmp/**/*'          # 一時ファイル
+    - 'log/**/*'          # ログファイル
+
+# 日本語コメントを許可
+Style/AsciiComments:
+  Enabled: false
+
+# 文字列リテラルのイミュータブル化を無効化
+# (Railsではfrozen_string_literalは不要)
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# メソッドの行数制限を緩和
+Metrics/MethodLength:
+  Max: 20  # 最大20行まで許可
+
+# クラスの行数制限を緩和
+Metrics/ClassLength:
+  Max: 200  # 最大200行まで許可
+
+# ブロックの行数制限を緩和
+Metrics/BlockLength:
+  # 以下のファイルでは行数制限を無効化
+  Exclude:
+    - 'spec/**/*'                  # テストファイル
+    - 'config/routes.rb'           # ルーティングファイル
+    - 'config/environments/*.rb'   # 環境設定ファイル
+
+# ドキュメントコメントを必須にしない
+Style/Documentation:
+  Enabled: false

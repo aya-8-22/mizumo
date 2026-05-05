@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # config/routes.rb
 # Rails アプリケーションのルーティング（URL とコントローラーの紐付け）を設定するファイル
 Rails.application.routes.draw do
