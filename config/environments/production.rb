@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # config/environments/production.rb
 # 本番環境の設定ファイル
 
 # Railsの便利な機能を読み込む
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # ===== 基本設定 =====
@@ -34,12 +36,11 @@ Rails.application.configure do
   # master.key が必要（暗号化データの復号化用）
   # config.require_master_key = true
 
-
   # ===== 静的ファイル配信設定 =====
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   # 環境変数が設定されている場合のみ静的ファイルを配信
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # ===== アセット設定 =====
   # Compress CSS using a preprocessor.
@@ -86,7 +87,7 @@ Rails.application.configure do
 
   # Prepend all log lines with the following tags.
   # 各ログ行に request_id を追加（追跡用）
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # ===== キャッシュストア設定 =====
   # Use a different cache store in production.
@@ -122,28 +123,28 @@ Rails.application.configure do
   # ===== ログフォーマット設定 =====
   # Use default logging formatter so that PID and timestamp are not suppressed.
   # 標準フォーマットでログを出力
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
-   # ===== 分散環境用ログ設定 =====
+  # ===== 分散環境用ログ設定 =====
   # Use a different logger for distributed setups.
   # Syslog 使用時の設定（コメントアウト中）
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  #【追加】Renderのホストを許可
-  config.hosts << "mizumo.onrender.com"
-  
-  #【追加】または開発段階では全て許可
+  # 【追加】Renderのホストを許可
+  config.hosts << 'mizumo.onrender.com'
+
+  # 【追加】または開発段階では全て許可
   # config.hosts.clear
 
   # ===== 標準出力へのログ設定 =====
   # 環境変数が設定されている場合、標準出力にログを出力
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
- 
+
   # ===== データベース設定 =====
   # Do not dump schema after migrations.
   # マイグレーション後に schema.rb を更新しない
