@@ -1,0 +1,10 @@
+<!-- 【追加】app/views/shared/_flash_message.html.erb -->
+<!-- フラッシュメッセージを表示するパーシャルファイル -->
+<!-- flash の中身を1つずつ取り出すループ開始 -->
+<% flash.each do |message_type, message| %>
+  <!-- メッセージを表示する div タグ（Bootstrap のスタイルを適用） -->
+  <div class="alert alert-<%= message_type %>">
+    <!-- メッセージ本文を表示 -->
+    <%= message %>
+  </div>
+<% end %>

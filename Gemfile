@@ -83,6 +83,11 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# ===== 【追加】認証機能（Devise）=====
+# ユーザー認証機能を提供するgem（ログイン、ログアウト、パスワードリセットなど）
+# 開発環境、テスト環境、本番環境のすべてで使用するため、グループの外に記述
+gem 'devise'
+
 # ===== 開発環境とテスト環境の両方で使用するgem =====
 group :development, :test do
   # デバッグツール（binding.pryでコードを一時停止してデバッグできる）

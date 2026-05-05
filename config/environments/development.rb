@@ -64,6 +64,12 @@ Rails.application.configure do
   # メールのキャッシュを無効化
   config.action_mailer.perform_caching = false
 
+  # 【追加】Devise のメール送信設定　Docker環境のためホスト名を文字列で指定
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+
+  # letter_opener_web を使う場合（パスワードリセット機能で使います）
+  # config.action_mailer.delivery_method = :letter_opener_web
+
   # ===== ログ設定 =====
   # Print deprecation notices to the Rails logger.
   # 非推奨の機能を使った場合、ログに記録

@@ -1,16 +1,29 @@
+<!-- app/views/layouts/application.html.erb -->
+<!-- アプリケーション全体で共通して表示される部分 （ヘッダー（ロゴ、メニュー）フッター（コピーライト、リンク）サイドバー）--> 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>App</title>
+    <!-- 【追加】ページタイトルを設定 -->
+    <title>ミズモ</title>
+    <!-- レスポンシブ対応のためのビューポート設定 -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- CSRF トークンを埋め込む（セキュリティ対策） -->
     <%= csrf_meta_tags %>
+    <!-- Content Security Policy を設定（セキュリティ対策） -->
     <%= csp_meta_tag %>
 
+    <!-- CSS ファイルを読み込む -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <!-- JavaScript ファイルを読み込む -->
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
+    <!-- 【追加】フラッシュメッセージを表示 -->
+    <!-- 他のレイアウトファイル（例：管理画面用のレイアウト）でも同じパーシャルを呼び出せる -->
+    <%= render 'shared/flash_message' %>
+
+    <!-- 各ページの内容を表示 -->
     <%= yield %>
   </body>
 </html>
