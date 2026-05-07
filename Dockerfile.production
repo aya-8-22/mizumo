@@ -33,5 +33,4 @@ RUN SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
 # ポートを公開
 EXPOSE 10000
 
-# Rails サーバーを起動
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "10000"]
+CMD bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 10000
