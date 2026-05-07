@@ -1,0 +1,37 @@
+# 本番環境用 Dockerfile (Render向け)
+FROM ruby:3.1.4
+
+# 必要なパッケージをインストール
+RUN apt-get update -qq && apt-get install -y \
+    nodejs \
+    postgresql-client \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 環境変数を設定
+ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+ENV BUNDLE_WITHOUT="development:test"
+
+# Gemfile と Gemfile.lock をコピー
+COPY Gemfile Gemfile.lock ./
+
+# bundle install を実行（本番用gemのみ）
+RUN bundle install
+
+# アプリケーションのコードをコピー
+COPY . .
+
+# アセットをプリコンパイル
+RUN SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
+
+# ポートを公開
+EXPOSE 10000
+
+# Rails サーバーを起動
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "10000"]
