@@ -1,9 +1,9 @@
 <!-- app/views/layouts/application.html.erb -->
-<!-- アプリケーション全体で共通して表示される部分 （ヘッダー（ロゴ、メニュー）フッター（コピーライト、リンク）サイドバー）--> 
+<!-- アプリケーション全体で共通して表示される部分（ヘッダー、フッター、サイドバーなど） -->
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- 【追加】ページタイトルを設定 -->
+    <!-- ページタイトルを設定 -->
     <title>ミズモ</title>
     <!-- レスポンシブ対応のためのビューポート設定 -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,11 +19,19 @@
   </head>
 
   <body>
-    <!-- 【追加】フラッシュメッセージを表示 -->
-    <!-- 他のレイアウトファイル（例：管理画面用のレイアウト）でも同じパーシャルを呼び出せる -->
-    <%= render 'shared/flash_message' %>
-
-    <!-- 各ページの内容を表示 -->
+    <!-- 【追加】ヘッダーを表示（app/views/shared/_header.html.erb を読み込む） -->
+    <%= render 'shared/header' %>
+    
+    <!-- 【追加】Devise のフラッシュメッセージ（notice）を表示 -->
+    <% if notice %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
+    <!-- 【追加】Devise のフラッシュメッセージ（alert）を表示 -->
+    <% if alert %>
+      <p class="alert"><%= alert %></p>
+    <% end %>
+    
+    <!-- 各ページの内容を表示（各コントローラーのビューが挿入される） -->
     <%= yield %>
   </body>
 </html>

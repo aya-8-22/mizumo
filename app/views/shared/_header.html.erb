@@ -1,0 +1,26 @@
+<!--【追加】app/views/shared/_header.html.erb -->
+<!-- ヘッダー全体の開始タグ -->
+<header>
+  <!-- ナビゲーションメニューの開始タグ -->
+  <nav>
+    <!-- トップページへのリンク（root_pathはルートパスを返すヘルパーメソッド） -->
+    <%= link_to 'トップページ', root_path %>
+    
+    <!-- user_signed_in?はDeviseのヘルパーメソッドで、ユーザーがログイン中かどうかを判定 -->
+    <% if user_signed_in? %>
+      <!-- ログイン中の場合に表示される部分 -->
+      <!-- ログアウトボタン（DELETE /users/sign_outにリクエストを送信） -->
+      <!-- button_toはフォームを生成し、method: :deleteでDELETEリクエストを送信 -->
+      <!-- data: { turbo_method: :delete }はRails 7のTurboに対応するための設定 -->
+      <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, data: { turbo_method: :delete } %>
+    <% else %>
+      <!-- 未ログインの場合に表示される部分 -->
+      <!-- ログイン画面へのリンク（GET /users/sign_inにアクセス） -->
+      <%= link_to 'ログイン', new_user_session_path %>
+      <!-- 新規登録画面へのリンク（GET /users/sign_upにアクセス） -->
+      <%= link_to '新規登録', new_user_registration_path %>
+    <% end %>
+  <!-- ナビゲーションメニューの終了タグ -->
+  </nav>
+<!-- ヘッダー全体の終了タグ -->
+</header>
