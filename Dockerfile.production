@@ -13,9 +13,13 @@ RUN apt-get update -qq && apt-get install -y \
 WORKDIR /app
 
 # 環境変数を設定
+# 本番環境モードを指定
 ENV RAILS_ENV=production
+# 静的ファイル(CSS/JS等)をRailsから直接配信する設定を有効化
 ENV RAILS_SERVE_STATIC_FILES=true
+# ログを標準出力に出力(Renderでログを確認しやすくするため)
 ENV RAILS_LOG_TO_STDOUT=true
+# 開発・テスト環境用のgemをインストールしない設定
 ENV BUNDLE_WITHOUT="development:test"
 
 # Gemfile と Gemfile.lock をコピー
@@ -33,4 +37,5 @@ RUN SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
 # ポートを公開
 EXPOSE 10000
 
+# 【追加】コンテナ起動時にマイグレーション実行後、Railsサーバーを起動
 CMD bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 10000
