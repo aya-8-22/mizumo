@@ -1,0 +1,37 @@
+# 【追加】docker-compose.production.yml
+# ローカルテスト用
+services:
+  # Webサービス（Railsアプリケーション）の定義
+  web:
+    # Dockerイメージのビルド設定
+    build:
+      context: .  # カレントディレクトリをビルドコンテキストとして使用
+      dockerfile: Dockerfile.production  # 本番環境用のDockerfileを指定
+    # ポートマッピング（ホスト:コンテナ）
+    ports:
+      - "3000:3000"  # ホストの3000番ポートをコンテナの3000番ポートにマッピング
+    # 環境変数の設定
+    environment:
+      - RAILS_ENV=production  # Rails環境を本番環境に設定
+      - DATABASE_URL=postgresql://postgres:password@db:5432/mizumo_production  # PostgreSQL接続URL（ユーザー名:パスワード@ホスト:ポート/データベース名）
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}  # 暗号化キー（.envファイルから読み込み）
+    # 依存関係の設定
+    depends_on:
+      - db  # dbサービスが起動してからwebサービスを起動
+
+  # データベースサービス（PostgreSQL）の定義
+  db:
+    # PostgreSQL公式イメージ（バージョン15）を使用
+    image: postgres:15
+    # 環境変数の設定
+    environment:
+      - POSTGRES_USER=postgres  # PostgreSQLのユーザー名
+      - POSTGRES_PASSWORD=password  # PostgreSQLのパスワード
+      - POSTGRES_DB=mizumo_production  # 作成するデータベース名
+    # ボリュームマウント（データの永続化）
+    volumes:
+      - db_data:/var/lib/postgresql/data  # 名前付きボリュームにDBデータを保存
+
+# 名前付きボリュームの定義
+volumes:
+  db_data:  # データベースのデータを永続化するためのボリューム
