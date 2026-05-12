@@ -22,14 +22,8 @@
     <!-- 【追加】ヘッダーを表示（app/views/shared/_header.html.erb を読み込む） -->
     <%= render 'shared/header' %>
     
-    <!-- 【追加】Devise のフラッシュメッセージ（notice）を表示 -->
-    <% if notice %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
-    <!-- 【追加】Devise のフラッシュメッセージ（alert）を表示 -->
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
+    <!-- 【変更】Flashメッセージを表示 -->
+    <%= render 'shared/flash_message' %>
     
     <!-- 各ページの内容を表示（各コントローラーのビューが挿入される） -->
     <%= yield %>

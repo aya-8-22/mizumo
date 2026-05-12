@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # 文字列を変更不可にしてメモリ効率を改善するRubyの機能
 
 # app/controllers/application_controller.rb
@@ -19,7 +20,7 @@ class ApplicationController < ActionController::Base
     # サインアップ時に weight パラメーターを許可
     # permit(:sign_up, keys: [:weight]) で weight を受け取れるようにする
     devise_parameter_sanitizer.permit(:sign_up, keys: [:weight])
-    
+
     # 【追加】アカウント更新時に weight パラメーターを許可
     # permit(:account_update, keys: [:weight]) で weight を更新できるようにする
     devise_parameter_sanitizer.permit(:account_update, keys: [:weight])

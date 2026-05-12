@@ -13,3 +13,54 @@
  *= require_tree .
  *= require_self
  */
+
+/* app/assets/stylesheets/application.css */
+/* 成功メッセージのスタイル */
+.alert-success {
+  background-color: #d4edda; /* 薄い緑色の背景 */
+  color: #155724; /* 濃い緑色の文字 */
+  padding: 15px; /* 内側の余白 */
+  margin-bottom: 20px; /* 下の余白 */
+  border: 1px solid #c3e6cb; /* 薄い緑色の枠線 */
+  border-radius: 4px; /* 角を丸く */
+  font-size: 20px; /* 文字サイズを大きく */
+  line-height: 2.0; /* 行間を広く */
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
+}
+
+/* エラーメッセージのスタイル */
+.alert-danger {
+  background-color: #f8d7da; /* 薄い赤色の背景 */
+  color: #721c24; /* 濃い赤色の文字 */
+  padding: 15px; /* 内側の余白 */
+  margin-bottom: 20px; /* 下の余白 */
+  border: 1px solid #f5c6cb; /* 薄い赤色の枠線 */
+  border-radius: 4px; /* 角を丸く */
+  font-size: 20px; /* 文字サイズを大きく */
+  line-height: 2.0; /* 行間を広く */
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
+}
+
+/* バリデーションエラーメッセージのスタイル */
+#error_explanation {
+  background-color: #f8d7da; /* 薄い赤色の背景 */
+  color: #721c24; /* 濃い赤色の文字 */
+  padding: 15px; /* 内側の余白 */
+  margin-bottom: 20px; /* 下の余白 */
+  border: 1px solid #f5c6cb; /* 薄い赤色の枠線 */
+  border-radius: 4px; /* 角を丸く */
+  font-size: 20px; /* 文字サイズを大きく */
+  line-height: 2.0; /* 行間を広く */
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
+}
+
+/* エラーメッセージのリストスタイル */
+#error_explanation ul {
+  margin: 10px 0 0 0; /* 上の余白のみ設定 */
+  padding-left: 20px; /* 左側の余白 */
+}
+
+/* エラーメッセージの各項目 */
+#error_explanation li {
+  margin-bottom: 5px; /* 下の余白 */
+}

@@ -1,77 +1,42 @@
-<%# app/views/devise/registrations/edit.html.erb %>
-<%# このファイルはDeviseのプロフィール編集画面のビューです %>
-
-<%# ページのタイトル %>
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-<%# プロフィール編集フォームの開始 %>
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  
-  <%# エラーメッセージを表示 %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <%# メールアドレス入力欄 %>
   <div class="field">
-    <%# メールアドレスのラベル %>
     <p><%= f.label :email %></p>
-    <%# メールアドレスの入力フィールド %>
     <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
   </div>
 
-  <%#【変更】体重入力欄を追加 %>
-  <div class="field">
-    <%# 体重のラベル（「体重 (kg)」と表示） %>
-    <%= f.label :weight, "体重 (kg)" %><br />
-    <%# 体重の入力フィールド（数値専用） %>
-    <%# step: 0.1: 小数点第1位まで入力可能 %>
-    <%# placeholder: 入力欄に薄く表示されるヒント %>
-    <%= f.number_field :weight, step: 0.1, placeholder: "例: 65.5" %>
-  </div>
-
-  <%# パスワード変更欄（空欄の場合は変更しない） %>
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>
 
-  <%# 新しいパスワード入力欄 %>
   <div class="field">
-    <%# パスワードのラベル %>
     <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <%# パスワードの入力フィールド %>
     <p><%= f.password_field :password, autocomplete: "new-password" %></p>
     <% if @minimum_password_length %>
       <p><em><%= @minimum_password_length %> characters minimum</em></p>
     <% end %>
   </div>
 
-  <%# 新しいパスワード確認入力欄 %>
   <div class="field">
-    <%# パスワード確認のラベル %>
     <p><%= f.label :password_confirmation %></p>
-    <%# パスワード確認の入力フィールド %>
     <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
   </div>
 
-  <%# 現在のパスワード入力欄（変更を保存するために必要） %>
   <div class="field">
-    <%# 現在のパスワードのラベル %>
     <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <%# 現在のパスワードの入力フィールド %>
     <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
   </div>
 
-  <%# 更新ボタン %>
   <div class="actions">
-    <%# フォーム送信ボタン（「Update」と表示） %>
     <%= f.submit "Update" %>
   </div>
 <% end %>
 
-<%# アカウント削除セクション %>
 <h3>Cancel my account</h3>
 
-<%# アカウント削除の説明 %>
 <div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
 
-<%# ログインページなどへのリンク %>
 <%= link_to "Back", :back %>
