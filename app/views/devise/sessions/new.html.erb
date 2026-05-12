@@ -1,26 +1,43 @@
-<h2>Log in</h2>
+<!-- 【追加】app/views/devise/sessions/new.html.erb -->
 
+<!-- 【修正】タイトルを i18n で日本語化 -->
+<h2><%= t('.title') %></h2>
+
+<!-- ログインフォーム開始 -->
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  
+  <!-- メールアドレス入力欄 -->
   <div class="field">
+    <!-- メールアドレスのラベル -->
     <p><%= f.label :email %></p>
+    <!-- メールアドレスの入力フィールド（自動フォーカス、自動補完あり） -->
     <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
   </div>
 
+  <!-- パスワード入力欄 -->
   <div class="field">
+    <!-- パスワードのラベル -->
     <p><%= f.label :password %></p>
+    <!-- パスワードの入力フィールド（自動補完あり） -->
     <p><%= f.password_field :password, autocomplete: "current-password" %></p>
   </div>
 
+  <!-- 「ログイン状態を保持する」チェックボックス（設定されている場合のみ表示） -->
   <% if devise_mapping.rememberable? %>
     <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me %></p>
+      <!-- 【修正】チェックボックス -->
+      <%= f.check_box :remember_me %>
+      <!-- 【修正】チェックボックスのラベル -->
+      <%= f.label :remember_me %>
     </div>
   <% end %>
 
+  <!-- ログインボタン -->
   <div class="actions">
-    <%= f.submit "Log in" %>
+    <!-- 【修正】ログインボタンのラベルを i18n で日本語化 -->
+    <%= f.submit t('.sign_in') %>
   </div>
 <% end %>
 
+<!-- 「パスワードを忘れた」「新規登録」などのリンク -->
 <%= render "devise/shared/links" %>

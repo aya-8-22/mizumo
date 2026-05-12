@@ -19,6 +19,7 @@ AllCops:
     - 'vendor/**/*'       # Gemのパッケージ
     - 'tmp/**/*'          # 一時ファイル
     - 'log/**/*'          # ログファイル
+    - 'config/initializers/devise.rb' #【追加】Deviseの初期化ファイル(config/initializers/devise.rb)がRuboCopのチェック対象から除外
 
 # 日本語コメントを許可
 Style/AsciiComments:
@@ -47,4 +48,9 @@ Metrics/BlockLength:
 
 # ドキュメントコメントを必須にしない
 Style/Documentation:
+  Enabled: false
+
+# 【追加】親クラスで定義されたアクションに対する before_action の警告を無効化
+# (Deviseなどの継承したコントローラーで before_action を使用する場合に必要)
+Rails/LexicallyScopedActionFilter:
   Enabled: false

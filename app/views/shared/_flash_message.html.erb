@@ -1,9 +1,15 @@
-<!-- 【追加】app/views/shared/_flash_message.html.erb -->
+<!--【追加】app/views/shared/_flash_message.html.erb -->
 <!-- フラッシュメッセージを表示するパーシャルファイル -->
+<!-- メッセージをどのように表示するかを記述 HTMLのタグや構造を定義 レイアウトを担当 -->
+
 <!-- flash の中身を1つずつ取り出すループ開始 -->
+<!-- message_type: メッセージの種類（例: 'notice', 'alert'） -->
+<!-- message: メッセージの本文（例: 'ログインしました'） -->
 <% flash.each do |message_type, message| %>
-  <!-- メッセージを表示する div タグ（Bootstrap のスタイルを適用） -->
-  <div class="alert alert-<%= message_type %>">
+  <!--【変更】メッセージを表示する div タグ（Bootstrap のスタイルを適用） -->
+  <!-- bootstrap_class_for メソッドで message_type を Bootstrap のクラス名に変換 -->
+  <!-- 例: 'notice' → 'success' → 'alert-success'（緑色） -->
+  <div class="alert alert-<%= bootstrap_class_for(message_type) %>">
     <!-- メッセージ本文を表示 -->
     <%= message %>
   </div>

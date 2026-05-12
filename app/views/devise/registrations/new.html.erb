@@ -1,62 +1,58 @@
-<%# app/views/devise/registrations/new.html.erb %>
-<%# このファイルはDeviseのユーザー登録画面のビューファイルです %>
+<!-- app/views/devise/registrations/new.html.erb -->
+<!-- 【修正】タイトルを i18n で日本語化 -->
+<h2><%= t('.title') %></h2>
 
-<%# ページのタイトル（見出し） %>
-<h2>Sign up</h2>
-
-<%# ユーザー登録フォームの開始 %>
+<!-- Deviseのユーザー登録フォームを開始 -->
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   
-  <%# バリデーションエラーを表示するパーシャルを呼び出す %>
+  <!-- バリデーションエラーがあった場合にエラーメッセージを表示する部分 -->
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <%# メールアドレス入力欄 %>
-  <%# CSSのクラスを指定（スタイリング用） %>
+  <!-- メールアドレス入力欄のセクション -->
   <div class="field">
-    <%# メールアドレスのラベル（「Email」と表示される） %>
+    <!-- 【修正】i18n でラベルを日本語化 -->
     <p><%= f.label :email %></p>
-    <%# メールアドレスの入力フィールド %>
+    <!-- メールアドレスを入力するテキストボックスを表示（自動フォーカス、自動補完有効） -->
     <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
   </div>
 
-  <%#【追加】体重入力欄 %>
+  <!-- パスワード入力欄のセクション -->
   <div class="field">
-    <%# 体重のラベル（「体重 (kg)」と表示）%>
-    <%= f.label :weight, "体重 (kg)" %><br />
-    <%# 体重の入力フィールド（小数点第1位まで入力可能）%>
-    <%= f.number_field :weight, step: 0.1, placeholder: "例: 65.5" %>
-  </div>
-
-  <%# パスワード入力欄 %>
-  <div class="field">
-    <%# パスワードのラベル（「Password」と表示） %>
+    <!-- 【修正】i18n でラベルを日本語化 -->
     <p><%= f.label :password %></p>
-    <%# パスワードの最小文字数を表示する条件分岐 %>
-    <%# @minimum_password_length: Deviseで設定された最小文字数（通常6文字） %>
+    <!-- パスワードの最小文字数が設定されている場合のみ実行 -->
     <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+      <!-- 【修正】「(8 characters minimum)」から「(8文字以上)」に変更 -->
+      <p><em>(<%= @minimum_password_length %>文字以上)</em></p>
     <% end %>
-    <%# パスワードの入力フィールド %>
+    <!-- パスワードを入力するテキストボックスを表示（入力内容は隠される） -->
     <p><%= f.password_field :password, autocomplete: "new-password" %></p>
   </div>
 
-  <%# パスワード確認入力欄 %>
+  <!-- パスワード確認入力欄のセクション -->
   <div class="field">
-    <%# パスワード確認のラベル（「Password confirmation」と表示） %>
+    <!-- 【修正】i18n でラベルを日本語化 -->
     <p><%= f.label :password_confirmation %></p>
-    <%# パスワード確認の入力フィールド（パスワードと同じ値を入力） %>
+    <!-- パスワード確認用のテキストボックスを表示（入力内容は隠される） -->
     <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
   </div>
 
-  <%# 登録ボタン %>
-   <%# CSSのクラスを指定（ボタンのスタイリング用） %>
-  <div class="actions">
-    <%# フォーム送信ボタン %>
-    <%= f.submit "Sign up" %>
+  <!-- 【追加】体重入力欄のセクション -->
+  <div class="field">
+    <!-- 【修正】i18n でラベルを日本語化 -->
+    <p><%= f.label :weight %></p>
+    <!-- 体重を入力する数値入力欄を表示（0.1刻みで入力可能） -->
+    <p><%= f.number_field :weight, step: 0.1 %></p>
   </div>
 
-<%# フォーム終了 %>
+  <!-- 【修正】登録ボタンのセクション -->
+  <div class="actions">
+    <!-- 【修正】登録ボタンのラベルを i18n で日本語化 -->
+    <%= f.submit t('.sign_up') %>
+  </div>
+  
+<!-- フォームの終了 -->
 <% end %>
 
-<%# ログインページなどへのリンク %>
+<!-- ログインページへのリンクなどを表示 -->
 <%= render "devise/shared/links" %>

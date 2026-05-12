@@ -1,0 +1,10 @@
+# config/locales/devise.ja.yml
+# Deviseの日本語訳ファイル
+ja:
+  devise:
+    registrations:
+      # ユーザー登録が成功したが、メールアドレスが確認されていない場合
+      signed_up_but_unconfirmed: '確認メールを送信しました。メールが届いていない場合は迷惑フォルダを確認してください。'
+    failure:
+      # 通信エラーが発生した場合
+      timeout: '通信に失敗しました。インターネット接続を確認してください。'
