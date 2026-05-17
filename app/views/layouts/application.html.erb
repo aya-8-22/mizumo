@@ -11,8 +11,10 @@
     <!-- Content Security Policy を設定(セキュリティ対策) -->
     <%= csp_meta_tag %>
     <!-- Tailwind CSS を読み込む -->
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <!-- アプリケーション固有の CSS を読み込む -->
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <!-- JavaScript ファイルを読み込む -->
     <%= javascript_importmap_tags %>
