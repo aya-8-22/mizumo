@@ -1,0 +1,82 @@
+/* app/assets/stylesheets/top.scss */
+/* メインコンテンツ全体のスタイル */
+.top-wrapper {
+  min-height: calc(100vh - 120px); /* ヘッダーとフッターを除いた高さ */
+  display: flex; /* フレックスボックスで中央配置 */
+  align-items: center; /* 縦方向の中央配置 */
+  justify-content: center; /* 横方向の中央配置 */
+  padding: 40px 20px; /* 上下40px、左右20pxの余白 */
+  background-color: #f5f5f5; /* 背景色(薄いグレー) */
+}
+
+/* メインコンテンツの内側のスタイル */
+.top-inner-text {
+  max-width: 800px; /* 最大幅を800pxに制限 */
+  width: 100%; /* 幅を100%に設定 */
+  background-color: white; /* 背景色(白) */
+  padding: 60px 40px; /* 上下60px、左右40pxの余白 */
+  border-radius: 10px; /* 角を丸くする(10px) */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影をつける */
+  text-align: center; /* テキストを中央揃え */
+}
+
+/* メインタイトル「ミズモ」のスタイル */
+.main-title {
+  font-size: 48px; /* フォントサイズを48pxに設定 */
+  font-weight: bold; /* 太字にする */
+  margin-bottom: 20px; /* 下に20pxの余白 */
+  color: #333; /* 文字色(濃いグレー) */
+}
+
+/* サブタイトル「〜水分摂取を習慣化しよう〜」のスタイル */
+.sub-title {
+  font-size: 20px; /* フォントサイズを20pxに設定 */
+  margin-bottom: 30px; /* 下に30pxの余白 */
+  color: #666; /* 文字色(グレー) */
+}
+
+/* 区切り線のスタイル */
+.divider {
+  border: none; /* デフォルトの枠線を削除 */
+  border-top: 2px solid #ddd; /* 上部に2pxの線を追加(薄いグレー) */
+  margin: 40px 0; /* 上下に40pxの余白 */
+}
+
+/* 使い方セクション全体のスタイル */
+.usage-section {
+  text-align: left; /* テキストを左揃え */
+  margin-top: 30px; /* 上に30pxの余白 */
+}
+
+/* 「使い方：」見出しのスタイル */
+.section-title {
+  font-size: 24px; /* フォントサイズを24pxに設定 */
+  font-weight: bold; /* 太字にする */
+  margin-bottom: 20px; /* 下に20pxの余白 */
+  color: #333; /* 文字色(濃いグレー) */
+  text-align: center; /* テキストを中央揃え */
+}
+
+/* 各項目(お知らせ方法、記録方法、確認方法)のブロックのスタイル */
+.usage-item {
+  margin-bottom: 30px; /* 下に30pxの余白 */
+  padding: 20px; /* 内側に20pxの余白 */
+  background-color: #f9f9f9; /* 背景色(薄いグレー) */
+  border-radius: 8px; /* 角を丸くする(8px) */
+}
+
+/* 各項目の小見出し(お知らせ方法：など)のスタイル */
+.item-title {
+  font-size: 18px; /* フォントサイズを18pxに設定 */
+  font-weight: bold; /* 太字にする */
+  margin-bottom: 10px; /* 下に10pxの余白 */
+  color: #555; /* 文字色(グレー) */
+}
+
+/* 各項目の内容のスタイル */
+.item-content {
+  font-size: 16px; /* フォントサイズを16pxに設定 */
+  line-height: 1.6; /* 行間を1.6に設定 */
+  color: #666; /* 文字色(グレー) */
+  margin-bottom: 5px; /* 下に5pxの余白 */
+}
