@@ -73,10 +73,10 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
 
-# ===== Sass（CSSプリプロセッサ）=====
+# =====【追加】Sass（CSSプリプロセッサ）=====
 # SassでCSSを書く場合はコメントを外す（現在は使わない設定）
 # Use Sass to process CSS
-# gem "sassc-rails"
+gem 'sassc-rails'
 
 # ===== 画像処理 =====
 # Active Storageで画像を加工する場合はコメントを外す（現在は使わない設定）
@@ -157,3 +157,10 @@ group :test do
   # Capybaraと組み合わせて、実際のブラウザでテストを実行できる
   gem 'selenium-webdriver'
 end
+
+# =====【追加】Tailwind CSS =====
+# Tailwind CSS を使うための gem
+# ユーティリティファーストの CSS フレームワーク
+# - クラス名を組み合わせてスタイルを適用できる
+# - カスタマイズ性が高く、デザインの自由度が高い
+gem 'tailwindcss-rails', '~> 4.4'

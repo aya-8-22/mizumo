@@ -1,20 +1,49 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+/* app/assets/stylesheets/application.scss */
+/* 【修正】Bootstrap を読み込む(もし使っている場合) */
+/* @import "bootstrap"; */
 
-/* app/assets/stylesheets/application.css */
+/* 【修正】top.scss を読み込む */
+@import "top";
+
+/* 【追加】ヘッダーのスタイル */
+.header {
+  display: flex; /* フレックスボックスでレイアウト */
+  justify-content: space-between; /* 左右に配置 */
+  align-items: center; /* 縦方向の中央揃え */
+  padding: 1rem 2rem; /* 内側の余白 */
+  background-color: #f8f9fa; /* 薄いグレーの背景 */
+  border-bottom: 1px solid #dee2e6; /* 下に薄いグレーの線 */
+}
+
+/* 【追加】ヘッダーのロゴスタイル */
+.header-logo {
+  margin: 0; /* 外側の余白をなくす */
+  font-size: 1.5rem; /* 文字サイズを大きく */
+  font-weight: bold; /* 太字 */
+}
+
+/* 【追加】ヘッダーのボタンエリアスタイル */
+.header-buttons {
+  display: flex; /* フレックスボックスでレイアウト */
+  gap: 1rem; /* ボタン間の余白 */
+}
+
+/* 【追加】ヘッダーのボタンスタイル */
+.header-button {
+  padding: 0.5rem 1rem; /* 内側の余白 */
+  background-color: #007bff; /* 青色の背景 */
+  color: white; /* 白色の文字 */
+  text-decoration: none; /* 下線をなくす */
+  border: none; /* 枠線をなくす */
+  border-radius: 4px; /* 角を丸く */
+  cursor: pointer; /* カーソルをポインターに */
+}
+
+/* 【追加】ヘッダーのボタンホバー時のスタイル */
+.header-button:hover {
+  background-color: #0056b3; /* ホバー時に濃い青色に */
+}
+
 /* 成功メッセージのスタイル */
 .alert-success {
   background-color: #d4edda; /* 薄い緑色の背景 */
