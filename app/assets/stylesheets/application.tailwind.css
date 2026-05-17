@@ -1,5 +1,4 @@
 /* app/assets/stylesheets/application.tailwind.css */
-
 /* Tailwind CSS の基本スタイルを読み込む */
 @tailwind base;
 
@@ -12,32 +11,38 @@
 /* 【追加】動的に使用するクラスを safelist として追加 */
 @layer utilities {
   /* 【追加】灰色の背景 */
+  /* Sass 用にカンマ区切りに変更 */
   .bg-gray-300 {
-    background-color: rgb(209 213 219);
+    background-color: rgb(209, 213, 219);
   }
   
   /* 【追加】灰色の背景(ホバー時) */
+  /* Sass 用にカンマ区切りに変更 */
   .hover\:bg-gray-400:hover {
-    background-color: rgb(156 163 175);
+    background-color: rgb(156, 163, 175);
   }
   
   /* 【追加】灰色の文字 */
+  /* Sass 用にカンマ区切りに変更 */
   .text-gray-700 {
-    color: rgb(55 65 81);
+    color: rgb(55, 65, 81);
   }
   
   /* 【追加】緑色の背景 */
+  /* Sass 用にカンマ区切りに変更 */
   .bg-green-500 {
-    background-color: rgb(34 197 94);
+    background-color: rgb(34, 197, 94);
   }
   
   /* 【追加】緑色の背景(ホバー時) */
+  /* Sass 用にカンマ区切りに変更 */
   .hover\:bg-green-600:hover {
-    background-color: rgb(22 163 74);
+    background-color: rgb(22, 163, 74);
   }
   
   /* 【追加】白色の文字 */
+  /* Sass 用にカンマ区切りに変更 */
   .text-white {
-    color: rgb(255 255 255);
+    color: rgb(255, 255, 255);
   }
 }
