@@ -1,0 +1,147 @@
+<%# app/views/water_intakes/index.html.erb %>
+<%# 飲水記録の一覧ページ %>
+
+<%# 全体を囲む箱 %>
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  
+  <%# タイトル %>
+  <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">記録</h1>
+  
+  <%# 目標水分量の表示を青い枠で囲んで目立たせる %>
+  <div class="bg-blue-100 border-2 border-blue-500 p-6 mb-6 text-center rounded-lg">
+    <%# 【修正】体重が登録されているかチェック %>
+    <% if current_user.weight.present? %>
+      <%# 体重×30mlで目標を計算 %>
+      <% target_amount = current_user.weight * 30 %>
+      <%# 計算式を表示 %>
+      <p class="text-sm text-gray-600">体重<%= current_user.weight %>kg × 30ml</p>
+      <%# 目標 %>
+      <p class="text-lg font-semibold text-blue-700 mt-3">目標水分摂取量: <%= target_amount %>ml / 日</p>
+    <% else %>
+      <%# 【修正】体重が未登録の場合のメッセージを表示 %>
+      <p class="text-sm text-gray-600">体重が未登録です</p>
+      <p class="text-base text-blue-600 mt-2">
+        <%= link_to '設定画面から体重を登録してください', edit_user_registration_path, class: 'underline hover:text-blue-800' %>
+      </p>
+    <% end %>
+  </div>
+
+  <%# 記録表 %>
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <table class="w-full">
+      <%# 表の見出し %>
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">日付</th>
+          <%# 時間帯の見出しを繰り返し表示 %>
+          <% @time_slots.each do |time_slot| %>
+            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">
+              <%= time_slot.split(':')[0] %>時
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      
+      <%# 表のデータ部分 %>
+      <tbody class="divide-y divide-gray-200">
+        <%# 日付ごとに行を作成 %>
+        <% @dates.each do |date| %>
+          <tr class="hover:bg-gray-50 transition duration-150">
+            <%# 日付セル %>
+            <td class="px-4 py-4 text-sm text-gray-900 font-medium">
+              <%= date.strftime('%-m/%-d') %>(<%= %w[日 月 火 水 木 金 土][date.wday] %>)
+            </td>
+            <%# 時間帯ごとにボタンを表示 %>
+            <% @time_slots.each do |time_slot| %>
+              <td class="px-4 py-4 text-center">
+                <%# この日時の記録を取得 %>
+                <% intake = @intakes[[date, time_slot]] %>
+                <%# 記録ボタン(記録済みなら緑、未記録なら灰色) %>
+                <button 
+                  class="px-4 py-2 rounded font-semibold transition duration-200 <%= intake ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-300 hover:bg-gray-400 text-gray-700' %>"
+                  data-date="<%= date.strftime('%Y-%m-%d') %>"
+                  data-time-slot="<%= time_slot %>"
+                  type="button"
+                  onclick="toggleIntake(this)"
+                >
+                  200ml
+                </button>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%# 使い方の説明 %>
+  <div class="mt-6 text-sm text-gray-600">
+    <ul class="space-y-1">
+      <li>記録時:灰色の200mlボタンを押すと緑色に変わり、飲水が記録されます</li>
+      <li>修正時:緑色のボタンをもう一度押すと灰色に戻り、記録が削除されます</li>
+      <li>注意:ボタンの色が変わらない時はもう一度押すと変わります</li>
+      <li>注意:必要時、医師にご相談ください</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ボタンをクリックしたときの処理
+function toggleIntake(button) {
+  // data-date属性から日付を取得
+  const date = button.dataset.date;
+  // data-time-slot属性から時間帯を取得
+  const timeSlot = button.getAttribute('data-time-slot');
+  
+  // デバッグ用にコンソールに出力
+  console.log('date:', date, 'timeSlot:', timeSlot);
+  
+  // サーバーにPOSTリクエストを送信
+  fetch('/water_intakes/toggle', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // CSRF対策のトークンを取得
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+    },
+    // 日付と時間帯をJSON形式で送信
+    body: JSON.stringify({ date: date, time_slot: timeSlot })
+  })
+  .then(response => {
+    // レスポンスのステータスコードを確認
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // デバッグ用にレスポンスを出力
+    console.log('response:', data);
+    console.log('ボタンの変更前のクラス:', button.className);
+
+    // レスポンスに応じてボタンの色を変更
+    if (data.status === 'created') {
+      // 記録が作成された場合(灰色→緑色)
+      console.log('記録が作成されました。ボタンを緑色に変更します。');
+      // 灰色のクラスを削除
+      button.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
+      // 緑色のクラスを追加
+      button.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
+    } else if (data.status === 'deleted') {
+      // 記録が削除された場合(緑色→灰色)
+      console.log('記録が削除されました。ボタンを灰色に変更します。');
+      // 緑色のクラスを削除
+      button.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
+      // 灰色のクラスを追加
+      button.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
+    }
+    console.log('ボタンの変更後のクラス:', button.className);
+  })
+  .catch(error => {
+    // エラーが発生した場合の処理
+    console.error('エラーが発生しました:', error);
+    // ユーザーにエラーを通知
+    alert('記録の更新に失敗しました');
+  });
+}
+</script>

@@ -1,31 +1,74 @@
 <!-- app/views/layouts/application.html.erb -->
-<!-- アプリケーション全体で共通して表示される部分（ヘッダー、フッター、サイドバーなど） -->
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- ページタイトルを設定 -->
-    <title>ミズモ</title>
+    <!-- ページタイトルを動的に設定 -->
+    <title><%= page_title(yield(:title)) %></title>
     <!-- レスポンシブ対応のためのビューポート設定 -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!-- CSRF トークンを埋め込む（セキュリティ対策） -->
+    <!-- CSRF トークンを埋め込む(セキュリティ対策) -->
     <%= csrf_meta_tags %>
-    <!-- Content Security Policy を設定（セキュリティ対策） -->
+    <!-- Content Security Policy を設定(セキュリティ対策) -->
     <%= csp_meta_tag %>
-
-    <!-- CSS ファイルを読み込む -->
+    <!-- Tailwind CSS を読み込む -->
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <!-- アプリケーション固有の CSS を読み込む -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <!-- JavaScript ファイルを読み込む -->
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <!-- 【追加】ヘッダーを表示（app/views/shared/_header.html.erb を読み込む） -->
-    <%= render 'shared/header' %>
-    
-    <!-- 【変更】Flashメッセージを表示 -->
+    <!-- ヘッダー全体を bg-white と shadow で装飾 -->
+    <header class="bg-white shadow">
+      <!-- container で中央寄せ、px-4 で左右の余白、py-4 で上下の余白、flex で横並び、justify-between で左右に配置、items-center で縦方向中央揃え -->
+      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        
+        <!-- ロゴ「ミズモ」を左側に表示（全ページで表示） -->
+        <h1 class="text-2xl font-bold text-blue-600">
+          ミズモ
+        </h1>
+        
+        <!-- ヘッダー右側のボタン群を flex で横並び、space-x-4 でボタン間に余白、items-center で縦方向中央揃え -->
+        <div class="flex items-center space-x-4">
+          
+          <!-- トップページの場合 -->
+          <% if controller_name == 'static_pages' && action_name == 'top' %>
+            <!-- 新規登録ボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
+            <%= link_to '新規登録', new_user_registration_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+            <!-- ログインボタン：px-4 py-2 で余白、bg-gray-500 で灰色背景、hover:bg-gray-600 でホバー時に濃い灰色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
+            <%= link_to 'ログイン', new_user_session_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+          
+          <!-- 新規登録ページの場合 -->
+          <% elsif controller_path == 'users/registrations' && action_name == 'new' %>
+            <!-- トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
+            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+          
+          <!-- 【修正】ログインページの場合（トップページボタンを表示） -->
+          <% elsif controller_path == 'users/sessions' && action_name == 'new' %>
+            <!-- 【修正】トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
+            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+          
+          <!-- 設定ページの場合 -->
+          <% elsif controller_path == 'users/registrations' && action_name == 'edit' %>
+            <!-- 【修正】ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
+            <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+          
+          <!-- 記録ページの場合 -->
+          <% elsif controller_name == 'water_intakes' && action_name == 'index' %>
+            <!-- 設定ボタン：inline-block で表示、px-4 py-2 で余白、bg-gray-500 で灰色背景、hover:bg-gray-600 でホバー時に濃い灰色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション -->
+            <%= link_to '設定', edit_user_registration_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+            <!-- 【修正】ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
+            <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <!-- Flash メッセージを表示 -->
     <%= render 'shared/flash_message' %>
-    
-    <!-- 各ページの内容を表示（各コントローラーのビューが挿入される） -->
+
+    <!-- 各ページの内容を表示(各コントローラーのビューが挿入される) -->
     <%= yield %>
   </body>
 </html>

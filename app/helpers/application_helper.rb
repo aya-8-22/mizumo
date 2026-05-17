@@ -28,4 +28,13 @@ module ApplicationHelper
       flash_type.to_s
     end
   end
+
+  # 【変更】ページタイトルを動的に設定するメソッド
+  # 引数: page_title(ページごとのタイトル、デフォルトは nil)
+  # 戻り値: ページタイトル（例: 'ログイン | ミズモ' または 'ミズモ'）
+  def page_title(page_title = nil)
+    base_title = 'ミズモ' # アプリケーション名
+    # page_title が存在する場合は「ページタイトル | ミズモ」、存在しない場合は「ミズモ」のみを返す
+    page_title.present? ? "#{page_title} | #{base_title}" : base_title
+  end
 end
