@@ -20,31 +20,31 @@ class WaterIntakesController < ApplicationController
                            .index_by { |intake| [intake.recorded_at.to_date, intake.time_slot] }
   end
 
-  # 【修正】飲水記録を作成または削除するアクション
-  # 【修正】メソッドを分割して、複雑さを下げた
+  # 飲水記録を作成または削除するアクション
+  # メソッドを分割して、複雑さを下げた
   def toggle
     # パラメータから日付と時間帯を取得
     date = params[:date].to_date
     time_slot = params[:time_slot]
 
-    # 【修正】記録を検索する処理を find_intake メソッドに分離
+    # 記録を検索する処理を find_intake メソッドに分離
     intake = find_intake(date, time_slot)
 
-    # 【修正】記録の削除・作成処理をそれぞれのメソッドに分離
+    # 記録の削除・作成処理をそれぞれのメソッドに分離
     if intake
-      # 【修正】記録が存在する場合は delete_intake メソッドを呼び出す
+      # 記録が存在する場合は delete_intake メソッドを呼び出す
       delete_intake(intake)
     else
-      # 【修正】記録が存在しない場合は create_intake メソッドを呼び出す
+      # 記録が存在しない場合は create_intake メソッドを呼び出す
       create_intake(date, time_slot)
     end
   end
 
-  # 【修正】private メソッドを追加
+  # private メソッドを追加
   private
 
-  # 【修正】指定された日付と時間帯の記録を検索するメソッド
-  # 【修正】元の toggle メソッドから検索処理を分離
+  # 指定された日付と時間帯の記録を検索するメソッド
+  # 元の toggle メソッドから検索処理を分離
   def find_intake(date, time_slot)
     # その日の時間帯の記録を検索
     current_user.water_intakes
@@ -52,8 +52,8 @@ class WaterIntakesController < ApplicationController
                 .find_by(time_slot: time_slot)
   end
 
-  # 【修正】記録を削除してJSONレスポンスを返すメソッド
-  # 【修正】元の toggle メソッドから削除処理を分離
+  # 記録を削除してJSONレスポンスを返すメソッド
+  # 元の toggle メソッドから削除処理を分離
   def delete_intake(intake)
     # 記録を削除
     intake.destroy
@@ -61,14 +61,15 @@ class WaterIntakesController < ApplicationController
     render json: { status: 'deleted' }
   end
 
-  # 【修正】記録を作成してJSONレスポンスを返すメソッド
-  # 【修正】元の toggle メソッドから作成処理を分離
+  # 記録を作成してJSONレスポンスを返すメソッド
+  # 元の toggle メソッドから作成処理を分離
+  # MVP版では200ml固定だが、データベースの制約のため amount_ml に200を保存
   def create_intake(date, time_slot)
     # 記録を作成
     current_user.water_intakes.create!(
       recorded_at: date.in_time_zone.change(hour: time_slot.split(':')[0].to_i),
       time_slot: time_slot,
-      amount_ml: 200
+      amount_ml: 200 # データベースの制約のため、200を保存
     )
     # JSON形式でレスポンスを返す
     render json: { status: 'created' }
