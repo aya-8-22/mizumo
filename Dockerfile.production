@@ -31,11 +31,14 @@ RUN bundle install
 # アプリケーションのコードをコピー
 COPY . .
 
-# アセットをプリコンパイル
-RUN SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
+# 【修正】Tailwind CSS をビルド（エラーが出ても続行）
+RUN bundle exec rails tailwindcss:build || true
+
+# 【修正】アセットをプリコンパイル（環境変数を明示）
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
 
 # ポートを公開
 EXPOSE 10000
 
-# 【追加】コンテナ起動時にマイグレーション実行後、Railsサーバーを起動
+# コンテナ起動時にマイグレーション実行後、Railsサーバーを起動
 CMD bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 10000

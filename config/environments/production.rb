@@ -131,10 +131,10 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  # 【追加】Renderのホストを許可
+  # Renderのホストを許可
   config.hosts << 'mizumo.onrender.com'
 
-  # 【追加】または開発段階では全て許可
+  # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear
 
   # ===== 標準出力へのログ設定 =====
