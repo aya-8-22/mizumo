@@ -770,7 +770,7 @@ Should版：
 
 
 ## 画面遷移図
-https://www.figma.com/design/l7iMFlNTgmaJq9XJATtulr/%E3%83%9F%E3%82%BA%E3%83%A2-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%E3%80%802026-4-11?node-id=0-1&t=PYLIOmpPA1Hozcp2-1
+https://gyazo.com/b296ad5313a939a7b1d99025f36d36b1
 
 ## ER図
 https://gyazo.com/9406981ec78a7141011f694956626d41
