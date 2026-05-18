@@ -1,4 +1,4 @@
-/* app/assets/stylesheets/top.scss */
+/* 【修正】app/assets/stylesheets/top.css */
 /* メインコンテンツ全体のスタイル */
 .top-wrapper {
   min-height: calc(100vh - 120px); /* ヘッダーとフッターを除いた高さ */

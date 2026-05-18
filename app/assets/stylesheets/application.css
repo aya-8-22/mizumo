@@ -1,9 +1,11 @@
-/* app/assets/stylesheets/application.scss */
-/* 【修正】Bootstrap を読み込む(もし使っている場合) */
+/* 【修正】app/assets/stylesheets/application.css */
+/* アプリケーション全体の CSS ファイル */
+
+/* 【修正】Bootstrap は使用していないためコメントアウト */
 /* @import "bootstrap"; */
 
-/* 【修正】top.scss を読み込む */
-@import "top";
+/* 【修正】top.css は自動的に読み込まれるため @import は不要 */
+/* Rails の Sprockets が自動的に app/assets/stylesheets 配下の CSS を読み込む */
 
 /* 【追加】ヘッダーのスタイル */
 .header {
