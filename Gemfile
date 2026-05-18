@@ -47,13 +47,6 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # Rails アプリケーションの起動を高速化するツール（キャッシュを使う）
 gem 'bootsnap', require: false
 
-# ===== Sass（CSS プリプロセッサ）=====
-# Sass で CSS を書くためのツール
-# - ネストした記述ができる
-# - 変数や関数が使える
-# - CSS を効率的に書ける
-gem 'sassc-rails'
-
 # ===== 認証機能（Devise）=====
 # ユーザー認証機能を提供する gem（ログイン、ログアウト、パスワードリセットなど）
 gem 'devise'
