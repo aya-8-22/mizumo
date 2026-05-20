@@ -14,10 +14,7 @@ class WaterIntakesController < ApplicationController
     # 時間帯の設定(8:00、12:00、17:00)
     @time_slots = ['8:00', '12:00', '17:00']
 
-    # 【修正】@datesの範囲に合わせて記録を取得し、日付と時間帯でインデックス化
-    # 修正前: @dates.first.beginning_of_day..@dates.last.end_of_day
-    # 修正後: @dates.last.beginning_of_day..@dates.first.end_of_day
-    # 理由: @dates は逆順（新しい日付が先頭）なので、.last が最も古い日付、.first が最も新しい日付
+    # @datesの範囲に合わせて記録を取得し、日付と時間帯でインデックス化
     @intakes = current_user.water_intakes
                            .where(recorded_at: @dates.last.beginning_of_day..@dates.first.end_of_day)
                            .index_by { |intake| [intake.recorded_at.to_date, intake.time_slot] }
@@ -49,7 +46,6 @@ class WaterIntakesController < ApplicationController
     render json: { status: 'error', message: e.message }, status: :unprocessable_entity
   end
 
-  # private メソッドを追加
   private
 
   # 指定された日付と時間帯の記録を検索するメソッド
@@ -64,8 +60,8 @@ class WaterIntakesController < ApplicationController
   def delete_intake(intake)
     # 記録を削除
     intake.destroy
-    # JSON形式でレスポンスを返す
-    render json: { status: 'deleted' }
+    # 【修正】JSON形式でレスポンスを返す(メッセージを追加)
+    render json: { status: 'deleted', message: '飲水記録を削除しました' }
   end
 
   # 記録を作成してJSONレスポンスを返すメソッド
@@ -81,7 +77,7 @@ class WaterIntakesController < ApplicationController
       time_slot: time_slot,
       amount_ml: 200 # MVP版では200ml固定
     )
-    # JSON形式でレスポンスを返す
-    render json: { status: 'created' }
+    # 【修正】JSON形式でレスポンスを返す(メッセージを追加)
+    render json: { status: 'created', message: '飲水を記録しました' }
   end
 end

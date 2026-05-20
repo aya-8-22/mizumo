@@ -112,6 +112,7 @@ function toggleIntake(button) {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+    // レスポンスをJSON形式に変換
     return response.json();
   })
   .then(data => {
@@ -127,6 +128,8 @@ function toggleIntake(button) {
       button.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
       // 緑色のクラスを追加
       button.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
+      // 【修正】成功メッセージを表示(緑色)
+      showFlashMessage(data.message, 'success');
     } else if (data.status === 'deleted') {
       // 記録が削除された場合(緑色→灰色)
       console.log('記録が削除されました。ボタンを灰色に変更します。');
@@ -134,14 +137,47 @@ function toggleIntake(button) {
       button.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
       // 灰色のクラスを追加
       button.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
+      // 【修正】削除メッセージを表示(赤色)
+      showFlashMessage(data.message, 'danger');
     }
+    // デバッグ用にボタンの変更後のクラスを出力
     console.log('ボタンの変更後のクラス:', button.className);
   })
   .catch(error => {
     // エラーが発生した場合の処理
     console.error('エラーが発生しました:', error);
-    // ユーザーにエラーを通知
-    alert('記録の更新に失敗しました');
+    // エラーメッセージを表示(赤色)
+    showFlashMessage('エラーが発生しました。もう一度試してください。', 'danger');
   });
+}
+
+// フラッシュメッセージを表示する関数
+function showFlashMessage(message, type) {
+  // 既存のフラッシュメッセージを削除
+  const existingFlash = document.getElementById('flash-message');
+  // 既存のフラッシュメッセージが存在する場合は削除
+  if (existingFlash) {
+    existingFlash.remove();
+  }
+  
+  // 【修正】メッセージの種類に応じて背景色を設定(success=緑、danger=赤)
+  const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+  
+  // フラッシュメッセージのHTML要素を作成
+  const flashDiv = document.createElement('div');
+  // フラッシュメッセージにIDを設定
+  flashDiv.id = 'flash-message';
+  // フラッシュメッセージのスタイルを設定
+  flashDiv.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+  // フラッシュメッセージのテキストを設定
+  flashDiv.textContent = message;
+  
+  // body要素の最初に追加
+  document.body.insertBefore(flashDiv, document.body.firstChild);
+  
+  // 3秒後に自動で消える
+  setTimeout(() => {
+    flashDiv.remove();
+  }, 3000);
 }
 </script>
