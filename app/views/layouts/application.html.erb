@@ -10,9 +10,9 @@
     <%= csrf_meta_tags %>
     <!-- Content Security Policy を設定(セキュリティ対策) -->
     <%= csp_meta_tag %>
-    <!-- 【修正】Tailwind CSS を読み込む(1回だけ) -->
+    <!-- Tailwind CSS を読み込む(1回だけ) -->
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <!-- 【修正】アプリケーション固有の CSS を読み込む -->
+    <!-- アプリケーション固有の CSS を読み込む -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <!-- JavaScript ファイルを読み込む -->
     <%= javascript_importmap_tags %>
@@ -24,41 +24,52 @@
       <!-- container で中央寄せ、px-4 で左右の余白、py-4 で上下の余白、flex で横並び、justify-between で左右に配置、items-center で縦方向中央揃え -->
       <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         
-        <!-- ロゴ「ミズモ」を左側に表示（全ページで表示） -->
-        <h1 class="text-2xl font-bold text-blue-600">
-          ミズモ
+        <!-- 【修正】ロゴ「ミズモ」を左側に表示（全ページで表示、クリックでトップページに遷移） -->
+        <h1 class="text-2xl font-bold">
+          <%= link_to 'ミズモ', root_path, class: 'text-blue-600 hover:text-blue-700' %>
         </h1>
         
         <!-- ヘッダー右側のボタン群を flex で横並び、space-x-4 でボタン間に余白、items-center で縦方向中央揃え -->
         <div class="flex items-center space-x-4">
           
-          <!-- トップページの場合 -->
+          <!-- 【修正】トップページの場合 -->
           <% if controller_name == 'static_pages' && action_name == 'top' %>
-            <!-- 新規登録ボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
-            <%= link_to '新規登録', new_user_registration_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-            <!-- ログインボタン：px-4 py-2 で余白、bg-gray-500 で灰色背景、hover:bg-gray-600 でホバー時に濃い灰色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
-            <%= link_to 'ログイン', new_user_session_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+            <!-- 【修正】ログイン状態で表示を出し分ける -->
+            <% if user_signed_in? %>
+              <!-- 【修正】ログイン中の場合は「記録」「設定」「ログアウト」ボタンを表示 -->
+              <%= link_to '記録', water_intakes_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+              <%= link_to '設定', edit_user_registration_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+              <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+            <% else %>
+              <!-- 【修正】ログアウト時は「新規登録」「ログイン」ボタンを表示 -->
+              <%= link_to '新規登録', new_user_registration_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+              <%= link_to 'ログイン', new_user_session_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+            <% end %>
           
           <!-- 新規登録ページの場合 -->
           <% elsif controller_path == 'users/registrations' && action_name == 'new' %>
             <!-- トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
             <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
           
-          <!-- 【修正】ログインページの場合（トップページボタンを表示） -->
+          <!-- ログインページの場合（トップページボタンを表示） -->
           <% elsif controller_path == 'users/sessions' && action_name == 'new' %>
-            <!-- 【修正】トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
+            <!-- トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
             <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-          
-          <!-- 設定ページの場合 -->
+ 
+          <!-- 【修正】設定ページの場合 -->
           <% elsif controller_path == 'users/registrations' && action_name == 'edit' %>
-            <!-- 【修正】ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
+            <!-- 【修正】トップページボタンを追加（ロゴでも遷移できるが、明示的なボタンも用意） -->
+            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
+            <!-- ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
             <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
           
-          <!-- 記録ページの場合 -->
+          <!-- 【修正】記録ページの場合 -->
           <% elsif controller_name == 'water_intakes' && action_name == 'index' %>
+            <!-- 【修正】トップページボタンを追加（ロゴでも遷移できるが、明示的なボタンも用意） -->
+            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
             <!-- 設定ボタン：inline-block で表示、px-4 py-2 で余白、bg-gray-500 で灰色背景、hover:bg-gray-600 でホバー時に濃い灰色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション -->
             <%= link_to '設定', edit_user_registration_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
-            <!-- 【修正】ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
+            <!-- ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
             <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
           <% end %>
         </div>
