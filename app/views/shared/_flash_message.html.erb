@@ -2,17 +2,24 @@
 <!-- フラッシュメッセージを表示するパーシャルファイル -->
 <!-- メッセージをどのように表示するかを記述 HTMLのタグや構造を定義 レイアウトを担当 -->
 
-<!-- flash の中身を1つずつ取り出すループ開始 -->
-<!-- message_type: メッセージの種類（例: 'notice', 'alert'） -->
-<!-- message: メッセージの本文（例: 'ログインしました'） -->
-<% flash.each do |message_type, message| %>
-  <!-- 【修正】data-controller="flash" を追加して Stimulus コントローラーと紐付け -->
-  <!-- 【修正】data-flash-target="message" を追加して JavaScript から要素を取得できるようにする -->
-  <!-- メッセージを表示する div タグ（Bootstrap のスタイルを適用） -->
-  <!-- bootstrap_class_for メソッドで message_type を Bootstrap のクラス名に変換 -->
-  <!-- 例: 'notice' → 'success' → 'alert-success'（緑色） -->
-  <div class="alert alert-<%= bootstrap_class_for(message_type) %>" data-controller="flash" data-flash-target="message">
-    <!-- メッセージ本文を表示 -->
-    <%= message %>
+<!-- 【修正】フラッシュメッセージがある場合のみ表示する -->
+<% if flash.any? %>
+  <!-- 【修正】fixed で画面に固定、top-1/2 で画面の縦中央、left-1/2 で画面の横中央、transform -translate-x-1/2 -translate-y-1/2 で中央に配置、z-50 でヘッダーより前面に表示、w-full max-w-md で幅を制限、px-4 で左右の余白 -->
+  <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md px-4">
+    <!-- flash の中身を1つずつ取り出すループ開始 -->
+    <!-- message_type: メッセージの種類（例: 'notice', 'alert'） -->
+    <!-- message: メッセージの本文（例: 'ログインしました'） -->
+    <% flash.each do |message_type, message| %>
+      <!-- 【修正】data-controller="flash" を追加して Stimulus コントローラーと紐付け -->
+      <!-- 【修正】data-flash-target="message" を追加して JavaScript から要素を取得できるようにする -->
+      <!-- 【修正】shadow-lg で影を濃くして目立たせる、mb-4 で複数メッセージがある場合の余白を確保、text-center で文字を中央揃え -->
+      <!-- メッセージを表示する div タグ（Bootstrap のスタイルを適用） -->
+      <!-- bootstrap_class_for メソッドで message_type を Bootstrap のクラス名に変換 -->
+      <!-- 例: 'notice' → 'success' → 'alert-success'（緑色） -->
+      <div class="alert alert-<%= bootstrap_class_for(message_type) %> shadow-lg mb-4 text-center" data-controller="flash" data-flash-target="message">
+        <!-- メッセージ本文を表示 -->
+        <%= message %>
+      </div>
+    <% end %>
   </div>
 <% end %>
