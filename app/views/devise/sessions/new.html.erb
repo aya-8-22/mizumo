@@ -1,6 +1,6 @@
-<!-- 【追加】app/views/devise/sessions/new.html.erb -->
+<!-- 【修正】app/views/devise/sessions/new.html.erb -->
 
-<!-- 【修正】タイトルを i18n で日本語化 -->
+<!-- タイトルを i18n で日本語化 -->
 <h2><%= t('.title') %></h2>
 
 <!-- ログインフォーム開始 -->
@@ -22,19 +22,19 @@
     <p><%= f.password_field :password, autocomplete: "current-password" %></p>
   </div>
 
-  <!-- 「ログイン状態を保持する」チェックボックス（設定されている場合のみ表示） -->
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <!-- 【修正】チェックボックス -->
-      <%= f.check_box :remember_me %>
-      <!-- 【修正】チェックボックスのラベル -->
-      <%= f.label :remember_me %>
-    </div>
-  <% end %>
+  <!-- 【削除】「ログイン状態を保持する」チェックボックスを削除 -->
+  <%# if devise_mapping.rememberable? %>
+    <%# <div class="field"> %>
+      <%# チェックボックス %>
+      <%#= f.check_box :remember_me %>
+      <%# チェックボックスのラベル %>
+      <%#= f.label :remember_me %>
+    <%# </div> %>
+  <%# end %>
 
   <!-- ログインボタン -->
   <div class="actions">
-    <!-- 【修正】ログインボタンのラベルを i18n で日本語化 -->
+    <!-- ログインボタンのラベルを i18n で日本語化 -->
     <%= f.submit t('.sign_in') %>
   </div>
 <% end %>

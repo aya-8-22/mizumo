@@ -3,7 +3,7 @@
 # app/controllers/users/sessions_controller.rb
 module Users
   class SessionsController < Devise::SessionsController
-    # 【修正】ログイン前にメール通知からのアクセスを判定
+    # ログイン前にメール通知からのアクセスを判定
     before_action :check_from_email_notification, only: [:create]
 
     # GET /resource/sign_in
@@ -12,7 +12,10 @@ module Users
     # end
 
     # POST /resource/sign_in
+    # 【修正】createアクションをコメントアウトして、チェックボックスの状態に応じて remember_me を設定する
     # def create
+    #   # 【修正前】remember_me を強制的に有効にする処理を削除
+    #   # params[:user][:remember_me] = '1' if params[:user]
     #   super
     # end
 
@@ -21,10 +24,9 @@ module Users
     #   super
     # end
 
-    # 【修正】protected のコメントアウトを解除
     protected
 
-    # 【修正】メール通知からのアクセスを判定するメソッドを追加
+    # メール通知からのアクセスを判定するメソッド
     def check_from_email_notification
       # パラメータに from_email が含まれている場合
       return unless params[:from_email] == 'true'
