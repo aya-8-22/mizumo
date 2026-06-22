@@ -4,6 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# .gitignore
+# Gitによる追跡（管理）から除外したいファイルやディレクトリを指定するための設定ファイル
+
 # Ignore bundler config.
 /.bundle
 
@@ -32,3 +35,4 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+.env
