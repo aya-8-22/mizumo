@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 # Gemfile
+# アプリケーションが動作するために必要なライブラリ（Gem）をリストアップした、依存関係の管理ファイル
+
 # gem のダウンロード元を指定（通常は公式の RubyGems を使う）
 source 'https://rubygems.org'
 # GitHub から gem をダウンロードする際の URL 形式を定義
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# このプロジェクトで使用する Ruby のバージョンを指定
-ruby '3.1.4'
+# このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4')
+ruby '3.2.4'
 
 # ===== フレームワーク =====
 # Rails 本体（Web アプリケーションフレームワーク）
