@@ -1,4 +1,5 @@
-<!-- 【修正】app/views/devise/sessions/new.html.erb -->
+<!-- app/views/devise/sessions/new.html.erb -->
+<!-- 会員登録済みのユーザーが、メールアドレスとパスワードを入力して「ログインするための画面」 -->
 
 <!-- タイトルを i18n で日本語化 -->
 <h2><%= t('.title') %></h2>
@@ -22,7 +23,7 @@
     <p><%= f.password_field :password, autocomplete: "current-password" %></p>
   </div>
 
-  <!-- 【削除】「ログイン状態を保持する」チェックボックスを削除 -->
+  <!-- 【コメントアウト中】「ログイン状態を保持する」チェックボックスを削除 -->
   <%# if devise_mapping.rememberable? %>
     <%# <div class="field"> %>
       <%# チェックボックス %>
@@ -39,5 +40,5 @@
   </div>
 <% end %>
 
-<!-- 「パスワードを忘れた」「新規登録」などのリンク -->
+<!--「パスワードを忘れた」「新規登録」などのリンク -->
 <%= render "devise/shared/links" %>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # config/routes.rb
-# Rails アプリケーションのルーティング（URL とコントローラーの紐付け）を設定するファイル
+# 「URL」と「処理（Controller）」をつなぐ仲介役
 Rails.application.routes.draw do
   # Devise のルーティングを設定（カスタマイズしたコントローラを使用）
   devise_for :users, controllers: {
@@ -31,6 +31,16 @@ Rails.application.routes.draw do
     end
   end
 
-  # 【削除】ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
+  # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
   # resources :users, only: [:edit, :update]
+
+  # 【追加】カレンダー画面（/calendar）のルーティング
+  get 'calendar', to: 'calendars#index'
+
+  # 【追加】お問い合わせページ
+  get 'contact', to: 'static_pages#contact'
+  # 【追加】利用規約ページ
+  get 'terms', to: 'static_pages#terms'
+  # 【追加】プライバシーポリシーページ
+  get 'privacy', to: 'static_pages#privacy'
 end
