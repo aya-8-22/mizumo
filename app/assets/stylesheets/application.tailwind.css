@@ -1,4 +1,4 @@
-/* app/assets/stylesheets/application.tailwind.css */
+/* 【修正】app/assets/stylesheets/application.tailwind.css */
 /* Tailwind CSS の基本スタイルを読み込む */
 @tailwind base;
 
@@ -7,38 +7,3 @@
 
 /* Tailwind CSS のユーティリティクラスを読み込む */
 @tailwind utilities;
-
-/* 動的に使用するクラスを safelist として追加 */
-/* Tailwind CSS v2 では @layer utilities の中で rgb() を使うと Sass と競合する */
-/* 【修正】そのため、16進数カラーコードに変更する */
-@layer utilities {
-  /* 灰色の背景 */
-  .bg-gray-300 {
-    background-color: #d1d5db; /* rgb(209, 213, 219) を16進数に変換 */
-  }
-  
-  /* 灰色の背景(ホバー時) */
-  .hover\:bg-gray-400:hover {
-    background-color: #9ca3af; /* rgb(156, 163, 175) を16進数に変換 */
-  }
-  
-  /* 灰色の文字 */
-  .text-gray-700 {
-    color: #374151; /* rgb(55, 65, 81) を16進数に変換 */
-  }
-  
-  /* 緑色の背景 */
-  .bg-green-500 {
-    background-color: #22c55e; /* rgb(34, 197, 94) を16進数に変換 */
-  }
-  
-  /* 緑色の背景(ホバー時) */
-  .hover\:bg-green-600:hover {
-    background-color: #16a34a; /* rgb(22, 163, 74) を16進数に変換 */
-  }
-  
-  /* 白色の文字 */
-  .text-white {
-    color: #ffffff; /* rgb(255, 255, 255) を16進数に変換 */
-  }
-}

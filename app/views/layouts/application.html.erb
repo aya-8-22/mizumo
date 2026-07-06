@@ -1,4 +1,5 @@
 <!-- app/views/layouts/application.html.erb -->
+<!-- Webサイト全体の共通テンプレート(ひな形) -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,7 +11,7 @@
     <%= csrf_meta_tags %>
     <!-- Content Security Policy を設定(セキュリティ対策) -->
     <%= csp_meta_tag %>
-    <!-- Tailwind CSS を読み込む(1回だけ) -->
+    <!-- Tailwind CSS を読み込む -->
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <!-- アプリケーション固有の CSS を読み込む -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -18,68 +19,285 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <!-- ヘッダー全体を bg-white と shadow で装飾 -->
-    <header class="bg-white shadow">
-      <!-- container で中央寄せ、px-4 で左右の余白、py-4 で上下の余白、flex で横並び、justify-between で左右に配置、items-center で縦方向中央揃え -->
-      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+  <!-- body タグに背景色とテキスト色を設定 -->
+  <body class="bg-ivory text-charcoal">
+    <!-- ヘッダー全体(背景色、テキスト色、影を設定) -->
+    <header class="bg-brand-navy text-pure-white shadow-lg">
+      <!-- コンテナで中央寄せ、余白設定、横並び配置 -->
+      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
         
-        <!-- 【修正】ロゴ「ミズモ」を左側に表示（全ページで表示、クリックでトップページに遷移） -->
+        <!-- ロゴ「ミズモ」を左側に表示(クリックでトップページに遷移) -->
         <h1 class="text-2xl font-bold">
-          <%= link_to 'ミズモ', root_path, class: 'text-blue-600 hover:text-blue-700' %>
+          <%= link_to 'ミズモ', root_path, class: 'text-pure-white hover:text-brand-orange transition duration-200' %>
         </h1>
         
-        <!-- ヘッダー右側のボタン群を flex で横並び、space-x-4 でボタン間に余白、items-center で縦方向中央揃え -->
+        <!-- ヘッダー右側のボタン群(横並び、ボタン間に余白、縦方向中央揃え) -->
         <div class="flex items-center space-x-4">
           
-          <!-- 【修正】トップページの場合 -->
-          <% if controller_name == 'static_pages' && action_name == 'top' %>
-            <!-- 【修正】ログイン状態で表示を出し分ける -->
+          <!-- トップページの場合 -->
+          <% if controller_path == 'static_pages' && action_name == 'top' %>
             <% if user_signed_in? %>
-              <!-- 【修正】ログイン中の場合は「記録」「設定」「ログアウト」ボタンを表示 -->
-              <%= link_to '記録', water_intakes_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-              <%= link_to '設定', edit_user_registration_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
-              <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+              <!-- ログイン中の場合は「ログアウト」ボタンのみ表示 -->
+              <%= button_to destroy_user_session_path, method: :delete, 
+                     form: { class: 'inline' },
+                     class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+                <!-- ログアウトアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ログアウト</span>
+              <% end %>
             <% else %>
-              <!-- 【修正】ログアウト時は「新規登録」「ログイン」ボタンを表示 -->
-              <%= link_to '新規登録', new_user_registration_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-              <%= link_to 'ログイン', new_user_session_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
+              <!-- ログアウト時は「新規登録」「ログイン」ボタンを表示 -->
+              <%= link_to new_user_registration_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- 新規登録アイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">新規登録</span>
+              <% end %>
+
+              <%= link_to new_user_session_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- ログインアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ログイン</span>
+              <% end %>
             <% end %>
           
           <!-- 新規登録ページの場合 -->
           <% elsif controller_path == 'users/registrations' && action_name == 'new' %>
-            <!-- トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
-            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-          
-          <!-- ログインページの場合（トップページボタンを表示） -->
+            <!-- ホームボタンを表示 -->
+            <%= link_to root_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+              <!-- ホームアイコン(SVG) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <!-- ボタンのテキスト -->
+              <span class="text-xs mt-1">ホーム</span>
+            <% end %>
+
+          <!-- ログインページの場合 -->
           <% elsif controller_path == 'users/sessions' && action_name == 'new' %>
-            <!-- トップページボタン：px-4 py-2 で余白、bg-blue-500 で青色背景、hover:bg-blue-600 でホバー時に濃い青色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション、inline-block で表示 -->
-            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
- 
-          <!-- 【修正】設定ページの場合 -->
-          <% elsif controller_path == 'users/registrations' && action_name == 'edit' %>
-            <!-- 【修正】トップページボタンを追加（ロゴでも遷移できるが、明示的なボタンも用意） -->
-            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-            <!-- ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
-            <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+            <!-- ホームボタンを表示 -->
+            <%= link_to root_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+              <!-- ホームアイコン(SVG) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <!-- ボタンのテキスト -->
+              <span class="text-xs mt-1">ホーム</span>
+            <% end %>
           
-          <!-- 【修正】記録ページの場合 -->
-          <% elsif controller_name == 'water_intakes' && action_name == 'index' %>
-            <!-- 【修正】トップページボタンを追加（ロゴでも遷移できるが、明示的なボタンも用意） -->
-            <%= link_to 'トップページ', root_path, class: 'inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-200' %>
-            <!-- 設定ボタン：inline-block で表示、px-4 py-2 で余白、bg-gray-500 で灰色背景、hover:bg-gray-600 でホバー時に濃い灰色、text-white で白文字、font-semibold で太字、rounded で角丸、transition duration-200 でアニメーション -->
-            <%= link_to '設定', edit_user_registration_path, class: 'inline-block px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded transition duration-200' %>
-            <!-- ログアウトボタン：button_to を使用して DELETE メソッドで送信、method: :delete で DELETE リクエストを送信、form_class で form 要素にスタイルを適用、class でボタン自体にスタイルを適用 -->
-            <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, form_class: 'inline-block', class: 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200 cursor-pointer' %>
+          <!-- 設定ページの場合 -->
+          <% elsif controller_path == 'users/registrations' && action_name == 'edit' %>
+            <!-- ログアウトボタンを表示 -->
+            <%= button_to destroy_user_session_path, method: :delete, 
+                   form: { class: 'inline' },
+                   class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+              <!-- ログアウトアイコン(SVG) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <!-- ボタンのテキスト -->
+              <span class="text-xs mt-1">ログアウト</span>
+            <% end %>
+          
+          <!-- 記録ページの場合 -->
+          <% elsif controller_path == 'water_intakes' && action_name == 'index' %>
+            <!-- ログアウトボタンを表示 -->
+            <%= button_to destroy_user_session_path, method: :delete, 
+                   form: { class: 'inline' },
+                   class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+              <!-- ログアウトアイコン(SVG) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <!-- ボタンのテキスト -->
+              <span class="text-xs mt-1">ログアウト</span>
+            <% end %>
+
+          <!-- カレンダーページの場合 -->
+          <% elsif controller_path == 'calendars' && action_name == 'index' %>
+            <!-- ログアウトボタンを表示 -->
+            <%= button_to destroy_user_session_path, method: :delete, 
+                   form: { class: 'inline' },
+                   class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+              <!-- ログアウトアイコン(SVG) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <!-- ボタンのテキスト -->
+              <span class="text-xs mt-1">ログアウト</span>
+            <% end %>
+
+          <!-- お問い合わせページの場合 -->
+          <% elsif controller_name == 'static_pages' && action_name == 'contact' %>
+            <% if user_signed_in? %>
+              <!-- ログイン中の場合は「ログアウト」ボタンを表示 -->
+              <%= button_to destroy_user_session_path, method: :delete, 
+                     form: { class: 'inline' },
+                     class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+                <!-- ログアウトアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ログアウト</span>
+              <% end %>
+            <% else %>
+              <!-- ログアウト時は「ホーム」ボタンを表示 -->
+              <%= link_to root_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- ホームアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ホーム</span>
+              <% end %>
+            <% end %>
+
+          <!-- 利用規約ページの場合 -->
+          <% elsif controller_name == 'static_pages' && action_name == 'terms' %>
+            <% if user_signed_in? %>
+              <!-- ログイン中の場合は「お問い合わせ」「ログアウト」ボタンを表示 -->
+              <%= link_to contact_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- お問い合わせアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">お問い合わせ</span>
+              <% end %>
+              
+              <%= button_to destroy_user_session_path, method: :delete, 
+                     form: { class: 'inline' },
+                     class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+                <!-- ログアウトアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ログアウト</span>
+              <% end %>
+            <% else %>
+              <!-- ログアウト時は「新規登録」「ホーム」ボタンを表示 -->
+              <%= link_to new_user_registration_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- 新規登録アイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">新規登録</span>
+              <% end %>
+              
+              <%= link_to root_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- ホームアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ホーム</span>
+              <% end %>
+            <% end %>
+
+          <!-- プライバシーポリシーページの場合 -->
+          <% elsif controller_name == 'static_pages' && action_name == 'privacy' %>
+            <% if user_signed_in? %>
+              <!-- ログイン中の場合は「お問い合わせ」「ログアウト」ボタンを表示 -->
+              <%= link_to contact_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- お問い合わせアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">お問い合わせ</span>
+              <% end %>
+              
+              <%= button_to destroy_user_session_path, method: :delete, 
+                     form: { class: 'inline' },
+                     class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+                <!-- ログアウトアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ログアウト</span>
+              <% end %>
+            <% else %>
+              <!-- ログアウト時は「新規登録」「ホーム」ボタンを表示 -->
+              <%= link_to new_user_registration_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- 新規登録アイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">新規登録</span>
+              <% end %>
+              
+              <%= link_to root_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+                <!-- ホームアイコン(SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <!-- ボタンのテキスト -->
+                <span class="text-xs mt-1">ホーム</span>
+              <% end %>
+            <% end %>
           <% end %>
         </div>
       </div>
     </header>
+ 
+   <!-- フラッシュメッセージ表示エリア -->
+    <% if flash.any? %>
+      <div class="container mx-auto px-4 mt-4">
+        <% flash.each do |type, message| %>
+          <!-- フラッシュメッセージの種類に応じて色を変える -->
+          <div class="<%= type == 'notice' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700' %> px-4 py-3 rounded relative mb-4" role="alert">
+            <!-- メッセージ本文 -->
+            <span class="block sm:inline"><%= message %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
 
-    <!-- Flash メッセージを表示 -->
-    <%= render 'shared/flash_message' %>
+    <!-- ボトムナビゲーションの有無で余白を変える -->
+    <main class="<%= show_bottom_navigation? ? 'pb-16' : 'pb-4' %>">
+      <%= yield %>
+    </main>
 
-    <!-- 各ページの内容を表示(各コントローラーのビューが挿入される) -->
-    <%= yield %>
+    <!-- ボトムナビゲーションを条件付きで表示 -->
+    <% if show_bottom_navigation? %>
+      <%= render 'shared/bottom_navigation' %>
+    <% end %>
+
+    <!-- フッターエリア -->
+    <footer class="bg-pure-black text-pure-white py-4 text-center">
+      <!-- コンテナで中央寄せ、余白設定 -->
+      <div class="container mx-auto px-4">
+        <!-- ログイン状態によってリンクの表示・非表示を切り替え -->
+        <% if user_signed_in? %>
+          <!-- 【修正】記録画面と設定画面では非表示にする -->
+          <% unless (controller_path == 'water_intakes' && action_name == 'index') || (controller_path == 'users/registrations' && action_name == 'edit') %>
+            <!-- ログイン中の場合のみリンクを表示 -->
+            <div class="flex flex-col items-center space-y-2">
+              <!-- 利用規約リンク -->
+              <%= link_to "利用規約", terms_path, class: "hover:text-brand-orange transition duration-200" %>
+              <!-- プライバシーポリシーリンク -->
+              <%= link_to "プライバシーポリシー", privacy_path, class: "hover:text-brand-orange transition duration-200" %>
+              <!-- お問い合わせリンク -->
+              <%= link_to "お問い合わせ", contact_path, class: "hover:text-brand-orange transition duration-200" %>
+          </div>
+        <% end %>
+      <% end %> 
+        <!-- コピーライト表示(常に表示・年号は自動更新)  -->
+        <p class="mt-4 text-sm text-gray-400">© <%= Time.current.year %> Mizumo. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>
