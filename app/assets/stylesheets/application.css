@@ -1,13 +1,14 @@
-/* 【修正】app/assets/stylesheets/application.css */
+/* app/assets/stylesheets/application.css */
 /* アプリケーション全体の CSS ファイル */
 
-/* 【修正】Bootstrap は使用していないためコメントアウト */
+/* Bootstrap は使用していないためコメントアウト */
 /* @import "bootstrap"; */
 
-/* 【修正】top.css は自動的に読み込まれるため @import は不要 */
+/* top.css は自動的に読み込まれるため @import は不要 */
 /* Rails の Sprockets が自動的に app/assets/stylesheets 配下の CSS を読み込む */
 
-/* 【追加】ヘッダーのスタイル */
+/* ===== ヘッダーのスタイル ===== */
+/* ヘッダー全体のスタイル */
 .header {
   display: flex; /* フレックスボックスでレイアウト */
   justify-content: space-between; /* 左右に配置 */
@@ -17,20 +18,20 @@
   border-bottom: 1px solid #dee2e6; /* 下に薄いグレーの線 */
 }
 
-/* 【追加】ヘッダーのロゴスタイル */
+/* ヘッダーのロゴスタイル */
 .header-logo {
   margin: 0; /* 外側の余白をなくす */
   font-size: 1.5rem; /* 文字サイズを大きく */
   font-weight: bold; /* 太字 */
 }
 
-/* 【追加】ヘッダーのボタンエリアスタイル */
+/* ヘッダーのボタンエリアスタイル */
 .header-buttons {
   display: flex; /* フレックスボックスでレイアウト */
   gap: 1rem; /* ボタン間の余白 */
 }
 
-/* 【追加】ヘッダーのボタンスタイル */
+/* ヘッダーのボタンスタイル */
 .header-button {
   padding: 0.5rem 1rem; /* 内側の余白 */
   background-color: #007bff; /* 青色の背景 */
@@ -41,11 +42,12 @@
   cursor: pointer; /* カーソルをポインターに */
 }
 
-/* 【追加】ヘッダーのボタンホバー時のスタイル */
+/* ヘッダーのボタンホバー時のスタイル */
 .header-button:hover {
   background-color: #0056b3; /* ホバー時に濃い青色に */
 }
 
+/* ===== フラッシュメッセージのスタイル ===== */
 /* 成功メッセージのスタイル */
 .alert-success {
   background-color: #d4edda; /* 薄い緑色の背景 */
@@ -94,4 +96,257 @@
 /* エラーメッセージの各項目 */
 #error_explanation li {
   margin-bottom: 5px; /* 下の余白 */
+}
+
+/* ===== 【追加】Devise の登録画面用のスタイル ===== */
+/* 新規登録画面のメインコンテナ */
+.registration-main {
+  display: flex; /* フレックスボックスでレイアウト */
+  justify-content: center; /* 横方向の中央揃え */
+  align-items: flex-start; /* 縦方向を上寄せに変更 */
+  min-height: 100vh; /* 画面の高さいっぱいに表示 */
+  background-color: #FDFBF7; /* アイボリーの背景 */
+  padding-top: 40px; /* 上部に40pxの余白を追加 */
+}
+
+/* 新規登録フォームのコンテナ */
+.registration-container {
+  background-color: #FFFFFF; /* 白色の背景 */
+  padding: 40px; /* 内側の余白 */
+  border-radius: 8px; /* 角を丸く */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 薄い影をつける */
+  max-width: 500px; /* 最大幅を500pxに制限 */
+  width: 100%; /* 幅を100%に設定 */
+  align-items: flex-start; /* 縦方向を上寄せに変更 */
+}
+
+/* 新規登録フォームのタイトル */
+.registration-title {
+  text-align: center; /* 中央揃え */
+  margin-bottom: 30px; /* 下の余白 */
+  color: #222222; /* 濃いチャコールグレー */
+  font-size: 25px; /* 文字サイズ */
+  font-weight: bold; /* 太字 */
+}
+
+/* エラーメッセージのコンテナ */
+.error-messages {
+  background-color: #f8d7da; /* 薄い赤色の背景 */
+  border: 1px solid #f5c6cb; /* 薄い赤色の枠線 */
+  border-radius: 5px; /* 角を丸く */
+  padding: 15px; /* 内側の余白 */
+  margin-bottom: 20px; /* 下の余白 */
+}
+
+/* エラーメッセージのタイトル */
+.error-messages h3 {
+  color: #721c24; /* 濃い赤色の文字 */
+  margin-bottom: 10px; /* 下の余白 */
+}
+
+/* エラーメッセージのリスト */
+.error-messages ul {
+  margin: 0; /* 外側の余白をなくす */
+  padding-left: 20px; /* 左側の余白 */
+}
+
+/* エラーメッセージの各項目 */
+.error-messages li {
+  color: #721c24; /* 濃い赤色の文字 */
+}
+
+/* アラートメッセージ */
+.alert-message {
+  background-color: #fff3cd; /* 薄い黄色の背景 */
+  border: 1px solid #ffc107; /* 黄色の枠線 */
+  border-radius: 5px; /* 角を丸く */
+  padding: 15px; /* 内側の余白 */
+  margin-bottom: 20px; /* 下の余白 */
+  color: #856404; /* 濃い黄色の文字 */
+}
+
+/* フォームグループ */
+.form-group {
+  margin-bottom: 20px; /* 下の余白 */
+}
+
+/* フォームラベル */
+.form-label {
+  display: block; /* ブロック要素として表示 */
+  margin-bottom: 8px; /* 下の余白 */
+  font-weight: bold; /* 太字 */
+  color: #222222; /* 濃いグレーの文字 */
+}
+
+/* 入力欄のラッパー */
+.input-wrapper {
+  position: relative; /* 相対位置 */
+  display: flex; /* フレックスボックスでレイアウト */
+  align-items: center; /* 縦方向の中央揃え */
+}
+
+/* 入力欄のアイコン */
+.input-icon {
+  position: absolute; /* 絶対位置 */
+  left: 12px; /* 左から12pxの位置 */
+  width: 20px !important; /* !important を追加 */
+  height: 20px !important; /* important を追加 */
+  color: #222222; /* 濃いチャコールグレーの文字 */
+  font-size: 16px; /* 文字サイズ(アイコンフォント用) */
+  top: 50%; /* 縦方向の中央揃え */
+  transform: translateY(-50%); /* 縦方向の中央揃え */
+  pointer-events: none; /* アイコンをクリックできないようにする */
+  flex-shrink: 0; /* アイコンが縮小されないようにする */
+}
+
+/* フォーム入力欄 */
+.form-input {
+  width: 100%; /* 幅を100%に設定 */
+  padding: 16px 12px 16px 45px; /* 上下の余白を大きく、左側にアイコン分の余白を確保 */
+  border: 1px solid #222222; /* 濃いチャコールグレーの枠線 */
+  border-radius: 8px; /* 角を少し丸く */
+  font-size: 16px; /* 文字サイズ */
+  color: #222222; /* 濃いチャコールグレーの文字色 */
+  background-color: #FFFFFF; /* 真っ白の背景色 */
+  transition: border-color 0.3s; /* ボーダー色の変化をなめらかに */
+  min-height: 55px; /* 最小の高さを指定 */
+}
+
+/* 入力欄にフォーカスした時 */
+.form-input:focus {
+  outline: none; /* デフォルトのアウトラインを消す */
+  border-color: #D85F00; /* 少し濃いオレンジの枠線 */
+}
+
+/* チェックボックスのコンテナ */
+.form-check {
+  margin-bottom: 15px; /* 下の余白 */
+  display: flex; /* フレックスボックスでレイアウト */
+  align-items: center; /* 縦方向の中央揃え */
+}
+
+/* チェックボックス */
+.form-checkbox {
+  margin-right: 8px; /* 右側の余白 */
+  width: 18px; /* 幅 */
+  height: 18px; /* 高さ */
+  cursor: pointer; /* カーソルをポインターに */
+}
+
+/* チェックボックスのラベル */
+.checkbox-label {
+  color: #222222; /* 濃いチャコールグレー */
+  font-size: 14px; /* 文字サイズ */
+  cursor: pointer; /* カーソルをポインターに */
+}
+
+
+/* 利用規約のチェックボックス */
+.terms-check {
+  margin-bottom: 20px; /* 下の余白 */
+}
+
+/* 利用規約のリンク */
+.terms-link {
+  color: #222222; /* 濃いチャコールグレー */
+  text-decoration: underline; /* 下線を引く */
+  transition: color 0.3s; /* 色の変化をなめらかに */
+}
+
+/* 利用規約のリンクホバー時のスタイル */
+.terms-check .terms-link:hover {
+  text-decoration: underline; /* ホバー時に下線を表示 */
+}
+
+/* フォームアクション */
+.form-actions {
+  margin-top: 30px; /* 上の余白 */
+  text-align: center; /* 中央揃えを追加 */
+}
+
+/* 送信ボタン */
+.submit-button {
+  width: 100%; /* 幅を100%に設定 */
+  padding: 14px; /* 内側の余白 */
+  background-color: #D85F00; /* 少し濃いオレンジ色の背景 */
+  color: #FFFFFF; /* 真っ白の文字 */
+  border: none; /* 枠線をなくす */
+  border-radius: 8px; /* 角を少し丸く */
+  font-size: 16px; /* 文字サイズ */
+  font-weight: bold; /* 太字 */
+  cursor: pointer; /* カーソルをポインターに */
+  transition: background-color 0.3s; /* 背景色の変化をスムーズに */
+}
+
+/* 送信ボタンホバー時のスタイル */
+.submit-button:hover:not(:disabled) {
+  background-color: #F27405; /* 鮮やかなオレンジ色に変わる */
+}
+
+/* 送信ボタンが無効化されている時 */
+.submit-button:disabled {
+  background-color: #ccc; /* グレー */
+  cursor: not-allowed; /* カーソルを禁止マークに */
+}
+
+/* リンクコンテナ */
+.links-container {
+  margin-top: 20px; /* 上の余白 */
+  text-align: center; /* 中央揃え */
+}
+
+/* リンク */
+.link {
+  color: #12436D; /* ネイビーの文字 */
+  text-decoration: none; /* 下線をなくす */
+  font-size: 14px; /* 文字サイズ */
+}
+
+/* リンクホバー時のスタイル */
+.link:hover {
+  text-decoration: underline; /* ホバー時に下線を表示 */
+}
+
+/* ===== フッターのスタイル ===== */
+.footer {
+  background-color: #12436D; /* 深みのあるネイビー */
+  color: #FFFFFF; /* 真っ白 */
+  text-align: center; /* 中央揃え */
+  padding: 1rem; /* 内側の余白 */
+  border-top: 1px solid #0d2f4d; /* 少し濃いネイビーの線 */
+  margin-top: 50px; /* 上の余白 */
+}
+
+/* ===== ボトムナビゲーションのスタイル ===== */
+.bottom-nav {
+  position: fixed; /* 固定位置 */
+  bottom: 0; /* 下端に配置 */
+  left: 0; /* 左端に配置 */
+  width: 100%; /* 幅を100%に設定 */
+  background-color: #12436D; /* 深みのあるネイビー */
+  display: flex; /* フレックスボックスでレイアウト */
+  justify-content: space-around; /* 均等に配置 */
+  align-items: center; /* 縦方向の中央揃え */
+  padding: 0.8rem 0; /* 内側の余白 */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 上側に影をつける */
+}
+
+/* ボトムナビゲーションのリンク */
+.bottom-nav-link {
+  color: #FFFFFF; /* 真っ白 */
+  text-decoration: none; /* 下線をなくす */
+  font-size: 14px; /* 文字サイズ */
+  transition: color 0.3s; /* 色の変化をなめらかに */
+}
+
+/* ボトムナビゲーションのリンクホバー時 */
+.bottom-nav-link:hover {
+  color: #F27405; /* 鮮やかなオレンジ色に変わる */
+}
+
+/* ボトムナビゲーションのアイコン */
+.bottom-nav-icon {
+  width: 24px; /* 幅 */
+  height: 24px; /* 高さ */
+  color: #FFFFFF; /* 【修正】真っ白 */
 }

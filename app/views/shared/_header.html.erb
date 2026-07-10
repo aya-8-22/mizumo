@@ -1,21 +1,21 @@
 <%# app/views/shared/_header.html.erb %>
 <%# 全画面で使い回す『共通のヘッダー(画面上部のナビゲーション)』 %>
 
-<%# 【修正】背景色を紺、テキスト色を白に変更 %>
+<%# 背景色を紺、テキスト色を白に変更 %>
 <header class="bg-brand-navy text-pure-white shadow-lg">
   <%# コンテナ: 中央寄せ、左右の余白、上下の余白、要素を横並び・左右に配置 %>
   <div class="container mx-auto px-4 py-3 flex items-center justify-between">
     
       <%# === ロゴ（左側） === %>
       <div class="flex items-center">
-        <%# 【修正】ルートパス（/）へのリンク: テキストサイズ大、太字、白色 %>
+        <%# ルートパス（/）へのリンク: テキストサイズ大、太字、白色 %>
         <%= link_to root_path, class: "text-2xl font-bold text-pure-white hover:text-brand-orange transition duration-200" do %>
           ミズモ
         <% end %>
       </div>
       
       <%# === ナビゲーションメニュー（右側） === %>
-      <%# 【修正】ナビゲーション: 要素を横並び・中央揃え、要素間に余白 %>
+      <%# ナビゲーション: 要素を横並び・中央揃え、要素間に余白 %>
       <nav class="flex items-center space-x-4">
         
         <%# === ログイン状態の判定 === %>
@@ -23,7 +23,7 @@
           
           <%# --- ログイン済みの場合 --- %>
           
-          <%# 【修正】ホームリンク(アイコン上、文字下) %>
+          <%# ホームリンク(アイコン上、文字下) %>
           <%= link_to root_path, class: "flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200" do %>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -31,7 +31,7 @@
             <span class="text-xs mt-1">ホーム</span>
           <% end %>
           
-          <%# 【修正】ログアウトボタン(アイコン上、文字下) %>
+          <%# ログアウトボタン(アイコン上、文字下) %>
           <%= button_to destroy_user_session_path, method: :delete, class: "flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer" do %>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -43,7 +43,7 @@
           
           <%# --- ログアウト時の場合 --- %>
           
-          <%# 【修正】新規登録ボタン(アイコン上、文字下) %>
+          <%# 新規登録ボタン(アイコン上、文字下) %>
           <%= link_to new_user_registration_path, class: "flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200" do %>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -51,7 +51,7 @@
             <span class="text-xs mt-1">新規登録</span>
           <% end %>
           
-          <%# 【修正】ログインボタン(アイコン上、文字下) %>
+          <%# ログインボタン(アイコン上、文字下) %>
           <%= link_to new_user_session_path, class: "flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200" do %>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
