@@ -1,4 +1,5 @@
 /* 【修正】app/assets/stylesheets/application.tailwind.css */
+/* Tailwind CSS の読み込み（ @tailwind ディレクティブのみ） */
 /* Tailwind CSS の基本スタイルを読み込む */
 @tailwind base;
 

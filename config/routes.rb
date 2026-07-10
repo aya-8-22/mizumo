@@ -17,6 +17,21 @@ Rails.application.routes.draw do
     get 'login', to: 'users/sessions#new'
     # ログアウトのルート
     delete 'logout', to: 'users/sessions#destroy'
+    # 【修正】登録完了画面のルートを devise_scope の中に移動
+    get 'users/registration/complete', to: 'users/registrations#complete', as: :users_registration_complete
+  end
+
+  # 設定画面のルートを追加
+  namespace :users do
+    # 体重設定画面の表示ルート
+    get 'settings/weight', to: 'settings#edit_weight', as: :edit_weight
+    # 体重更新のルート
+    patch 'settings/weight', to: 'settings#update_weight', as: :update_weight
+
+    # 通知時間設定画面の表示ルート
+    get 'settings/notification', to: 'settings#edit_notification', as: :edit_notification
+    # 通知時間更新のルート
+    patch 'settings/notification', to: 'settings#update_notification', as: :update_notification
   end
 
   # ルート URL（ / ）にアクセスしたときに static_pages コントローラーの top アクションを実行
@@ -34,13 +49,13 @@ Rails.application.routes.draw do
   # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
   # resources :users, only: [:edit, :update]
 
-  # 【追加】カレンダー画面（/calendar）のルーティング
+  # カレンダー画面（/calendar）のルーティング
   get 'calendar', to: 'calendars#index'
 
-  # 【追加】お問い合わせページ
+  # お問い合わせページ
   get 'contact', to: 'static_pages#contact'
-  # 【追加】利用規約ページ
+  # 利用規約ページ
   get 'terms', to: 'static_pages#terms'
-  # 【追加】プライバシーポリシーページ
+  # プライバシーポリシーページ
   get 'privacy', to: 'static_pages#privacy'
 end

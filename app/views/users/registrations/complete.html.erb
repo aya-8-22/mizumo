@@ -1,0 +1,22 @@
+<!-- app/views/users/registrations/complete.html.erb -->
+<!-- 新規登録完了画面の見た目を決めている設計図 -->
+
+<!-- メイン画面を追加 -->
+<main class="registration-main">
+  <!-- 新規登録完了メッセージのコンテナ -->
+  <div class="registration-container">
+    <!-- 新規登録完了メッセージのタイトル -->
+    <h2 class="registration-title">新規登録完了のお知らせ</h2>
+
+    <!-- 登録完了メッセージの本文 -->
+    <div class="complete-message">
+      <p>ご登録ありがとうございます。</p>
+      <p>ご利用開始ボタンを押して、体重と通知時間を設定してください。</p>
+    </div>
+
+    <!-- ご利用開始ボタンを追加 -->
+    <div class="form-actions">
+      <%= link_to "ご利用開始（体重・通知時間設定へ）", users_edit_weight_path, class: "submit-button submit-button-large" %>
+    </div>
+  </div>
+</main>

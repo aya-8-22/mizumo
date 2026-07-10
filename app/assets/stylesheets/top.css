@@ -1,5 +1,5 @@
 /* 【修正】app/assets/stylesheets/top.css */
-/* メインコンテンツ全体のスタイル */
+/* トップページ専用スタイル（トップページのメインコンテンツのスタイル） */
 .top-wrapper {
   min-height: calc(100vh - 120px); /* ヘッダーとフッターを除いた高さ */
   display: flex; /* フレックスボックスで中央配置 */

@@ -41,6 +41,9 @@ module ApplicationHelper
   # 【追加】ボトムナビゲーションを表示するかどうかを判定するメソッド
   # 戻り値: true(表示する) / false(表示しない)
   def show_bottom_navigation?
+    # 【修正】新規登録完了画面では常に非表示にする
+    return false if controller_name == 'registrations' && action_name == 'complete'
+
     # ログイン中の場合は常に表示
     return true if user_signed_in?
 

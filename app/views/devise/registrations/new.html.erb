@@ -1,58 +1,112 @@
 <!-- app/views/devise/registrations/new.html.erb -->
-<!-- 【修正】タイトルを i18n で日本語化 -->
-<h2><%= t('.title') %></h2>
+<!-- Webサイトの新規登録画面（新規作成ページ）の見た目を決めている設計図 -->
 
-<!-- Deviseのユーザー登録フォームを開始 -->
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  
-  <!-- バリデーションエラーがあった場合にエラーメッセージを表示する部分 -->
-  <%= render "devise/shared/error_messages", resource: resource %>
+<!-- 【修正】メイン画面を追加 -->
+<main class="registration-main">
+  <!-- 登録フォームのコンテナ -->
+  <div class="registration-container">
+    <!-- 【修正】タイトルをh2タグで表示 -->
+    <h2 class="registration-title"><%= t('.title') %></h2>
 
-  <!-- メールアドレス入力欄のセクション -->
-  <div class="field">
-    <!-- 【修正】i18n でラベルを日本語化 -->
-    <p><%= f.label :email %></p>
-    <!-- メールアドレスを入力するテキストボックスを表示（自動フォーカス、自動補完有効） -->
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <!-- パスワード入力欄のセクション -->
-  <div class="field">
-    <!-- 【修正】i18n でラベルを日本語化 -->
-    <p><%= f.label :password %></p>
-    <!-- パスワードの最小文字数が設定されている場合のみ実行 -->
-    <% if @minimum_password_length %>
-      <!-- 【修正】「(8 characters minimum)」から「(8文字以上)」に変更 -->
-      <p><em>(<%= @minimum_password_length %>文字以上)</em></p>
+    <!-- 【修正】エラーメッセージの表示エリア -->
+    <% if resource.errors.any? %>
+      <!-- エラーメッセージのコンテナ -->
+      <div class="error-messages">
+        <!-- エラー件数の表示 -->
+        <h3><%= pluralize(resource.errors.count, "個のエラー") %>があります</h3>
+        <!-- エラーメッセージのリスト -->
+        <ul>
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
-    <!-- パスワードを入力するテキストボックスを表示（入力内容は隠される） -->
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-  </div>
 
-  <!-- パスワード確認入力欄のセクション -->
-  <div class="field">
-    <!-- 【修正】i18n でラベルを日本語化 -->
-    <p><%= f.label :password_confirmation %></p>
-    <!-- パスワード確認用のテキストボックスを表示（入力内容は隠される） -->
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
+    <!-- 【修正】フラッシュメッセージの表示 -->
+    <% if flash[:alert] %>
+      <div class="alert-message"><%= flash[:alert] %></div>
+    <% end %>
 
-  <!-- 【追加】体重入力欄のセクション -->
-  <div class="field">
-    <!-- 【修正】i18n でラベルを日本語化 -->
-    <p><%= f.label :weight %></p>
-    <!-- 体重を入力する数値入力欄を表示（0.1刻みで入力可能） -->
-    <p><%= f.number_field :weight, step: 0.1 %></p>
-  </div>
+    <!-- Deviseのユーザー登録フォームを開始 -->
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      
+      <!-- 【修正】メールアドレス入力欄 -->
+      <div class="form-group">
+        <!-- ラベル（「メールアドレス」という文字） -->
+        <%= f.label :email, "メールアドレス", class: "form-label" %>
+        <div class="input-wrapper">
+          <!-- SVG形式のメールアイコン -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- メールアイコンのパス -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <!-- 【修正】メールアドレス入力フィールド -->
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input", placeholder: "example@email.com" %>
+        </div>
+      </div>
 
-  <!-- 【修正】登録ボタンのセクション -->
-  <div class="actions">
-    <!-- 【修正】登録ボタンのラベルを i18n で日本語化 -->
-    <%= f.submit t('.sign_up') %>
+      <!-- 【修正】パスワード入力欄 -->
+      <div class="form-group">
+        <!-- ラベルに最小文字数を含める -->
+        <%= f.label :password, "パスワード（8文字以上）", class: "form-label" %>
+        <!-- 入力欄のラッパー（アイコンと入力欄を囲む） -->
+        <div class="input-wrapper">
+          <!-- SVG形式の鍵アイコン -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- 鍵アイコンのパス -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <!-- パスワード入力フィールド -->
+          <%= f.password_field :password, autocomplete: "new-password", class: "form-input", id: "password-field" %>
+        </div>
+      </div>
+
+      <!-- パスワード確認入力欄 -->
+      <div class="form-group">
+        <!-- ラベル（「パスワード（確認）」という文字） -->
+        <%= f.label :password_confirmation, "パスワード（確認）", class: "form-label" %>
+        <!-- 入力欄のラッパー（アイコンと入力欄を囲む） -->
+        <div class="input-wrapper">
+          <!-- SVG形式の鍵アイコン -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- 鍵アイコンのパス -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <!-- パスワード確認入力フィールド -->
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-input", id: "password-confirmation-field" %>
+        </div>
+      </div>
+
+      <!-- 【修正】パスワード表示チェックボックスを追加 -->
+      <div class="form-check">
+        
+        <input type="checkbox" id="show-password" class="form-checkbox">
+        <label for="show-password" class="form-check-label">パスワードを表示する</label>
+      </div>
+
+      <!-- 【修正】利用規約とプライバシーポリシーへの同意を追加 -->
+      <div class="form-check terms-check">
+        <!-- 同意チェックボックス -->
+        <%= f.check_box :terms_of_service, class: "form-checkbox", id: "terms-checkbox" %>
+        <!-- チェックボックスのラベル（リンク付き） -->
+        <label for="terms-checkbox" class="form-check-label">
+          <!-- 利用規約へのリンク（新しいタブで開く） -->
+          <%= link_to "利用規約", terms_path, target: "_blank", class: "terms-link" %>
+          と
+          <!-- プライバシーポリシーへのリンク（新しいタブで開く） -->
+          <%= link_to "プライバシーポリシー", privacy_path, target: "_blank", class: "terms-link" %>
+          に同意する
+        </label>
+      </div>
+
+      <!-- 【修正】登録ボタンを修正 -->
+      <div class="form-actions">
+        <%= f.submit "登録", class: "submit-button", id: "register-button", disabled: true %>
+      </div>
+    <% end %>
   </div>
-  
-<!-- フォームの終了 -->
-<% end %>
+</main>
 
 <!-- ログインページへのリンクなどを表示 -->
-<%# render "devise/shared/links" %>
+<!-- = render "devise/shared/links" -->
