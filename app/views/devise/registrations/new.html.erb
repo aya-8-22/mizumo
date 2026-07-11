@@ -1,37 +1,44 @@
 <!-- app/views/devise/registrations/new.html.erb -->
-<!-- Webサイトの新規登録画面（新規作成ページ）の見た目を決めている設計図 -->
+<!-- Webサイトの新規登録画面の見た目を決めている設計図 -->
 
-<!-- 【修正】メイン画面を追加 -->
+<!-- 【修正】バリデーションエラーの表示を<main>の外に移動 -->
+<!-- ヘッダーのすぐ下に表示するため -->
+<% if resource.errors.any? %>
+  <!-- エラーメッセージのコンテナ -->
+  <div class="container mx-auto px-4 mt-4">
+    <!-- エラーメッセージのボックス -->
+    <div class="bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+      <!-- エラー件数の表示 -->
+      <h3 class="font-bold mb-2"><%= pluralize(resource.errors.count, "個のエラー") %>があります</h3>
+      <!-- エラーメッセージのリスト -->
+      <ul class="list-disc list-inside">
+        <!-- 各エラーメッセージを表示 -->
+        <% resource.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
+<!-- メイン画面を追加 -->
 <main class="registration-main">
   <!-- 登録フォームのコンテナ -->
   <div class="registration-container">
-    <!-- 【修正】タイトルをh2タグで表示 -->
+    <!-- タイトルをh2タグで表示 -->
     <h2 class="registration-title"><%= t('.title') %></h2>
 
-    <!-- 【修正】エラーメッセージの表示エリア -->
-    <% if resource.errors.any? %>
-      <!-- エラーメッセージのコンテナ -->
-      <div class="error-messages">
-        <!-- エラー件数の表示 -->
-        <h3><%= pluralize(resource.errors.count, "個のエラー") %>があります</h3>
-        <!-- エラーメッセージのリスト -->
-        <ul>
-          <% resource.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
+    <!-- 【修正】フラッシュメッセージの表示（notice用） -->
+    <% if flash[:notice] %>
+      <div class="bg-green-100 border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <%= flash[:notice] %>
       </div>
-    <% end %>
-
-    <!-- 【修正】フラッシュメッセージの表示 -->
-    <% if flash[:alert] %>
-      <div class="alert-message"><%= flash[:alert] %></div>
     <% end %>
 
     <!-- Deviseのユーザー登録フォームを開始 -->
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       
-      <!-- 【修正】メールアドレス入力欄 -->
+      <!-- メールアドレス入力欄 -->
       <div class="form-group">
         <!-- ラベル（「メールアドレス」という文字） -->
         <%= f.label :email, "メールアドレス", class: "form-label" %>
@@ -41,12 +48,12 @@
             <!-- メールアイコンのパス -->
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
-          <!-- 【修正】メールアドレス入力フィールド -->
+          <!-- メールアドレス入力フィールド -->
           <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input", placeholder: "example@email.com" %>
         </div>
       </div>
 
-      <!-- 【修正】パスワード入力欄 -->
+      <!-- パスワード入力欄 -->
       <div class="form-group">
         <!-- ラベルに最小文字数を含める -->
         <%= f.label :password, "パスワード（8文字以上）", class: "form-label" %>
@@ -78,14 +85,14 @@
         </div>
       </div>
 
-      <!-- 【修正】パスワード表示チェックボックスを追加 -->
+      <!-- パスワード表示チェックボックスを追加 -->
       <div class="form-check">
         
         <input type="checkbox" id="show-password" class="form-checkbox">
         <label for="show-password" class="form-check-label">パスワードを表示する</label>
       </div>
 
-      <!-- 【修正】利用規約とプライバシーポリシーへの同意を追加 -->
+      <!-- 利用規約とプライバシーポリシーへの同意を追加 -->
       <div class="form-check terms-check">
         <!-- 同意チェックボックス -->
         <%= f.check_box :terms_of_service, class: "form-checkbox", id: "terms-checkbox" %>
@@ -100,7 +107,7 @@
         </label>
       </div>
 
-      <!-- 【修正】登録ボタンを修正 -->
+      <!-- 登録ボタンを修正 -->
       <div class="form-actions">
         <%= f.submit "登録", class: "submit-button", id: "register-button", disabled: true %>
       </div>
@@ -108,5 +115,5 @@
   </div>
 </main>
 
-<!-- ログインページへのリンクなどを表示 -->
-<!-- = render "devise/shared/links" -->
+<!-- ログインページへのリンクなどを表示（コメントアウト）-->
+<!-- <%= render "devise/shared/links" %> -->
