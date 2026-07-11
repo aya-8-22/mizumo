@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 # app/controllers/users/sessions_controller.rb
+# ユーザーがログイン・ログアウトする際の具体的な処理や手順を制御する司令
+
 module Users
+  # Deviseという既存の便利なログイン機能（Devise::SessionsController）を継承して、自分好みにカスタマイズできるようにした新しい司令塔
   class SessionsController < Devise::SessionsController
     # ログイン前にメール通知からのアクセスを判定
     before_action :check_from_email_notification, only: [:create]
@@ -25,6 +28,15 @@ module Users
     # end
 
     protected
+
+    # 【追加】ログイン成功後のリダイレクト先を設定
+    # ログイン成功後は記録画面に遷移
+    def after_sign_in_path_for(_resource)
+      # メール通知からのアクセスの場合はセッションを削除
+      session.delete(:from_email_notification)
+      # 記録画面にリダイレクト
+      water_intakes_path
+    end
 
     # メール通知からのアクセスを判定するメソッド
     def check_from_email_notification

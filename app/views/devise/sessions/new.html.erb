@@ -1,44 +1,83 @@
 <!-- app/views/devise/sessions/new.html.erb -->
 <!-- 会員登録済みのユーザーが、メールアドレスとパスワードを入力して「ログインするための画面」 -->
 
-<!-- タイトルを i18n で日本語化 -->
-<h2><%= t('.title') %></h2>
+<!-- 【修正】メイン画面を追加 -->
+<main class="registration-main">
+  <!-- 登録フォームのコンテナ -->
+  <div class="registration-container">
+    <!-- 【修正】タイトルをh2タグで表示（i18n対応） -->
+    <h2 class="registration-title"><%= t('.title') %></h2>
 
-<!-- ログインフォーム開始 -->
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  
-  <!-- メールアドレス入力欄 -->
-  <div class="field">
-    <!-- メールアドレスのラベル -->
-    <p><%= f.label :email %></p>
-    <!-- メールアドレスの入力フィールド（自動フォーカス、自動補完あり） -->
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
+    <!-- 【修正】エラーメッセージの表示エリアを追加（コメントアウト中） -->
+    <!-- <% if flash[:alert] %> -->
+      <!-- エラーメッセージのコンテナ -->
+     <!-- <div class="error-messages"> -->
+        <!-- <%= flash[:alert] %> -->
+      <!-- </div> -->
+    <!-- <% end %> -->
+
+    <!-- 【修正】フラッシュメッセージの表示 -->
+    <% if flash[:notice] %>
+      <!-- 通知メッセージのコンテナ -->
+      <div class="notice-message"><%= flash[:notice] %></div>
+    <% end %>
+
+    <!-- Deviseのログインフォームを開始 -->
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      
+      <!-- 【修正】メールアドレス入力欄（新規登録画面と同じデザイン） -->
+      <div class="form-group">
+        <!-- ラベル（「メールアドレス」という文字） -->
+        <%= f.label :email, "メールアドレス", class: "form-label" %>
+        <div class="input-wrapper">
+          <!-- SVG形式のメールアイコン -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- メールアイコンのパス -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <!-- 【修正】メールアドレス入力フィールド -->
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input", placeholder: "example@email.com" %>
+        </div>
+      </div>
+
+      <!-- 【修正】パスワード入力欄（新規登録画面と同じデザイン） -->
+      <div class="form-group">
+        <!-- ラベル（「パスワード」という文字） -->
+        <%= f.label :password, "パスワード", class: "form-label" %>
+        <!-- 入力欄のラッパー（アイコンと入力欄を囲む） -->
+        <div class="input-wrapper">
+          <!-- SVG形式の鍵アイコン -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- 鍵アイコンのパス -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <!-- 【修正】パスワード入力フィールド（id追加） -->
+          <%= f.password_field :password, autocomplete: "current-password", class: "form-input", id: "password-field" %>
+        </div>
+      </div>
+
+      <!-- 【修正】パスワード表示チェックボックスを追加 -->
+      <div class="form-check">
+        <input type="checkbox" id="show-password" class="form-checkbox">
+        <label for="show-password" class="form-check-label">パスワードを表示する</label>
+      </div>
+
+      <!-- 【修正】ログインボタンを修正 -->
+      <div class="form-actions">
+        <%= f.submit "ログイン", class: "submit-button" %>
+      </div>
+    <% end %>
+    
+    <!--【修正】新規登録へのリンクを追加（現在はコメントアウト中） -->
+    <!-- <div class="form-footer"> -->
+      <!-- <p class="form-footer-text"> -->
+        <!-- アカウントをお持ちでない方は -->
+        <!-- <%= link_to "新規登録", new_user_registration_path, class: "form-footer-link" %> -->
+      <!-- </p> -->
+    <!-- </div> -->
+    
   </div>
+</main>
 
-  <!-- パスワード入力欄 -->
-  <div class="field">
-    <!-- パスワードのラベル -->
-    <p><%= f.label :password %></p>
-    <!-- パスワードの入力フィールド（自動補完あり） -->
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
-
-  <!-- 【コメントアウト中】「ログイン状態を保持する」チェックボックスを削除 -->
-  <%# if devise_mapping.rememberable? %>
-    <%# <div class="field"> %>
-      <%# チェックボックス %>
-      <%#= f.check_box :remember_me %>
-      <%# チェックボックスのラベル %>
-      <%#= f.label :remember_me %>
-    <%# </div> %>
-  <%# end %>
-
-  <!-- ログインボタン -->
-  <div class="actions">
-    <!-- ログインボタンのラベルを i18n で日本語化 -->
-    <%= f.submit t('.sign_in') %>
-  </div>
-<% end %>
-
-<!--「パスワードを忘れた」「新規登録」などのリンク -->
-<%= render "devise/shared/links" %>
+<!--「パスワードを忘れた」「新規登録」などのリンク（コメントアウト） -->
+<!-- <%= render "devise/shared/links" %> -->
