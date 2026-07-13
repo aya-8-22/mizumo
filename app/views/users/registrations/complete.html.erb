@@ -1,22 +1,28 @@
 <!-- app/views/users/registrations/complete.html.erb -->
-<!-- 新規登録完了画面の見た目を決めている設計図 -->
+<!-- 【修正】新規登録完了画面の見た目を決めている設計図(Tailwind CSS使用中) -->
 
-<!-- メイン画面を追加 -->
-<main class="registration-main">
-  <!-- 新規登録完了メッセージのコンテナ -->
-  <div class="registration-container">
-    <!-- 新規登録完了メッセージのタイトル -->
-    <h2 class="registration-title">新規登録完了のお知らせ</h2>
+<!-- メイン画面:画面全体を中央揃えにして、上部に余白を追加 -->
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-10">
+  
+  <!-- コンテナ:白い背景のボックスを作成し、影をつけて立体感を出す -->
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
+    
+    <!-- タイトル:新規登録完了のお知らせを中央揃えで太字表示 -->
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">新規登録完了のお知らせ</h2>
 
-    <!-- 登録完了メッセージの本文 -->
-    <div class="complete-message">
-      <p>ご登録ありがとうございます。</p>
-      <p>ご利用開始ボタンを押して、体重と通知時間を設定してください。</p>
+    <!-- メッセージエリア:登録完了メッセージを表示 -->
+    <div class="mb-8">
+      <!-- メッセージ1:ご登録ありがとうございますを中央揃えで表示 -->
+      <p class="text-center text-charcoal text-base mb-4">ご登録ありがとうございます。</p>
+      
+      <!-- メッセージ2:次のステップの案内を中央揃えで表示 -->
+      <p class="text-center text-charcoal text-base">ご利用開始ボタンを押して、体重と通知時間を設定してください。</p>
     </div>
 
-    <!-- ご利用開始ボタンを追加 -->
-    <div class="form-actions">
-      <%= link_to "ご利用開始（体重・通知時間設定へ）", users_edit_weight_path, class: "submit-button submit-button-large" %>
+    <!-- ボタンエリア:ご利用開始ボタンを中央に配置 -->
+    <div class="text-center">
+      <!-- ご利用開始ボタン:クリックすると体重・通知時間設定画面に移動 -->
+      <%= link_to "ご利用開始(体重・通知時間設定へ)", users_edit_weight_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
     </div>
   </div>
 </main>

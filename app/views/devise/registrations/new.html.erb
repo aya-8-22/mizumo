@@ -1,13 +1,13 @@
 <!-- app/views/devise/registrations/new.html.erb -->
 <!-- Webサイトの新規登録画面の見た目を決めている設計図 -->
 
-<!-- 【修正】バリデーションエラーの表示を<main>の外に移動 -->
+<!-- バリデーションエラーの表示を<main>の外に移動 -->
 <!-- ヘッダーのすぐ下に表示するため -->
 <% if resource.errors.any? %>
   <!-- エラーメッセージのコンテナ -->
   <div class="container mx-auto px-4 mt-4">
     <!-- エラーメッセージのボックス -->
-    <div class="bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
       <!-- エラー件数の表示 -->
       <h3 class="font-bold mb-2"><%= pluralize(resource.errors.count, "個のエラー") %>があります</h3>
       <!-- エラーメッセージのリスト -->
@@ -21,16 +21,16 @@
   </div>
 <% end %>
 
-<!-- メイン画面を追加 -->
-<main class="registration-main">
+<!-- メイン画面 -->
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-10">
   <!-- 登録フォームのコンテナ -->
-  <div class="registration-container">
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
     <!-- タイトルをh2タグで表示 -->
-    <h2 class="registration-title"><%= t('.title') %></h2>
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold"><%= t('.title') %></h2>
 
-    <!-- 【修正】フラッシュメッセージの表示（notice用） -->
+    <!-- フラッシュメッセージの表示(notice用) -->
     <% if flash[:notice] %>
-      <div class="bg-green-100 border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
         <%= flash[:notice] %>
       </div>
     <% end %>
@@ -39,81 +39,85 @@
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       
       <!-- メールアドレス入力欄 -->
-      <div class="form-group">
-        <!-- ラベル（「メールアドレス」という文字） -->
-        <%= f.label :email, "メールアドレス", class: "form-label" %>
-        <div class="input-wrapper">
+      <div class="mb-5 relative">
+        <!-- ラベル(「メールアドレス」という文字) -->
+        <%= f.label :email, "メールアドレス", class: "block mb-2 text-charcoal font-bold" %>
+        <!-- 入力欄のラッパー(アイコンと入力欄を囲む) -->
+        <div class="relative">
           <!-- SVG形式のメールアイコン -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <!-- メールアイコンのパス -->
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
+
           <!-- メールアドレス入力フィールド -->
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input", placeholder: "example@email.com" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full py-4 px-3 pl-11 border border-charcoal rounded-lg text-base text-charcoal bg-pure-white transition-colors duration-300 min-h-[55px] focus:outline-none focus:border-brand-orange", placeholder: "example@email.com" %>
         </div>
       </div>
 
       <!-- パスワード入力欄 -->
-      <div class="form-group">
+      <div class="mb-5 relative">
         <!-- ラベルに最小文字数を含める -->
-        <%= f.label :password, "パスワード（8文字以上）", class: "form-label" %>
-        <!-- 入力欄のラッパー（アイコンと入力欄を囲む） -->
-        <div class="input-wrapper">
+        <%= f.label :password, "パスワード(8文字以上)", class: "block mb-2 text-charcoal font-bold" %>
+        <!-- 入力欄のラッパー(アイコンと入力欄を囲む) -->
+        <div class="relative">
           <!-- SVG形式の鍵アイコン -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <!-- 鍵アイコンのパス -->
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
-          <!-- パスワード入力フィールド -->
-          <%= f.password_field :password, autocomplete: "new-password", class: "form-input", id: "password-field" %>
+          <!-- パスワード入力フィールド(id属性はRailsのデフォルトに任せる) -->
+          <%= f.password_field :password, autocomplete: "new-password", class: "w-full py-4 px-3 pl-11 border border-charcoal rounded-lg text-base text-charcoal bg-pure-white transition-colors duration-300 min-h-[55px] focus:outline-none focus:border-brand-orange" %>
         </div>
       </div>
 
       <!-- パスワード確認入力欄 -->
-      <div class="form-group">
-        <!-- ラベル（「パスワード（確認）」という文字） -->
-        <%= f.label :password_confirmation, "パスワード（確認）", class: "form-label" %>
-        <!-- 入力欄のラッパー（アイコンと入力欄を囲む） -->
-        <div class="input-wrapper">
+      <div class="mb-5 relative">
+        <!-- ラベル(「パスワード(確認)」という文字) -->
+        <%= f.label :password_confirmation, "パスワード(確認)", class: "block mb-2 text-charcoal font-bold" %>
+        <!-- 入力欄のラッパー(アイコンと入力欄を囲む) -->
+        <div class="relative">
           <!-- SVG形式の鍵アイコン -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <!-- 鍵アイコンのパス -->
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <!-- パスワード確認入力フィールド -->
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-input", id: "password-confirmation-field" %>
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+         </svg>
+
+          <!-- パスワード確認入力フィールド(id属性はRailsのデフォルトに任せる) -->
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full py-4 px-3 pl-11 border border-charcoal rounded-lg text-base text-charcoal bg-pure-white transition-colors duration-300 min-h-[55px] focus:outline-none focus:border-brand-orange" %>
         </div>
       </div>
 
       <!-- パスワード表示チェックボックスを追加 -->
-      <div class="form-check">
-        
-        <input type="checkbox" id="show-password" class="form-checkbox">
-        <label for="show-password" class="form-check-label">パスワードを表示する</label>
+      <div class="mb-4 flex items-center">
+        <!-- チェックボックス -->
+        <input type="checkbox" id="show-password" class="mr-2 w-[18px] h-[18px] cursor-pointer">
+        <!-- チェックボックスのラベル -->
+        <label for="show-password" class="text-charcoal text-sm cursor-pointer">パスワードを表示する</label>
       </div>
 
       <!-- 利用規約とプライバシーポリシーへの同意を追加 -->
-      <div class="form-check terms-check">
+      <div class="mb-5 flex items-center">
         <!-- 同意チェックボックス -->
-        <%= f.check_box :terms_of_service, class: "form-checkbox", id: "terms-checkbox" %>
-        <!-- チェックボックスのラベル（リンク付き） -->
-        <label for="terms-checkbox" class="form-check-label">
-          <!-- 利用規約へのリンク（新しいタブで開く） -->
-          <%= link_to "利用規約", terms_path, target: "_blank", class: "terms-link" %>
+        <%= f.check_box :terms_of_service, class: "mr-2 w-[18px] h-[18px] cursor-pointer", id: "terms-checkbox" %>
+        <!-- チェックボックスのラベル(リンク付き) -->
+        <label for="terms-checkbox" class="text-charcoal text-sm cursor-pointer">
+          <!-- 利用規約へのリンク(新しいタブで開く) -->
+          <%= link_to "利用規約", terms_path, target: "_blank", class: "text-charcoal underline transition-colors duration-300 hover:text-brand-orange" %>
           と
-          <!-- プライバシーポリシーへのリンク（新しいタブで開く） -->
-          <%= link_to "プライバシーポリシー", privacy_path, target: "_blank", class: "terms-link" %>
+          <!-- プライバシーポリシーへのリンク(新しいタブで開く) -->
+          <%= link_to "プライバシーポリシー", privacy_path, target: "_blank", class: "text-charcoal underline transition-colors duration-300 hover:text-brand-orange" %>
           に同意する
         </label>
       </div>
 
       <!-- 登録ボタンを修正 -->
-      <div class="form-actions">
-        <%= f.submit "登録", class: "submit-button", id: "register-button", disabled: true %>
+      <div class="mt-8 text-center">
+        <%= f.submit "登録", class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] disabled:bg-gray-400 disabled:cursor-not-allowed", id: "register-button", disabled: true %>
       </div>
     <% end %>
   </div>
 </main>
 
-<!-- ログインページへのリンクなどを表示（コメントアウト）-->
+<!-- ログインページへのリンクなどを表示(コメントアウト)-->
 <!-- <%= render "devise/shared/links" %> -->
