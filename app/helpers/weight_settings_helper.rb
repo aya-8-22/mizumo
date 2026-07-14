@@ -1,0 +1,2 @@
+module WeightSettingsHelper
+end

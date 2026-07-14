@@ -1,0 +1,66 @@
+<!-- （仮）app/views/password_settings/edit.html.erb -->
+<!-- パスワード変更画面 -->
+<div class="bg-ivory min-h-screen flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8">
+  <div class="bg-pure-white p-5 sm:p-7 md:p-8 max-w-2xl w-full rounded-2xl shadow-lg">
+    
+    <!-- ページタイトル -->
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-6 sm:mb-8">
+      パスワード変更
+    </h2>
+
+    <!-- エラーメッセージの表示 -->
+    <% if current_user.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        <ul class="list-disc list-inside">
+          <% current_user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- フォーム -->
+    <%= form_with model: current_user, url: password_setting_path, method: :patch, local: true do |f| %>
+      
+      <!-- 現在のパスワード -->
+      <div class="mb-6">
+        <%= f.label :current_password, "現在のパスワード", class: "block text-brand-navy font-bold mb-2" %>
+        <%= f.password_field :current_password, 
+            autocomplete: "current-password",
+            class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange",
+            placeholder: "現在のパスワードを入力" %>
+      </div>
+
+      <!-- 新しいパスワード -->
+      <div class="mb-6">
+        <%= f.label :password, "新しいパスワード", class: "block text-brand-navy font-bold mb-2" %>
+        <%= f.password_field :password, 
+            autocomplete: "new-password",
+            class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange",
+            placeholder: "新しいパスワードを入力（8文字以上）" %>
+        <p class="text-sm text-gray-600 mt-1">※ 8文字以上で入力してください</p>
+      </div>
+
+      <!-- 新しいパスワード（確認） -->
+      <div class="mb-8">
+        <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "block text-brand-navy font-bold mb-2" %>
+        <%= f.password_field :password_confirmation, 
+            autocomplete: "new-password",
+            class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange",
+            placeholder: "新しいパスワードを再入力" %>
+      </div>
+
+      <!-- 更新ボタン -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <%= f.submit "パスワードを変更する", 
+            class: "w-full bg-brand-orange text-pure-white py-4 rounded-xl font-bold text-lg shadow-lg hover:opacity-90 transition cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <!-- 戻るボタン -->
+    <div class="mt-6 text-center">
+      <%= link_to "設定一覧に戻る", edit_user_registration_path, 
+          class: "inline-block bg-gray-400 text-pure-white px-6 py-3 rounded-xl font-bold text-base shadow-lg hover:opacity-90 transition" %>
+    </div>
+  </div>
+</div>
