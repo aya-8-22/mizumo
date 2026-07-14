@@ -11,6 +11,12 @@ ja:
     destroyed: '削除しました' # 記録削除成功時のメッセージ
     destroy_failed: '削除できませんでした' # 記録削除失敗時のメッセージ
 
+  # 【追加】パスワード変更のフラッシュメッセージ
+  password_settings:
+    update:
+      success: パスワードを変更しました
+      failure: パスワードの変更に失敗しました
+
   # 時刻の表示形式設定
   time:
     formats:
@@ -66,7 +72,7 @@ ja:
 
   # ActiveRecord（モデル）の翻訳設定
   activerecord: 
-    # 【追加】モデル名の翻訳
+    # モデル名の翻訳
     models:
       user: "ユーザー" 
 
@@ -75,8 +81,8 @@ ja:
       user: # User モデルのカラム名を日本語化
         email: "メールアドレス" # email カラムの日本語表示名（エラーメッセージ例: 「メールアドレスを入力してください」）
         password: "パスワード" # password カラムの日本語表示名（エラーメッセージ例: 「パスワードを入力してください」）
-        password_confirmation: "パスワード（確認）" # 【追加】password_confirmation カラムの日本語表示名（エラーメッセージ例: 「パスワード（確認）を入力してください」）
-        weight: "体重" # 【追加】weight カラムの日本語表示名（エラーメッセージ例: 「体重を入力してください」）
+        password_confirmation: "パスワード（確認）" # password_confirmation カラムの日本語表示名（エラーメッセージ例: 「パスワード（確認）を入力してください」）
+        weight: "体重" # weight カラムの日本語表示名（エラーメッセージ例: 「体重を入力してください」）
         # first_name: "名" # first_name カラムの日本語表示名（エラーメッセージ例: 「名を入力してください」）
         # last_name: "姓" # last_name カラムの日本語表示名（エラーメッセージ例: 「姓を入力してください」）
 
