@@ -1,4 +1,5 @@
-# （仮）app/controllers/password_settings_controller.rb
+# 【修正】app/controllers/password_settings_controller.rb
+# 設定（パスワード変更）画面のコントローラー
 class PasswordSettingsController < ApplicationController
   # ログインしているユーザーのみアクセス可能
   before_action :authenticate_user!
@@ -15,10 +16,12 @@ class PasswordSettingsController < ApplicationController
     if current_user.update_with_password(password_params)
       # バイパスサインインで再ログインを不要に
       bypass_sign_in(current_user)
+      # 【修正】成功時のみフラッシュメッセージを表示
       redirect_to edit_user_registration_path, notice: t('.success')
     else
+      # 【修正】フラッシュメッセージの設定を削除
+      # バリデーションエラーのみを表示するため、flash.now[:alert] を削除
       # バリデーションエラーがあれば編集画面を再表示
-      flash.now[:alert] = t('.failure')
       render :edit, status: :unprocessable_entity
     end
   end
