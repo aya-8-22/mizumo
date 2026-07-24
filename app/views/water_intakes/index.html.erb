@@ -168,16 +168,16 @@ function showFlashMessage(message, type) {
   // フラッシュメッセージにIDを設定
   flashDiv.id = 'flash-message';
   // フラッシュメッセージのスタイルを設定
-  flashDiv.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+  flashDiv.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 text-2xl sm:!text-2xl rounded-lg shadow-lg z-50`;
   // フラッシュメッセージのテキストを設定
   flashDiv.textContent = message;
   
   // body要素の最初に追加
   document.body.insertBefore(flashDiv, document.body.firstChild);
   
-  // 3秒後に自動で消える
+  // 15秒後に自動で消える
   setTimeout(() => {
     flashDiv.remove();
-  }, 3000);
+  }, 15000);
 }
 </script>
