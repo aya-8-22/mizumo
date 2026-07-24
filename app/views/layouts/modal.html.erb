@@ -1,5 +1,5 @@
-<%# app/views/layouts/application.html.erb %>
-<%# Webサイト全体の共通テンプレート(ひな形) %>
+<%# 【追加】app/views/layouts/modal.html.erb %>
+<%# 初回保存時専用のレイアウトファイル(ヘッダー・フッターなし) %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -21,25 +21,12 @@
 
   <%# body タグに背景色とテキスト色を設定 %>
   <body class="bg-ivory text-charcoal">
-    <%# ヘッダーを条件付きで表示(初回モーダル時は非表示) %>
-    <% if show_header? %>
-      <%= render 'shared/header' %>
-    <% end %>
+    <%# 【修正】フラッシュメッセージを共通パーシャルで表示 %>
+    <%= render 'shared/flash_message' %>
 
-    <%# メインコンテンツエリア(ボトムナビゲーションの有無で余白を変える) %>
-    <main class="<%= show_bottom_navigation? ? 'pb-16' : 'pb-4' %>">
-      <%# 【修正】フラッシュメッセージをパーシャルで表示 %>
-      <%= render 'shared/flash_message' %>
-
+    <%# メインコンテンツエリア %>
+    <main class="pb-4">
       <%= yield %>
     </main>
-
-    <%# ボトムナビゲーションを条件付きで表示 %>
-    <% if show_bottom_navigation? %>
-      <%= render 'shared/bottom_navigation' %>
-    <% end %>
-
-    <%# フッターをパーシャルで読み込む %>
-    <%= render 'shared/footer' %>
   </body>
 </html>
