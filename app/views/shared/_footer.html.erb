@@ -1,0 +1,11 @@
+<%# app/views/shared/_footer.html.erb %>
+<%# 全画面共通のフッター(コピーライト表示) %>
+
+<%# フッター全体のコンテナ(背景色:アイボリー、文字色:白、上下の余白、中央揃え) %>
+<footer class="bg-ivory text-pure-white py-4 text-center">
+  <%# フッター内のコンテンツを中央揃えにするコンテナ(左右に余白を追加) %>
+  <div class="container mx-auto px-4">
+    <%# コピーライト表示(文字サイズ小、グレー色、年号は自動更新) %>
+    <p class="text-sm text-gray-400">© <%= Time.current.year %> Mizumo. All rights reserved.</p>
+  </div>
+</footer>
