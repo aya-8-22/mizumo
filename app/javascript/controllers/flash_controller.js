@@ -8,9 +8,9 @@ export default class extends Controller {
 
   // コントローラーが読み込まれた時に実行
   connect() {
-    // 3秒後にフラッシュメッセージを削除
+    // 15秒後にフラッシュメッセージを削除
     setTimeout(() => {
       this.messageTarget.remove()
-    }, 3000)
+    }, 15000) 
   }
 }
