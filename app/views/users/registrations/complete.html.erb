@@ -19,10 +19,10 @@
       <p class="text-center text-charcoal text-base">ご利用開始ボタンを押して、体重と通知時間を設定してください。</p>
     </div>
 
-    <!-- ボタンエリア:ご利用開始ボタンを中央に配置 -->
+    <!-- 【修正】ボタンエリア:ご利用開始ボタンを中央に配置 -->
     <div class="text-center">
       <!-- ご利用開始ボタン:クリックすると体重・通知時間設定画面に移動 -->
-      <%= link_to "ご利用開始(体重・通知時間設定へ)", users_edit_weight_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
+      <%= link_to "ご利用開始(体重・通知時間設定へ)", edit_weight_setting_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
     </div>
   </div>
 </main>
