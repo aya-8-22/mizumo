@@ -15,22 +15,37 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # ユーザーは複数の飲水記録を持つ
-  has_many :water_intakes, dependent: :destroy
-
-  # 【修正】利用規約の同意用の仮想属性を追加（DBには保存しない）
-  attr_accessor :terms_of_service
-
-  # 【修正】体重のバリデーション（体重設定画面での更新時のみ必須）
-  # on: :update_weight で、体重設定画面での更新時のみバリデーションを実行
-  validates :weight, presence: true, numericality: { greater_than: 0 }, on: :update_weight
-
-  # 【修正】体重が設定されている場合のみ、0より大きい値かをチェック
-  # allow_nil: true で体重が nil の場合はバリデーションをスキップ
-  validates :weight, numericality: { greater_than: 0, allow_nil: true }
-
-  # 【修正】利用規約の同意チェック（新規登録時のみ必須）
+  # 利用規約の同意チェック（新規登録時のみ必須）
   # acceptance: true で利用規約にチェックが入っていない場合にエラーを表示
   # on: :create で新規登録時のみバリデーションを実行
   validates :terms_of_service, acceptance: true, on: :create
+
+  # 【修正】体重のバリデーション（任意入力）
+  # 入力された場合のみ、数値であることと範囲をチェック
+  validates :weight, numericality: {
+                       # greater_than_or_equal_to: 20 で体重が20以上の値かをチェック
+                       greater_than_or_equal_to: 20,
+                       # less_than_or_equal_to: 222.2でデータベースの制約に合わせてを設定
+                       # データベースの precision: 4, scale: 1 の制約により、999.9が最大値
+                       less_than_or_equal_to: 200.0
+                     },
+                     # allow_nil: true で体重が未入力（nil）でもエラーにならない
+                     # これにより、新規登録時は体重を入力しなくても登録できる
+                     # 設定（体重）画面での必須チェックは、コントローラーで実行する
+                     allow_nil: true
+
+  # 【修正】目標水分摂取量のバリデーション（任意入力）
+  # 入力された場合のみ、数値であることと範囲をチェック
+  validates :target_water_intake, numericality: {
+                                    # greater_than: 0 で目標水分摂取量が0より大きい値かをチェック
+                                    greater_than: 0,
+                                    # only_integer: true で整数のみを許可
+                                    only_integer: true
+                                  },
+                                  # allow_nil: true で目標水分摂取量が未入力（nil）でもエラーにならない
+                                  allow_nil: true
+
+  # ユーザーは複数の飲水記録を持つ
+  has_many :water_intakes, dependent: :destroy
+
 end
