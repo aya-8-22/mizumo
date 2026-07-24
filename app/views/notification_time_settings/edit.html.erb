@@ -1,4 +1,34 @@
-<div>
-  <h1 class="font-bold text-4xl">NotificationTimeSettings#edit</h1>
-  <p>Find me in app/views/notification_time_settings/edit.html.erb</p>
-</div>
+<%# 【修正】app/views/notification_time_settings/edit.html.erb %>
+<%# （仮）設定（メール通知時間）画面 %>
+
+<!-- 【追加】エラーメッセージをここに表示 -->
+<%= render 'shared/error_messages', object: current_user %>
+
+<%# メイン画面:画面全体を中央揃えにして、上部に余白を追加 %>
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-10">
+  
+  <%# コンテナ:白い背景のボックスを作成し、影をつけて立体感を出す %>
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
+    
+    <%# タイトル:通知時間設定を中央揃えで太字表示 %>
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">設定（メール通知時間）</h2>
+
+    <%# フォーム開始:PATCH メソッドで notification_time_setting_path に送信 %>
+    <%= form_with model: @user, url: notification_time_setting_path, method: :patch, local: true do |f| %>
+
+      <%# フォーム入力エリア %>
+      <div class="mb-6">
+        <%# ラベル:通知時間を表示 %>
+        <%= f.label :notification_time, '通知時間', class: 'block text-charcoal text-base font-bold mb-2' %>
+        
+        <%# 入力欄:時間を選択 %>
+        <%= f.time_field :notification_time, class: 'w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-brand-orange' %>
+      </div>
+
+      <%# 保存ボタン %>
+      <div class="text-center mt-6">
+        <%= f.submit '保存する', class: 'w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405]' %>
+      </div>
+    <% end %>
+  </div>
+</main>
