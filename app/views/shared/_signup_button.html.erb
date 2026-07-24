@@ -1,0 +1,11 @@
+<%# 【追加】app/views/shared/_signup_button.html.erb %>
+<%# 新規登録ボタンの共通パーシャル %>
+
+<%= link_to new_user_registration_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+  <%# 新規登録アイコン(SVG) %>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+  </svg>
+  <%# ボタンのテキスト %>
+  <span class="text-xs mt-1">新規登録</span>
+<% end %>

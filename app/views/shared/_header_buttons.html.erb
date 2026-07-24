@@ -1,0 +1,71 @@
+<%# app/views/shared/_header_buttons.html.erb %>
+<%# ヘッダー右側のボタン表示ロジック %>
+
+<%# 新規登録完了画面・各種完了画面の場合はボタンなし %>
+<% if controller_path == 'users/registrations' && action_name == 'complete' %>
+  <%# ボタンなし %>
+
+<%# トップページ(ホーム画面)の場合 %>
+<% elsif controller_path == 'static_pages' && action_name == 'top' %>
+  <%# ログイン状態を確認 %>
+  <% if user_signed_in? %>
+    <%# ログイン中の場合はログアウトボタンを表示 %>
+    <%= render 'shared/logout_button' %>
+  <% else %>
+    <%# 未ログインの場合は新規登録ボタンとログインボタンを表示 %>
+    <%= render 'shared/signup_button' %>
+    <%= render 'shared/login_button' %>
+  <% end %>
+
+<%# 【修正】新規登録画面の場合（new と create の両方に対応） %>
+<% elsif controller_path == 'users/registrations' && %w[new create].include?(action_name) %>
+  <%# ログインボタンとホームボタンを表示 %>
+  <%= render 'shared/login_button' %>
+  <%= render 'shared/home_button' %>
+
+<%# 【修正】ログイン画面の場合（new と create の両方に対応） %>
+<% elsif controller_path == 'users/sessions' && %w[new create].include?(action_name) %>
+  <%# 新規登録ボタンとホームボタンを表示 %>
+  <%= render 'shared/signup_button' %>
+  <%= render 'shared/home_button' %>
+
+<%# お問い合わせ画面の場合 %>
+<% elsif controller_path == 'static_pages' && action_name == 'contact' %>
+  <%# ログイン状態を確認 %>
+  <% if user_signed_in? %>
+    <%# ログイン中の場合はログアウトボタンを表示 %>
+    <%= render 'shared/logout_button' %>
+  <% else %>
+    <%# 未ログインの場合はホームボタンを表示 %>
+    <%= render 'shared/home_button' %>
+  <% end %>
+
+<%# 利用規約・プライバシーポリシー画面の場合 %>
+<% elsif controller_path == 'static_pages' && %w[terms privacy].include?(action_name) %>
+  <%# ログイン状態を確認 %>
+  <% if user_signed_in? %>
+    <%# ログイン中の場合はお問い合わせボタンとログアウトボタンを表示 %>
+    <%= render 'shared/contact_button' %>
+    <%= render 'shared/logout_button' %>
+  <% else %>
+    <%# 未ログインの場合は新規登録ボタンとホームボタンを表示 %>
+    <%= render 'shared/signup_button' %>
+    <%= render 'shared/home_button' %>
+  <% end %>
+
+<%# 初回モーダル表示時はボタンなし %>
+<% elsif (controller_path == 'weight_settings' && action_name == 'edit' && current_user&.weight.blank?) ||
+         (controller_path == 'notification_time_settings' && action_name == 'edit' && current_user&.notification_time.blank?) %>
+  <%# ボタンなし %>
+
+<%# パスワード変更画面の場合 %>
+<% elsif controller_path == 'password_settings' && action_name == 'edit' %>
+  <%# 設定ボタンとホームボタンを表示 %>
+  <%= render 'shared/settings_button' %>
+  <%= render 'shared/home_button' %>
+
+<%# その他の画面の場合(デフォルト) %>
+<% else %>
+  <%# デフォルトはログアウトボタンを表示 %>
+  <%= render 'shared/logout_button' %>
+<% end %>

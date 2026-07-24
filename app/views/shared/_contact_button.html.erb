@@ -1,0 +1,11 @@
+<%# app/views/shared/_contact_button.html.erb %>
+<%# お問い合わせボタンの共通パーシャル %>
+
+<%= link_to contact_path, class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200' do %>
+  <%# お問い合わせアイコン(SVG) %>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+  <%# ボタンのテキスト %>
+  <span class="text-xs mt-1">お問い合わせ</span>
+<% end %>

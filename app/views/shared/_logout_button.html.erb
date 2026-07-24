@@ -1,0 +1,18 @@
+<%# 【追加】app/views/shared/_logout_button.html.erb %>
+<%# ログアウトボタンの共通パーシャル %>
+
+<%# ログアウトボタン全体のコンテナ %>
+<%= button_to destroy_user_session_path, method: :delete, 
+       form: { class: 'inline' },
+       class: 'flex flex-col items-center text-pure-white hover:text-brand-orange transition duration-200 bg-transparent border-0 p-0 cursor-pointer' do %>
+  
+  <%# ログアウトアイコン(SVG) %>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <%# アイコンのパス(ログアウトマーク) %>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+  </svg>
+  
+  <%# ボタンのテキスト %>
+  <span class="text-xs mt-1">ログアウト</span>
+  
+<% end %>
