@@ -5,10 +5,11 @@
 Rails.application.routes.draw do
   # get 'password_settings/edit'
   # get 'password_settings/update'
-  get 'notification_time_settings/edit'
-  get 'notification_time_settings/update'
-  get 'weight_settings/edit'
-  get 'weight_settings/update'
+  # get 'notification_time_settings/edit'
+  # get 'notification_time_settings/update'
+  # get 'weight_settings/edit'
+  # get 'weight_settings/update'
+
   # Devise のルーティングを設定（カスタマイズしたコントローラを使用）
   devise_for :users, controllers: {
     # ログイン機能のコントローラーを指定
@@ -16,7 +17,7 @@ Rails.application.routes.draw do
     # ユーザー登録・更新機能のコントローラーを指定
     registrations: 'users/registrations'
   }
-
+  
   # Devise のパスをカスタマイズ（ヘッダーで使うパス名に合わせる）
   devise_scope :user do
     # ログインページのルート
@@ -58,19 +59,28 @@ Rails.application.routes.draw do
   # カレンダー画面（/calendar）のルーティング
   get 'calendar', to: 'calendars#index'
 
-  # 【追加】体重設定画面のルーティング（単数リソース）
+  # 体重設定画面のルーティング（単数リソース）
   # resource を使うことで、編集edit と 更新update のみのルートを生成
   # URL: /weight_setting/edit, /weight_setting
   resource :weight_setting, only: %i[edit update]
 
-  # 【追加】通知時間設定画面のルーティング（単数リソース）
+  # 通知時間設定画面のルーティング（単数リソース）
   # resource を使うことで、編集edit と 更新update のみのルートを生成
   # URL: /notification_time_setting/edit, /notification_time_setting
   resource :notification_time_setting, only: %i[edit update]
 
-  # 【追加】パスワード変更画面のルーティング（単数リソース）
+  # パスワード変更画面のルーティング（単数リソース）
   resource :password_setting, only: %i[edit update]
 
+  # 体重設定完了画面のルート
+  get 'weight_settings/complete', to: 'weight_settings#complete', as: :weight_settings_complete
+
+  # 通知時間設定完了画面のルート
+  get 'notification_time_settings/complete', to: 'notification_time_settings#complete', as: :notification_time_settings_complete
+
+  # パスワード変更完了画面のルート(実装後に追加)
+  # get 'password_settings/complete', to: 'password_settings#complete', as: :password_settings_complete
+  
   # お問い合わせページ
   # URL: /contact
   get 'contact', to: 'static_pages#contact'
