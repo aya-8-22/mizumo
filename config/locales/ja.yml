@@ -4,12 +4,24 @@
 
 # 日本語設定の開始
 ja:
-  # 【追加】ユーザー登録関連のメッセージ
+  # 【修正】通知時間設定画面のメッセージを追加
+  notification_time_settings:
+    create:
+      success: 'メール通知時間を設定しました' # 初回設定成功時のメッセージ
+    update:
+      success: 'メール通知時間を更新しました' # 2回目以降の更新成功時のメッセージ
+
+  # 【修正】体重設定画面のメッセージを追加
+  weight_settings:
+    update:
+      success: '体重を保存しました' # 体重保存成功時のメッセージ
+
+  # ユーザー登録関連のメッセージ
   users:
     registrations:
       terms_not_agreed: 利用規約とプライバシーポリシーに同意してください
   
-  # 【追加】パスワード変更のフラッシュメッセージ
+  # パスワード変更のフラッシュメッセージ
   password_settings:
     update:
       success: パスワードを変更しました
@@ -48,7 +60,7 @@ ja:
         password_confirmation: "パスワード（確認）" # パスワード確認のラベル
         weight: "体重" # 体重のラベル
         remember_me: "ログイン状態を保持する" # ログイン状態を保持するチェックボックスのラベル
-        terms_of_service: "利用規約とプライバシーポリシー" # 【修正】利用規約のラベル
+        terms_of_service: "利用規約とプライバシーポリシー" # 利用規約のラベル
   
   # Devise 用の翻訳設定（ビューとメッセージをまとめる）
   devise:

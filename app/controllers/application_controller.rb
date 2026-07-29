@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     # サインアップ時に weight と terms_of_service パラメーターを許可
     # weight は任意入力だが、入力された場合は保存できるようにする
     # terms_of_service は必須入力（バリデーションで制御）
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:weight, :terms_of_service])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[weight terms_of_service])
 
     # アカウント更新時に weight パラメーターを許可
     # permit(:account_update, keys: [:weight]) で weight を更新できるようにする

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     # ユーザー登録・更新機能のコントローラーを指定
     registrations: 'users/registrations'
   }
-  
+
   # Devise のパスをカスタマイズ（ヘッダーで使うパス名に合わせる）
   devise_scope :user do
     # ログインページのルート
@@ -76,11 +76,12 @@ Rails.application.routes.draw do
   get 'weight_settings/complete', to: 'weight_settings#complete', as: :weight_settings_complete
 
   # 通知時間設定完了画面のルート
-  get 'notification_time_settings/complete', to: 'notification_time_settings#complete', as: :notification_time_settings_complete
+  get 'notification_time_settings/complete', to: 'notification_time_settings#complete',
+                                             as: :notification_time_settings_complete
 
   # パスワード変更完了画面のルート(実装後に追加)
   # get 'password_settings/complete', to: 'password_settings#complete', as: :password_settings_complete
-  
+
   # お問い合わせページ
   # URL: /contact
   get 'contact', to: 'static_pages#contact'

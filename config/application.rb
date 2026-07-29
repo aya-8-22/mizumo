@@ -30,7 +30,7 @@ module App
     config.i18n.available_locales = %i[ja en]
 
     # 【修正】翻訳ファイルのパスを指定（config/locales 配下のすべての yml ファイルを読み込む）
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

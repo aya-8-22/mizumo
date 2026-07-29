@@ -38,63 +38,88 @@ module ApplicationHelper
     page_title.present? ? "#{page_title} | #{base_title}" : base_title
   end
 
-  # 【追加】ヘッダーを表示するかどうかを判定するメソッド
-  # 戻り値: true(表示する) / false(表示しない)
-  def show_header?
-    # 【修正】初回モーダル表示時はヘッダーを非表示にする
-    # 体重設定画面で体重が未設定の場合
-    if controller_path == 'weight_settings' && action_name == 'edit'
-      # 【修正】Safe Navigation Operator を使用して current_user が nil でもエラーにならないようにする
-      return current_user&.weight.present?
-    end
+  # 【修正】ヘッダーを表示するかどうかを判定するメソッド
+  def show_header?(first_time: false)
+    # 通知時間設定画面の場合は first_time で判定
+    return !first_time if notification_time_settings_page?
 
-    # 【修正】通知時間設定画面で通知時間が未設定の場合
-    if controller_path == 'notification_time_settings' && action_name == 'edit'
-      # 【修正】Safe Navigation Operator を使用して current_user が nil でもエラーにならないようにする
-      return current_user&.notification_time.present?
-    end
+    # 体重設定画面で体重が未設定の場合は非表示
+    return current_user&.weight.present? if weight_settings_edit_page?
 
-    # 【修正】その他の画面では常にヘッダーを表示
+    # その他の画面では常にヘッダーを表示
     true
   end
 
   # 【修正】ボトムナビゲーションを表示するかどうかを判定するメソッド
-  # 戻り値: true(表示する) / false(表示しない)
-  def show_bottom_navigation?
-    # 【修正】新規登録完了画面では常に非表示にする
-    return false if controller_path == 'users/registrations' && action_name == 'complete'
+  def show_bottom_navigation?(first_time: false)
+    # 【修正】非表示にする画面を判定
+    return false if hide_bottom_navigation_page?
 
-    # 【修正】新規登録画面でも非表示にする
-    return false if controller_path == 'users/registrations' && action_name == 'new'
+    # 【修正】通知時間設定画面の場合は first_time で判定
+    return !first_time if notification_time_settings_page?
 
-    # 【修正】ログイン画面でも非表示にする
-    return false if controller_path == 'users/sessions' && action_name == 'new'
+    # 【修正】体重設定画面で体重が未設定の場合は非表示
+    return current_user&.weight.present? if weight_settings_edit_page?
 
-    # 【修正】パスワード変更画面でも非表示にする
-    return false if controller_path == 'password_settings' && action_name == 'edit'
-
-    # 【修正】パスワード変更完了画面でも非表示にする(実装後)
-    # return false if controller_path == 'password_settings' && action_name == 'complete'
-
-    # 【修正】初回モーダル表示時もボトムナビを非表示
-    # 体重設定画面で体重が未設定の場合
-    if controller_path == 'weight_settings' && action_name == 'edit'
-      return current_user&.weight.present?
-    end
-
-    # 【修正】通知時間設定画面で通知時間が未設定の場合
-    if controller_path == 'notification_time_settings' && action_name == 'edit'
-      return current_user&.notification_time.present?
-    end
-
-    # 【修正】ログイン中の場合は常に表示
+    # ログイン中の場合は常に表示
     return true if user_signed_in?
 
-    # 【修正】ログイン前の場合、特定のページでのみ表示
-    # - ホーム画面(トップページ): static_pages#top
-    # - お問い合わせ画面: static_pages#contact
-    # - 利用規約画面: static_pages#terms
-    # - プライバシーポリシー画面: static_pages#privacy
+    # ログイン前の場合、特定のページでのみ表示
+    static_pages_with_bottom_navigation?
+  end
+
+  private
+
+  # 【修正】通知時間設定画面かどうかを判定
+  def notification_time_settings_page?
+    # controller_path が 'notification_time_settings' かつ action_name が 'edit' または 'update' の場合に true を返す
+    controller_path == 'notification_time_settings' && %w[edit update].include?(action_name)
+  end
+
+  # 【修正】体重設定画面(edit)かどうかを判定
+  def weight_settings_edit_page?
+    # controller_path が 'weight_settings' かつ action_name が 'edit' の場合に true を返す
+    controller_path == 'weight_settings' && action_name == 'edit'
+  end
+
+  # 【修正】ボトムナビゲーションを非表示にする画面かどうかを判定
+  def hide_bottom_navigation_page?
+    # 【修正】新規登録関連の画面かどうかを判定
+    return true if registration_page?
+
+    # 【修正】ログイン画面かどうかを判定
+    return true if login_page?
+
+    # 【修正】パスワード変更画面かどうかを判定
+    return true if password_settings_page?
+
+    # 上記以外の場合は false を返す
+    false
+  end
+
+  # 【修正】新規登録関連の画面かどうかを判定
+  def registration_page?
+    # controller_path が 'users/registrations' の場合に true を返す
+    # action_name が 'complete' または 'new' の場合に true を返す
+    controller_path == 'users/registrations' && %w[complete new].include?(action_name)
+  end
+
+  # 【修正】ログイン画面かどうかを判定
+  def login_page?
+    # controller_path が 'users/sessions' かつ action_name が 'new' の場合に true を返す
+    controller_path == 'users/sessions' && action_name == 'new'
+  end
+
+  # 【修正】パスワード変更画面かどうかを判定
+  def password_settings_page?
+    # controller_path が 'password_settings' かつ action_name が 'edit' の場合に true を返す
+    controller_path == 'password_settings' && action_name == 'edit'
+  end
+
+  # 【修正】ログイン前でボトムナビゲーションを表示する画面かどうかを判定
+  def static_pages_with_bottom_navigation?
+    # controller_path が 'static_pages' の場合に true を返す
+    # action_name が 'top', 'contact', 'terms', 'privacy' のいずれかの場合に true を返す
     controller_path == 'static_pages' && %w[top contact terms privacy].include?(action_name)
-  end 
-end 
+  end
+end
