@@ -17,13 +17,13 @@
     <%= render 'shared/login_button' %>
   <% end %>
 
-<%# 【修正】新規登録画面の場合（new と create の両方に対応） %>
+<%# 新規登録画面の場合(new と create の両方に対応) %>
 <% elsif controller_path == 'users/registrations' && %w[new create].include?(action_name) %>
   <%# ログインボタンとホームボタンを表示 %>
   <%= render 'shared/login_button' %>
   <%= render 'shared/home_button' %>
 
-<%# 【修正】ログイン画面の場合（new と create の両方に対応） %>
+<%# ログイン画面の場合(new と create の両方に対応) %>
 <% elsif controller_path == 'users/sessions' && %w[new create].include?(action_name) %>
   <%# 新規登録ボタンとホームボタンを表示 %>
   <%= render 'shared/signup_button' %>
@@ -53,9 +53,11 @@
     <%= render 'shared/home_button' %>
   <% end %>
 
-<%# 初回モーダル表示時はボタンなし %>
+<%# 初回表示時はボタンなし %>
+<%# 体重設定画面で体重が未設定の場合 %>
+<%# 通知時間設定画面で初回の場合(notification_times_confirmed が false) %>
 <% elsif (controller_path == 'weight_settings' && action_name == 'edit' && current_user&.weight.blank?) ||
-         (controller_path == 'notification_time_settings' && action_name == 'edit' && current_user&.notification_time.blank?) %>
+         (controller_path == 'notification_time_settings' && action_name == 'edit' && !current_user&.notification_times_confirmed) %>
   <%# ボタンなし %>
 
 <%# パスワード変更画面の場合 %>

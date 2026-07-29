@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_07_22_060031) do
+ActiveRecord::Schema[7.0].define(version: 2026_07_27_153215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,6 +26,23 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_22_060031) do
     t.integer "target_water_intake", default: 2000, null: false
     t.time "notification_time"
     t.boolean "terms_of_service", default: false, null: false
+    t.time "wake_up_time", default: "2000-01-01 06:00:00"
+    t.time "breakfast_time", default: "2000-01-01 08:00:00"
+    t.time "morning_time", default: "2000-01-01 10:00:00"
+    t.time "lunch_time", default: "2000-01-01 12:00:00"
+    t.time "afternoon_time", default: "2000-01-01 15:00:00"
+    t.time "bath_time", default: "2000-01-01 17:00:00"
+    t.time "dinner_time", default: "2000-01-01 19:00:00"
+    t.time "bedtime", default: "2000-01-01 21:00:00"
+    t.boolean "wake_up_enabled", default: true
+    t.boolean "breakfast_enabled", default: true
+    t.boolean "morning_enabled", default: true
+    t.boolean "lunch_enabled", default: true
+    t.boolean "afternoon_enabled", default: true
+    t.boolean "bath_enabled", default: true
+    t.boolean "dinner_enabled", default: true
+    t.boolean "bedtime_enabled", default: true
+    t.boolean "notification_times_confirmed", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

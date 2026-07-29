@@ -8,3 +8,5 @@ import "@hotwired/turbo-rails"
 import "controllers"
 // パスワード表示/非表示機能を読み込む
 import "./password_toggle"
+// 【修正】通知トグル機能を読み込む
+import "./notification_toggle"

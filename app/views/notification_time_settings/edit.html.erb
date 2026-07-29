@@ -1,34 +1,132 @@
-<%# 【修正】app/views/notification_time_settings/edit.html.erb %>
-<%# （仮）設定（メール通知時間）画面 %>
+<%# app/views/notification_time_settings/edit.html.erb %>
+<%# 設定(メール通知時間)画面のビュー設定 %>
 
-<!-- 【追加】エラーメッセージをここに表示 -->
+<!-- エラーメッセージをここに表示 -->
 <%= render 'shared/error_messages', object: current_user %>
 
 <%# メイン画面:画面全体を中央揃えにして、上部に余白を追加 %>
-<main class="flex justify-center items-start min-h-screen bg-ivory pt-10">
-  
-  <%# コンテナ:白い背景のボックスを作成し、影をつけて立体感を出す %>
-  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
-    
-    <%# タイトル:通知時間設定を中央揃えで太字表示 %>
-    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">設定（メール通知時間）</h2>
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-6 sm:pt-8 px-4 sm:px-6">
+  <!-- 中央に白いカードを配置、最大幅を設定、影を追加して立体感を出す -->
+  <div class="bg-pure-white p-5 sm:p-7 md:p-8 max-w-4xl w-full rounded-2xl shadow-lg">
+
+    <%# タイトル:設定一覧ページと同じスタイルに統一 %>
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-6 sm:mb-8">
+      設定(メール通知時間)
+    </h2>
+
+    <%# 【修正】説明文エリア:数字バッジを追加 %>
+    <div class="mb-6 sm:mb-8 text-charcoal text-lg sm:text-xl leading-relaxed font-bold">
+      
+      <%# 【修正】①を数字バッジに変更 %>
+      <div class="flex items-start mb-3 sm:mb-4">
+        <span class="bg-brand-orange text-pure-white text-base sm:text-lg font-bold rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center mr-3 flex-shrink-0">1</span>
+        <p class="flex-1">時間変更 : 時計マークを押して時刻を変更してください</p>
+      </div>
+
+      <%# 【修正】②を数字バッジに変更 %>
+      <div class="flex items-start mb-3 sm:mb-4">
+        <span class="bg-brand-orange text-pure-white text-base sm:text-lg font-bold rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center mr-3 flex-shrink-0">2</span>
+        <p class="flex-1">メール通知の有無 ：「通知有:橙色」「通知無:灰色」ボタンを押すことで選択できます</p>
+      </div>
+      
+      <%# 【修正】③を数字バッジに変更 %>
+      <%# @first_time で判定する %>
+      <% if @first_time %>
+        <%#  初回のみ表示 %>
+        <div class="flex items-start mb-3 sm:mb-4">
+          <span class="bg-brand-orange text-pure-white text-base sm:text-lg font-bold rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center mr-3 flex-shrink-0">3</span>
+          <p class="flex-1">設定後 ：「保存(記録画面へ)」ボタンを押してください</p>
+        </div>
+      <% else %>
+        <%# 2回目以降のみ表示 %>
+        <div class="flex items-start mb-3 sm:mb-4">
+          <span class="bg-brand-orange text-pure-white text-base sm:text-lg font-bold rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center mr-3 flex-shrink-0">3</span>
+          <p class="flex-1">設定後 :「保存」ボタンを押し、上下のボタンからお好きなページをお選びください</p>
+        </div>
+      <% end %>
+    </div>
 
     <%# フォーム開始:PATCH メソッドで notification_time_setting_path に送信 %>
-    <%= form_with model: @user, url: notification_time_setting_path, method: :patch, local: true do |f| %>
+    <%# data: { turbo: false } を追加してTurboを無効化 %>
+    <%= form_with model: @user, url: notification_time_setting_path, method: :patch, local: true, data: { turbo: false } do |f| %>
 
-      <%# フォーム入力エリア %>
-      <div class="mb-6">
-        <%# ラベル:通知時間を表示 %>
-        <%= f.label :notification_time, '通知時間', class: 'block text-charcoal text-base font-bold mb-2' %>
+      <%# 8つの時間帯を表示 %>
+      <% [
+        { label: '起床時', field: :wake_up_time, enabled: :wake_up_enabled },
+        { label: '朝食時', field: :breakfast_time, enabled: :breakfast_enabled },
+        { label: '10時頃', field: :morning_time, enabled: :morning_enabled },
+        { label: '昼食時', field: :lunch_time, enabled: :lunch_enabled },
+        { label: '15時頃', field: :afternoon_time, enabled: :afternoon_enabled },
+        { label: '入浴時', field: :bath_time, enabled: :bath_enabled },
+        { label: '夕食時', field: :dinner_time, enabled: :dinner_enabled },
+        { label: '就寝時', field: :bedtime, enabled: :bedtime_enabled }
+      ].each do |time_slot| %>
         
-        <%# 入力欄:時間を選択 %>
-        <%= f.time_field :notification_time, class: 'w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-brand-orange' %>
-      </div>
+        <%# 各時間帯を角丸のボックスで表示 %>
+        <div class="mb-4 sm:mb-6 p-3 sm:p-5 border-2 border-brand-navy rounded-lg bg-ivory relative">
+          
+          <%# 横一列に配置(トグルボタン・ラベル・時間入力) %>
+          <%# gap を小さくして iPhone SE でも1行に収まるように調整 %>
+          <div class="flex items-center gap-2 sm:gap-4 md:gap-6">
+            
+            <%# オン・オフトグルボタン(左端) %>
+            <div class="flex items-center flex-shrink-0">
+              <%# チェックボックス(非表示) %>
+              <%# data-target 属性を追加してテキスト要素を特定 %>
+              <%= f.check_box time_slot[:enabled], 
+                  class: "hidden peer toggle-checkbox", 
+                  id: "toggle_#{time_slot[:enabled]}",
+                  data: { target: "text_#{time_slot[:enabled]}" } %>
+              
+              <%# トグルボタンのラベル(タップ式) %>
+              <%# iPhone SE では w-16、それ以上では w-20 に設定 %>
+              <label for="toggle_<%= time_slot[:enabled] %>" 
+                     class="relative inline-flex items-center justify-center cursor-pointer w-16 h-9 sm:w-20 sm:h-10 md:w-24 md:h-12 rounded-full bg-gray-400 peer-checked:bg-brand-orange transition-colors duration-300">
 
-      <%# 保存ボタン %>
-      <div class="text-center mt-6">
-        <%= f.submit '保存する', class: 'w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405]' %>
+                <%# オン・オフのテキスト表示(スイッチの中に白色で表示) %>
+                <%# id を追加して JavaScript から操作できるようにする %>
+                <%# iPhone SE では text-xs、それ以上では text-sm に設定 %>
+                <span id="text_<%= time_slot[:enabled] %>" 
+                      class="text-pure-white text-xs sm:text-sm md:text-base font-bold">
+                  <%= @user.send(time_slot[:enabled]) ? '通知有' : '通知無' %>
+                </span>
+              </label>
+            </div>
+            
+            <%# ラベル(起床時、朝食時など)(中央) %>
+            <%# iPhone SE では w-16、それ以上では w-20 に設定 %>
+            <div class="flex-shrink-0 w-16 sm:w-20 md:w-24">
+              <%# iPhone SE では text-base、それ以上では text-lg に設定 %>
+              <label class="block text-charcoal font-semibold text-base sm:text-lg md:text-xl">
+                <%= time_slot[:label] %>
+              </label>
+            </div>
+
+            <%# 時間入力フィールド(右端) %>
+            <%# flex-grow で残りのスペースを使う %>
+            <div class="flex-grow min-w-0 relative">
+              <%# iPhone SE では px-2 py-2、それ以上では px-3 py-2 に設定 %>
+              <%= f.time_field time_slot[:field], 
+                class: "w-full px-2 sm:px-3 md:px-4 py-4 sm:py-5 md:py-6 border-2 border-brand-navy rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-navy text-xl sm:text-2xl md:text-3xl font-bold text-center" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%# 【修正】保存ボタンの表示を初回と2回目以降で切り替える %>
+      <%# @first_time で判定する %>
+      <div class="mt-8 sm:mt-10 text-center">
+        <% if @first_time %>
+          <%# 【修正】初回のみ「保存(記録画面へ)」ボタンを表示 %>
+          <%= f.submit '保存(記録画面へ)', 
+              class: "w-full bg-brand-orange text-pure-white text-center py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl shadow-lg hover:opacity-90 transition" %>
+        <% else %>
+          <%# 【修正】2回目以降は「保存」ボタンのみ表示 %>
+          <%= f.submit '保存', 
+              class: "w-full bg-brand-orange text-pure-white text-center py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl shadow-lg hover:opacity-90 transition" %>
+        <% end %>
       </div>
     <% end %>
+
   </div>
 </main>
