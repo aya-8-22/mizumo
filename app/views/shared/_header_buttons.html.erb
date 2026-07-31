@@ -5,6 +5,10 @@
 <% if controller_path == 'users/registrations' && action_name == 'complete' %>
   <%# ボタンなし %>
 
+<%# 【修正】パスワード変更完了画面の場合はボタンなし %>
+<% elsif controller_path == 'password_settings' && action_name == 'complete' %>
+  <%# ボタンなし %>
+
 <%# トップページ(ホーム画面)の場合 %>
 <% elsif controller_path == 'static_pages' && action_name == 'top' %>
   <%# ログイン状態を確認 %>
@@ -62,9 +66,8 @@
 
 <%# パスワード変更画面の場合 %>
 <% elsif controller_path == 'password_settings' && action_name == 'edit' %>
-  <%# 設定ボタンとホームボタンを表示 %>
-  <%= render 'shared/settings_button' %>
-  <%= render 'shared/home_button' %>
+  <%# デフォルトはログアウトボタンを表示 %>
+  <%= render 'shared/logout_button' %>
 
 <%# その他の画面の場合(デフォルト) %>
 <% else %>

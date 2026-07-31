@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   resource :notification_time_setting, only: %i[edit update]
 
   # パスワード変更画面のルーティング（単数リソース）
+  # resource を使うことで、編集edit と 更新update のみのルートを生成
+  # URL: /password_setting/edit, /password_setting
   resource :password_setting, only: %i[edit update]
 
   # 体重設定完了画面のルート
@@ -79,8 +81,10 @@ Rails.application.routes.draw do
   get 'notification_time_settings/complete', to: 'notification_time_settings#complete',
                                              as: :notification_time_settings_complete
 
-  # パスワード変更完了画面のルート(実装後に追加)
-  # get 'password_settings/complete', to: 'password_settings#complete', as: :password_settings_complete
+  # 【修正】パスワード変更完了画面のルート
+  # URL: /password_settings/complete
+  # as: :password_settings_complete で password_settings_complete_path というヘルパーメソッドを生成
+  get 'password_settings/complete', to: 'password_settings#complete', as: :password_settings_complete
 
   # お問い合わせページ
   # URL: /contact
