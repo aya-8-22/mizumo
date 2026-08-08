@@ -31,7 +31,7 @@
       }
     </style>
 
-    <!-- 【修正】体重入力エリア全体の表示制御：初回保存後は非表示 -->
+    <!-- 体重入力エリア全体の表示制御：初回保存後は非表示 -->
     <!-- @show_next_button が false の場合（初回表示時または2回目以降）のみ表示 -->
     <% unless @show_next_button %>
       <!-- 体重入力エリア全体 -->
@@ -157,22 +157,18 @@
         <div class="flex-1 border-t-2 border-brand-navy"></div>
       </div>
 
-      <!-- 目標水分摂取量の表示 -->
+      <!-- 【修正】目標水分摂取量の表示 -->
       <% if current_user.weight.present? %>
-        <!-- 体重が登録されている場合の処理 -->
-        <!-- 目標水分摂取量を計算（体重 × 30ml） -->
-        <% target_amount = current_user.weight * 30 %>
-
         <!-- 目標水分摂取量を大きく表示（例：1800ml / 日） -->
         <p class="text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal text-center mt-3">
-          <%= target_amount.to_i %>ml / 日
+          <%= current_user.calculate_target_water_intake %>ml / 日
         </p>
        
         <!-- 計算式を表示（例：(体重 60kg × 30ml)） -->
         <p class="text-base sm:text-lg font-bold text-charcoal text-center mt-2">
           (体重 <%= current_user.weight %>kg × 30ml)
         </p>
-        
+
       <% else %>
         <!-- 体重が未登録の場合の処理 -->
         <!-- 「体重が未登録です」というメッセージを表示 -->

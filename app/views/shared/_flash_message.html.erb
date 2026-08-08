@@ -1,31 +1,43 @@
-<!-- app/views/shared/_flash_message.html.erb -->
-<!-- フラッシュメッセージを表示するパーシャルファイル -->
+<%# app/views/shared/_flash_message.html.erb %>
+<%# フラッシュメッセージを表示するパーシャルファイル %>
 
-<!-- フラッシュメッセージがある場合のみ表示する -->
-<% if flash.any? %>
-  <!-- ヘッダー直下に配置、幅いっぱいに表示 -->
-  <div class="w-full">
-    <!-- flash の中身を1つずつ取り出すループ -->
-    <% flash.each do |message_type, message| %>
-      <!-- message_type に応じて色を変える条件分岐 -->
-      <%
-        # message_type が success または notice の場合は緑色
-        if message_type.to_s == 'success' || message_type.to_s == 'notice'
-          color_classes = "bg-green-100 border-green-400 text-green-700"
-        # message_type が danger または alert の場合は赤色
-        elsif message_type.to_s == 'danger' || message_type.to_s == 'alert'
-          color_classes = "bg-red-100 border-red-400 text-red-700"
-        # その他の場合は青色（お知らせ用）
-        else
-          color_classes = "bg-blue-100 border-blue-400 text-blue-700"
-        end
-      %>
-      
-      <!-- フラッシュメッセージを表示（色は条件分岐で決定） -->
-      <div class="<%= color_classes %> border-2 px-4 py-3 rounded-lg mb-4 text-center mx-4 mt-4 !text-2xl sm:!text-2xl leading-relaxed font-bold" data-controller="flash" data-flash-target="message">
-        <%= message %>
-      </div>
-    <% end %>
-  </div>
-<% end %>
-
+<%# 【修正】固定表示用のコンテナを追加（画面上部に固定、z-indexで最前面に表示） %>
+<%# ヘッダーの高さ分（64px）だけ下にずらす %>
+<div id="flash" class="fixed left-0 right-0 z-50 w-full" style="top: 64px;">
+  <%# フラッシュメッセージがある場合のみ表示する %>
+  <% flash.each do |message_type, message| %>
+    <%# message_type に応じて色とdata-auto-closeを変える条件分岐 %>
+    <%
+      # message_type が success または notice の場合は緑色、自動消去する
+      if message_type.to_s == 'success' || message_type.to_s == 'notice'
+        color_classes = "bg-green-100 border-green-400 text-green-700"
+        auto_close = true
+        # 【修正】aria-live 属性を設定（成功メッセージは polite）
+        aria_live = "polite"
+      # 【修正】message_type が achievement の場合は青色、自動消去する
+      elsif message_type.to_s == 'achievement'
+        color_classes = "bg-blue-100 border-blue-400 text-blue-700"
+        auto_close = true
+        # 【修正】aria-live 属性を設定（目標達成メッセージは polite）
+        aria_live = "polite"
+      # message_type が danger または alert の場合は赤色、自動消去する
+      elsif message_type.to_s == 'danger' || message_type.to_s == 'alert'
+        color_classes = "bg-red-100 border-red-400 text-red-700"
+        auto_close = true
+        # 【修正】aria-live 属性を設定（エラーメッセージは assertive）
+        aria_live = "assertive"
+      # その他の場合は青色（お知らせ用）、自動消去する
+      else
+        color_classes = "bg-blue-100 border-blue-400 text-blue-700"
+        auto_close = true
+        # 【修正】aria-live 属性を設定（その他のメッセージは polite）
+        aria_live = "polite"
+      end
+    %>
+    
+    <%# 【修正】フラッシュメッセージを表示（role="alert" と aria-live 属性を追加） %>
+    <div class="<%= color_classes %> border-2 px-4 py-3 rounded-lg mb-4 text-center mx-4 !text-2xl sm:!text-2xl leading-relaxed font-bold shadow-lg" data-controller="flash" data-flash-target="message" data-flash-auto-close-value="<%= auto_close %>" role="alert" aria-live="<%= aria_live %>">
+      <%= message %>
+    </div>
+  <% end %>
+</div>

@@ -1,7 +1,9 @@
 <%# app/views/shared/_header.html.erb %>
 <%# 全画面で使い回す『共通のヘッダー(画面上部のナビゲーション)』 %>
 
-<header class="bg-brand-navy text-pure-white shadow-lg">
+<%# 【修正】ヘッダーを画面上部に固定表示、高さを64pxに固定 %>
+<header class="fixed top-0 left-0 right-0 bg-brand-navy text-pure-white shadow-lg z-40" style="height: 64px;">
+  <%# コンテナ（中央寄せ、左右に余白、上下に余白、横並び、左右に配置） %>
   <div class="container mx-auto px-6 py-4 flex justify-between items-center">
     
     <%# ロゴ「ミズモ」を左側に表示 %>

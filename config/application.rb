@@ -23,13 +23,19 @@ module App
     # Rails 7.0 のデフォルト設定を読み込む
     config.load_defaults 7.0
 
-    # 【追加】エラーメッセージや日付フォーマットなどが日本語で表示
+    # 【修正】タイムゾーンを日本時間に設定
+    config.time_zone = 'Tokyo'
+    
+    # 【修正】データベースに保存する時刻も日本時間にする
+    config.active_record.default_timezone = :local
+
+    # エラーメッセージや日付フォーマットなどが日本語で表示
     config.i18n.default_locale = :ja
 
-    # 【追加】利用可能なロケールを設定
+    # 利用可能なロケールを設定
     config.i18n.available_locales = %i[ja en]
 
-    # 【修正】翻訳ファイルのパスを指定（config/locales 配下のすべての yml ファイルを読み込む）
+    # 翻訳ファイルのパスを指定（config/locales 配下のすべての yml ファイルを読み込む）
     config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
     # Configuration for the application, engines, and railties goes here.
     #

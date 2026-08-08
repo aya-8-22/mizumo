@@ -1,183 +1,229 @@
 <%# app/views/water_intakes/index.html.erb %>
-<%# 飲水記録の一覧ページ %>
+<%# 記録画面 %>
 
-<%# 全体を囲む箱 %>
-<div class="container mx-auto px-4 py-8 max-w-6xl">
-  
-  <%# タイトル %>
-  <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">記録</h1>
-  
-  <%# 目標水分量の表示を青い枠で囲んで目立たせる %>
-  <div class="bg-blue-100 border-2 border-blue-500 p-6 mb-6 text-center rounded-lg">
-    <%# 【修正】体重が登録されているかチェック %>
-    <% if current_user.weight.present? %>
-      <%# 体重×30mlで目標を計算 %>
-      <% target_amount = current_user.weight * 30 %>
-      <%# 計算式を表示 %>
-      <p class="text-sm text-gray-600">体重<%= current_user.weight %>kg × 30ml</p>
-      <%# 目標 %>
-      <p class="text-lg font-semibold text-blue-700 mt-3">目標水分摂取量: <%= target_amount %>ml / 日</p>
-    <% else %>
-      <%# 【修正】体重が未登録の場合のメッセージを表示 %>
-      <p class="text-sm text-gray-600">体重が未登録です</p>
-      <p class="text-base text-blue-600 mt-2">
-        <%= link_to '設定画面から体重を登録してください', edit_user_registration_path, class: 'underline hover:text-blue-800' %>
+<%# 画面全体をアイボリー色の背景で表示、画面全体の高さを確保、中央配置 %>
+<div class="bg-ivory min-h-screen flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8">
+
+  <%# 中央に白いカードを配置、最大幅を設定、影を追加して立体感を出す %>
+  <div class="bg-pure-white p-5 sm:p-7 md:p-8 max-w-2xl w-full rounded-2xl shadow-lg">
+
+    <%# タイトルと日付を一列に配置(横並び、中央揃え) %>
+    <div class="flex items-center justify-between mb-6 sm:mb-7 md:mb-8">
+      <%# 「記録」を左寄せで表示 %>
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-navy" style="font-family: 'Noto Sans JP', sans-serif;">
+        記録
+      </h1>
+      <%# 日付を中央に配置 %>
+      <p class="flex-1 text-lg sm:text-2xl md:text-3xl font-semibold text-brand-navy text-center" style="font-family: 'Noto Sans JP', sans-serif;">
+        <%# 日本語の曜日を取得 %>
+        <% wday_ja = %w[日 月 火 水 木 金 土][@today.wday] %>
+        <%# 「8月2日(日)」形式で表示 %>
+        <%= @today.strftime("%-m月%-d日(#{wday_ja})") %>
       </p>
-    <% end %>
-  </div>
+      <%# 右側のスペース確保(左右対称にするため) %>
+      <div class="text-2xl sm:text-3xl md:text-4xl invisible">記録</div>
+    </div>
 
-  <%# 記録表 %>
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
-    <table class="w-full">
-      <%# 表の見出し %>
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">日付</th>
-          <%# 時間帯の見出しを繰り返し表示 %>
-          <% @time_slots.each do |time_slot| %>
-            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">
-              <%= time_slot.split(':')[0] %>時
-            </th>
+    <%# 目標水分摂取量のセクション %>
+    <div class="mb-5 sm:mb-6 p-4 sm:p-5 rounded-xl shadow-md bg-ivory">
+      <%# 見出しと区切り線を表示 %>
+      <div class="mb-5 sm:mb-6 flex items-center">
+        <%# 左側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+        <%# 見出し「目標水分摂取量」 %>
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-brand-navy px-3 sm:px-5" style="font-family: 'Noto Sans JP', sans-serif;">
+          <%# 体重が設定されているかをチェック %>
+          <% if current_user.weight.present? && current_user.weight > 0 %>
+            <%# 体重が設定されている場合は目標水分摂取量を表示 %>
+            目標量【<span id="daily-goal"><%= current_user.calculate_target_water_intake %></span>ml/日】
+          <% else %>
+            <%# 体重が未設定の場合はメッセージを表示 %>
+            目標水分摂取量
           <% end %>
-        </tr>
-      </thead>
-      
-      <%# 表のデータ部分 %>
-      <tbody class="divide-y divide-gray-200">
-        <%# 日付ごとに行を作成 %>
-        <% @dates.each do |date| %>
-          <tr class="hover:bg-gray-50 transition duration-150">
-            <%# 日付セル %>
-            <td class="px-4 py-4 text-sm text-gray-900 font-medium">
-              <%= date.strftime('%-m/%-d') %>(<%= %w[日 月 火 水 木 金 土][date.wday] %>)
-            </td>
-            <%# 時間帯ごとにボタンを表示 %>
-            <% @time_slots.each do |time_slot| %>
-              <td class="px-4 py-4 text-center">
-                <%# この日時の記録を取得 %>
-                <% intake = @intakes[[date, time_slot]] %>
-                <%# 記録ボタン(記録済みなら緑、未記録なら灰色) %>
-                <button 
-                  class="px-4 py-2 rounded font-semibold transition duration-200 <%= intake ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-300 hover:bg-gray-400 text-gray-700' %>"
-                  data-date="<%= date.strftime('%Y-%m-%d') %>"
-                  data-time-slot="<%= time_slot %>"
-                  type="button"
-                  onclick="toggleIntake(this)"
-                >
-                  200ml
-                </button>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </h2>
+        <%# 右側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+      </div>
 
-  <%# 使い方の説明 %>
-  <div class="mt-6 text-sm text-gray-600">
-    <ul class="space-y-1">
-      <li>記録時:灰色の200mlボタンを押すと緑色に変わり、飲水が記録されます</li>
-      <li>修正時:緑色のボタンをもう一度押すと灰色に戻り、記録が削除されます</li>
-      <li>注意:ボタンの色が変わらない時はもう一度押すと変わります</li>
-      <li>注意:必要時、医師にご相談ください</li>
-    </ul>
+      <%# 体重が設定されている場合のみ進捗バーを表示 %>
+      <% if current_user.weight.present? && current_user.weight > 0 %>
+        <%# 進捗バーの外枠 %>
+        <div class="w-full bg-gray-200 rounded-full h-5 sm:h-6 mb-3 relative">
+          <%# 進捗率を計算(0%〜100%) %>
+          <% progress_percentage = @daily_goal > 0 ? [(@today_total.to_f / @daily_goal * 100).round, 100].min : 0 %>
+          <%# 進捗バーの内側(幅は進捗率に応じて変化) %>
+          <div
+            id="progress-bar"
+            class="bg-brand-navy h-5 sm:h-6 rounded-full transition-all duration-300"
+            style="width: <%= progress_percentage %>%"
+          ></div>
+          <%# 進捗率を中央に表示 %>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span id="progress-percentage" class="text-pure-white font-bold text-sm sm:text-base" style="font-family: 'Noto Sans JP', sans-serif; text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;">
+              <%= progress_percentage %>%
+            </span>
+          </div>
+        </div>
+
+        <%# 合計飲水量を右寄せで表示 %>
+        <div class="text-right">
+          <span class="text-base sm:text-lg md:text-xl text-charcoal font-semibold" style="font-family: 'Noto Sans JP', sans-serif;">
+            合計飲水量:
+            <span id="today-total" class="font-bold"><%= @today_total %></span>ml
+          </span>
+        </div>
+
+      <% else %>
+        <%# 体重が未設定の場合のメッセージを表示 %>
+        <div class="text-center py-4">
+          <p class="text-base sm:text-lg font-bold text-charcoal" style="font-family: 'Noto Sans JP', sans-serif;">
+            体重を設定すると目標水分摂取量が表示されます
+          </p>
+          <%# 設定画面へのリンクを表示 %>
+          <div class="mt-4">
+            <%= link_to '設定(体重)画面へ',
+                edit_weight_setting_path,
+                class: 'inline-block px-6 py-3 bg-brand-orange text-pure-white rounded-lg hover:opacity-90 transition-colors font-bold text-base sm:text-lg',
+                style: "font-family: 'Noto Sans JP', sans-serif;" %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <%# 飲水記録のセクション %>
+    <div class="mb-5 sm:mb-6 p-4 sm:p-5 rounded-xl shadow-md bg-ivory">
+      <%# 【修正】見出しと区切り線を表示 %>
+      <div class="mb-5 sm:mb-6 flex items-center">
+        <%# 左側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+        <%# 見出し「飲水記録」 %>
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-brand-navy px-3 sm:px-5" style="font-family: 'Noto Sans JP', sans-serif;">
+          飲水記録
+        </h2>
+        <%# 右側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+      </div>
+
+      <%# フォームを作成(Ajaxで送信) %>
+      <%= form_with url: water_intakes_path, method: :post, local: false, id: 'water-intake-form' do |f| %>
+
+        <%# 飲水時間設定 %>
+        <div class="mb-6">
+          <%# ラベル「①飲水時間(時間は変更可)」 %>
+          <%= label_tag :recorded_at, '①飲水時間(時間は変更可)', class: 'block text-base sm:text-lg md:text-xl font-semibold text-charcoal mb-2 text-center', style: "font-family: 'Noto Sans JP', sans-serif;" %>
+          <%# 時刻入力フィールド %>
+          <%= time_field_tag :recorded_at,
+              Time.zone.now.strftime('%H:%M'),
+              id: 'recorded-at-field',
+              class: 'w-full px-2 sm:px-3 md:px-4 py-4 sm:py-5 md:py-6 border-2 border-brand-navy rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-navy text-xl sm:text-2xl md:text-3xl font-bold text-center',
+              style: "font-family: 'Noto Sans JP', sans-serif;" %>
+        </div>
+
+        <%# 水分摂取量のボタン %>
+        <div class="mb-4">
+          <%# ラベル「②飲水量(下記ボタンで記録)」 %>
+          <label class="block text-base sm:text-lg md:text-xl font-semibold text-charcoal mb-2 text-center" style="font-family: 'Noto Sans JP', sans-serif;">②飲水量(下記ボタンで記録)</label>
+          <%# ボタンを横3列に配置 %>
+          <div class="grid grid-cols-3 gap-3 sm:gap-4">
+            <%# 150mlボタン %>
+            <button type="button"
+                    class="amount-btn w-full px-3 sm:px-4 py-5 sm:py-6 bg-brand-orange text-pure-white rounded-lg hover:opacity-90 transition-colors font-bold text-lg sm:text-xl"
+                    data-amount="150"
+                    style="font-family: 'Noto Sans JP', sans-serif; min-height: 44px; min-width: 44px;">
+              150ml
+            </button>
+            <%# 200mlボタン %>
+            <button type="button"
+                    class="amount-btn w-full px-3 sm:px-4 py-5 sm:py-6 bg-brand-orange text-pure-white rounded-lg hover:opacity-90 transition-colors font-bold text-lg sm:text-xl"
+                    data-amount="200"
+                    style="font-family: 'Noto Sans JP', sans-serif; min-height: 44px; min-width: 44px;">
+              200ml
+            </button>
+            <%# 250mlボタン %>
+            <button type="button"
+                    class="amount-btn w-full px-3 sm:px-4 py-5 sm:py-6 bg-brand-orange text-pure-white rounded-lg hover:opacity-90 transition-colors font-bold text-lg sm:text-xl"
+                    data-amount="250"
+                    style="font-family: 'Noto Sans JP', sans-serif; min-height: 44px; min-width: 44px;">
+              250ml
+            </button>
+          </div>
+          <%# 隠しフィールド(JavaScriptで値を設定) %>
+          <%= hidden_field_tag :amount_ml, nil, id: 'amount-ml-input' %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# 飲水履歴のセクション %>
+    <div class="mb-5 sm:mb-6 p-4 sm:p-5 rounded-xl shadow-md bg-ivory">
+      <%# 【修正】見出しと区切り線を表示 %>
+      <div class="mb-5 sm:mb-6 flex items-center">
+        <%# 左側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+        <%# 見出し「飲水履歴」 %>
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-brand-navy px-3 sm:px-5" style="font-family: 'Noto Sans JP', sans-serif;">
+          飲水履歴
+        </h2>
+        <%# 右側の区切り線 %>
+        <div class="flex-1 border-t-2 border-brand-navy"></div>
+      </div>
+
+      <%# 飲水履歴一覧を表示 %>
+      <div id="water-intakes-list">
+        <%# 横スクロール可能にする %>
+        <div class="overflow-x-auto">
+          <%# テーブル(幅100%、列幅を固定) %>
+          <table class="w-full table-fixed">
+            <%# テーブルヘッダー %>
+            <thead>
+              <%# ヘッダー行(下部に太い区切り線) %>
+              <tr class="border-b-2 border-brand-navy">
+                <%# 「時間」列のヘッダー(幅を33%に設定) %>
+                <th class="px-2 sm:px-4 py-2 text-center text-base sm:text-lg font-semibold text-charcoal w-1/3" style="font-family: 'Noto Sans JP', sans-serif;">時間</th>
+                <%# 「飲水量」列のヘッダー(幅を33%に設定) %>
+                <th class="px-2 sm:px-4 py-2 text-center text-base sm:text-lg font-semibold text-charcoal w-1/3" style="font-family: 'Noto Sans JP', sans-serif;">飲水量</th>
+                <%# 「削除」列のヘッダー(幅を33%に設定) %>
+                <th class="px-2 sm:px-4 py-2 text-center text-base sm:text-lg font-semibold text-charcoal w-1/3" style="font-family: 'Noto Sans JP', sans-serif;">削除</th>
+              </tr>
+            </thead>
+            <%# テーブルボディ(Turbo Streamで更新される部分) %>
+            <tbody id="water-intakes-tbody">
+              <%# 記録が空の場合 %>
+              <% if @water_intakes.empty? %>
+                <%# 「本日の記録はありません」を表示 %>
+                <tr id="no-records-message">
+                  <%# 3列分を結合 %>
+                  <td colspan="3" class="text-charcoal text-center py-4 text-base sm:text-lg font-bold" style="font-family: 'Noto Sans JP', sans-serif;">
+                    本日の記録はありません
+                  </td>
+                </tr>
+              <% else %>
+                <%# パーシャルを使って各飲水記録を表示 %>
+                <%= render @water_intakes %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <%# 注意アイコンと注意事項を表示 %>
+    <div class="flex items-start">
+      <%# 注意アイコン(オレンジ色) %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-brand-orange mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <%# 注意事項のテキスト %>
+      <div>
+        <p class="text-sm sm:text-base text-charcoal leading-relaxed">
+          ・【削除ボタン】削除すると復元不可です<br>
+          ・【追加記録】時間変更で、記載可能です<br>
+          ・【目標達成状況】カレンダー画面から確認可能です<br>
+          ・【疾患・飲水制限・体調変化がある場合】医師に相談してください
+        </p>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<script>
-// ボタンをクリックしたときの処理
-function toggleIntake(button) {
-  // data-date属性から日付を取得
-  const date = button.dataset.date;
-  // data-time-slot属性から時間帯を取得
-  const timeSlot = button.getAttribute('data-time-slot');
-  
-  // デバッグ用にコンソールに出力
-  console.log('date:', date, 'timeSlot:', timeSlot);
-  
-  // サーバーにPOSTリクエストを送信
-  fetch('/water_intakes/toggle', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // CSRF対策のトークンを取得
-      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-    },
-    // 日付と時間帯をJSON形式で送信
-    body: JSON.stringify({ date: date, time_slot: timeSlot })
-  })
-  .then(response => {
-    // レスポンスのステータスコードを確認
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    // レスポンスをJSON形式に変換
-    return response.json();
-  })
-  .then(data => {
-    // デバッグ用にレスポンスを出力
-    console.log('response:', data);
-    console.log('ボタンの変更前のクラス:', button.className);
-
-    // レスポンスに応じてボタンの色を変更
-    if (data.status === 'created') {
-      // 記録が作成された場合(灰色→緑色)
-      console.log('記録が作成されました。ボタンを緑色に変更します。');
-      // 灰色のクラスを削除
-      button.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
-      // 緑色のクラスを追加
-      button.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
-      // 【修正】成功メッセージを表示(緑色)
-      showFlashMessage(data.message, 'success');
-    } else if (data.status === 'deleted') {
-      // 記録が削除された場合(緑色→灰色)
-      console.log('記録が削除されました。ボタンを灰色に変更します。');
-      // 緑色のクラスを削除
-      button.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
-      // 灰色のクラスを追加
-      button.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-700');
-      // 【修正】削除メッセージを表示(赤色)
-      showFlashMessage(data.message, 'danger');
-    }
-    // デバッグ用にボタンの変更後のクラスを出力
-    console.log('ボタンの変更後のクラス:', button.className);
-  })
-  .catch(error => {
-    // エラーが発生した場合の処理
-    console.error('エラーが発生しました:', error);
-    // エラーメッセージを表示(赤色)
-    showFlashMessage('エラーが発生しました。もう一度試してください。', 'danger');
-  });
-}
-
-// フラッシュメッセージを表示する関数
-function showFlashMessage(message, type) {
-  // 既存のフラッシュメッセージを削除
-  const existingFlash = document.getElementById('flash-message');
-  // 既存のフラッシュメッセージが存在する場合は削除
-  if (existingFlash) {
-    existingFlash.remove();
-  }
-  
-  // 【修正】メッセージの種類に応じて背景色を設定(success=緑、danger=赤)
-  const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-  
-  // フラッシュメッセージのHTML要素を作成
-  const flashDiv = document.createElement('div');
-  // フラッシュメッセージにIDを設定
-  flashDiv.id = 'flash-message';
-  // フラッシュメッセージのスタイルを設定
-  flashDiv.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 text-2xl sm:!text-2xl rounded-lg shadow-lg z-50`;
-  // フラッシュメッセージのテキストを設定
-  flashDiv.textContent = message;
-  
-  // body要素の最初に追加
-  document.body.insertBefore(flashDiv, document.body.firstChild);
-  
-  // 15秒後に自動で消える
-  setTimeout(() => {
-    flashDiv.remove();
-  }, 15000);
-}
-</script>

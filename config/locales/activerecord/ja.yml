@@ -1,18 +1,29 @@
-#　【追加】config/locales/activerecord/ja.yml 
+# config/locales/activerecord/ja.yml
 # ActiveRecord（モデル）関連の日本語化設定ファイル
+# モデル名・属性名・バリデーションエラーメッセージを定義
 
 ja: # 日本語設定の開始
   activerecord: # ActiveRecord の設定
     models: # モデル名の日本語化
       user: ユーザー # User モデルの日本語表示名
+      water_intake: 飲水記録 # 飲水記録
+
     attributes: # モデルの属性（カラム）名の日本語化
       user: # User モデルの属性
         email: メールアドレス # email カラムの日本語表示名
         password: パスワード # password カラムの日本語表示名
         password_confirmation: パスワード（確認） # password_confirmation カラムの日本語表示名
         weight: 体重 # weight カラムの日本語表示名
-        first_name: 名 # first_name カラムの日本語表示名
-        last_name: 姓 # last_name カラムの日本語表示名
+        current_password: 現在のパスワード
+        terms_of_service: 利用規約とプライバシーポリシー
+        # first_name: 名 # first_name カラムの日本語表示名
+        # last_name: 姓 # last_name カラムの日本語表示名
+
+      water_intake: # 【追加】WaterIntake モデルの属性
+        amount_ml: 水分摂取量 # amount_ml カラムの日本語表示名
+        recorded_at: 記録日時 # recorded_at カラムの日本語表示名
+        time_slot: 時間帯 # time_slot カラムの日本語表示名
+
     errors: # バリデーションエラーメッセージの設定
       messages: # エラーメッセージの定義
         blank: を入力してください # 必須項目が空の場合のメッセージ
@@ -26,3 +37,32 @@ ja: # 日本語設定の開始
         less_than: は%{count}より小さい値にしてください # 指定値より小さい必要がある場合のメッセージ
         less_than_or_equal_to: は%{count}以下の値にしてください # 指定値以下である必要がある場合のメッセージ
         confirmation: と%{attribute}の入力が一致しません # 確認用の値が一致しない場合のメッセージ
+        accepted: にチェックを入れてください # チェックボックスがチェックされていない場合のメッセージ
+
+      models: # モデル・属性ごとの個別エラーメッセージ
+        user: # User モデル固有のエラーメッセージ
+          attributes: # 属性ごとのエラーメッセージ
+            email: # email カラム固有のエラーメッセージ
+              taken: が使用できないものになっています。別のメールアドレスをご使用ください # 【修正】email 専用の taken メッセージ
+              blank: を入力してください # email が空の場合のメッセージ
+              invalid: の形式が正しくありません # email の形式が不正な場合のメッセージ
+            password: # password カラム固有のエラーメッセージ
+              blank: を入力してください # password が空の場合のメッセージ
+              too_short: は%{count}文字以上で入力してください # password が短すぎる場合のメッセージ
+            password_confirmation: # password_confirmation カラム固有のエラーメッセージ
+              confirmation: とパスワードが一致しません # password と password_confirmation が一致しない場合のメッセージ
+            terms_of_service: # terms_of_service カラム固有のエラーメッセージ
+              accepted: に同意して、レ点チェックを入れてください # 利用規約にチェックが入っていない場合のメッセージ
+
+        water_intake: # 【修正】
+          attributes:
+            amount_ml:
+              # 必須入力エラー
+              blank: を入力してください
+              # 許可された値以外が入力された場合のエラー
+              inclusion: は150ml、200ml、250mlのいずれかを選択してください
+            recorded_at:
+              # 必須入力エラー
+              blank: を入力してください
+              # 未来の時刻が入力された場合のエラー
+              cannot_be_in_the_future: は未来の時刻を入力できません

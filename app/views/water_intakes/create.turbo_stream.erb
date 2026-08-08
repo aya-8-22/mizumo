@@ -1,0 +1,37 @@
+<%# app/views/water_intakes/create.turbo_stream.erb %>
+<%# 飲水記録の作成成功時に実行される Turbo Stream %>
+
+<%# 新しい記録を先頭に追加(prependを使用) %>
+<%= turbo_stream.prepend "water-intakes-tbody" do %>
+  <%# 新しく作成された記録だけをレンダリング %>
+  <%= render @water_intake %>
+<% end %>
+
+<%# 「本日の記録はありません」のメッセージを削除 %>
+<%= turbo_stream.remove "no-records-message" %>
+
+<%# 今日の合計水分摂取量を更新 %>
+<%= turbo_stream.update "today-total" do %>
+  <%= @today_total %>
+<% end %>
+
+<%# プログレスバーを更新 %>
+<%= turbo_stream.replace "progress-bar" do %>
+  <% progress_percentage = @daily_goal > 0 ? [(@today_total.to_f / @daily_goal * 100).round, 100].min : 0 %>
+  <div
+    id="progress-bar"
+    class="bg-brand-navy h-5 sm:h-6 rounded-full transition-all duration-300"
+    style="width: <%= progress_percentage %>%"
+  ></div>
+<% end %>
+
+<%# 進捗率を更新 %>
+<%= turbo_stream.update "progress-percentage" do %>
+  <% progress_percentage = @daily_goal > 0 ? [(@today_total.to_f / @daily_goal * 100).round, 100].min : 0 %>
+  <%= progress_percentage %>%
+<% end %>
+
+<%# 【修正】フラッシュメッセージを更新 %>
+<%= turbo_stream.replace "flash" do %>
+  <%= render 'shared/flash_message' %>
+<% end %>

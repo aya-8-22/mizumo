@@ -36,14 +36,14 @@ class User < ApplicationRecord
 
   # 目標水分摂取量のバリデーション（任意入力）
   # 入力された場合のみ、数値であることと範囲をチェック
-  validates :target_water_intake, numericality: {
+  # validates :target_water_intake, numericality: {
                                     # greater_than: 0 で目標水分摂取量が0より大きい値かをチェック
-                                    greater_than: 0,
+                                    # greater_than: 0,
                                     # only_integer: true で整数のみを許可
-                                    only_integer: true
-                                  },
+                                    # only_integer: true
+                                  # },
                                   # allow_nil: true で目標水分摂取量が未入力（nil）でもエラーにならない
-                                  allow_nil: true
+                                  # allow_nil: true
 
   # カスタムバリデーション:少なくとも1つの通知時間がオンになっているかチェック
   # validate メソッドでカスタムバリデーションを定義
@@ -53,15 +53,26 @@ class User < ApplicationRecord
   # ユーザーは複数の飲水記録を持つ
   has_many :water_intakes, dependent: :destroy
 
-  # 【修正】初回設定完了フラグで判定（デフォルト値があっても初回かどうかを判定できる）
+  # 初回設定完了フラグで判定（デフォルト値があっても初回かどうかを判定できる）
   def notification_times_set?
     # notification_times_confirmed が true なら設定済み
     notification_times_confirmed
   end
 
+  # 【修正】目標水分摂取量を計算するメソッド メソッド名を変更（カラム名と衝突しないように）
+  def calculate_target_water_intake
+    # 体重が設定されている場合のみ計算
+    # weight が nil または 0 の場合は 0 を返す
+    return 0 if weight.blank? || weight.zero?
+
+    # 体重 × 30ml で計算
+    # to_i で整数に変換
+    (weight * 30).to_i
+  end
+
   private
 
-  # 【修正】カスタムバリデーションメソッド:少なくとも1つの通知時間がオンになっているかチェック
+  # カスタムバリデーションメソッド:少なくとも1つの通知時間がオンになっているかチェック
   def at_least_one_notification_enabled
     # 8つの通知時間の有・無状態を配列にまとめる
     enabled_notifications = [
@@ -75,7 +86,7 @@ class User < ApplicationRecord
       bedtime_enabled        # 就寝時の有・無
     ]
 
-    # 【修正】配列の中に true が1つもない場合（すべて false の場合）
+    # 配列の中に true が1つもない場合（すべて false の場合）
     # any? メソッドで配列の中に true が1つでもあるかをチェック
     # unless で「true が1つもない場合」にエラーを追加
     return if enabled_notifications.any?
