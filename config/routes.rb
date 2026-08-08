@@ -44,14 +44,13 @@ Rails.application.routes.draw do
   # ルート URL（ / ）にアクセスしたときに static_pages コントローラーの top アクションを実行
   root 'static_pages#top'
 
-  # 飲水記録のルーティング
-  resources :water_intakes, only: [:index] do
-    # collection: 特定のリソースに依存しないアクションを定義
-    collection do
-      # 飲水記録の作成・削除を切り替えるルート
-      post :toggle
-    end
-  end
+  # 【修正】飲水記録のルーティング
+  # resources: RESTfulなルーティングを自動生成する
+  # only: 使用するアクションだけを指定(index, create, destroy)
+  # | index | GET | /water_intakes | 記録一覧を表示 |
+  # | create | POST | /water_intakes | 記録を作成 |
+  # | destroy | DELETE | /water_intakes/:id | 記録を削除 |
+  resources :water_intakes, only: [:index, :create, :destroy]
 
   # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
   # resources :users, only: [:edit, :update]
@@ -81,7 +80,7 @@ Rails.application.routes.draw do
   get 'notification_time_settings/complete', to: 'notification_time_settings#complete',
                                              as: :notification_time_settings_complete
 
-  # 【修正】パスワード変更完了画面のルート
+  # パスワード変更完了画面のルート
   # URL: /password_settings/complete
   # as: :password_settings_complete で password_settings_complete_path というヘルパーメソッドを生成
   get 'password_settings/complete', to: 'password_settings#complete', as: :password_settings_complete

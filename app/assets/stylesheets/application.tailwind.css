@@ -1,4 +1,4 @@
-/* 【修正】app/assets/stylesheets/application.tailwind.css */
+/* app/assets/stylesheets/application.tailwind.css */
 /* Tailwind CSS の読み込み（ @tailwind ディレクティブのみ） */
 /* Tailwind CSS の基本スタイルを読み込む */
 @tailwind base;
@@ -8,3 +8,8 @@
 
 /* Tailwind CSS のユーティリティクラスを読み込む */
 @tailwind utilities;
+
+/* 【修正】ヘッダーの高さを定義（カスタムプロパティ） */
+:root {
+  --header-height: 64px;
+}

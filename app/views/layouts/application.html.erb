@@ -21,7 +21,7 @@
 
   <%# body タグに背景色とテキスト色を設定 %>
   <body class="bg-ivory text-charcoal">
-    <%# 【修正】ヘッダーを条件付きで表示(初回モーダル時は非表示) %>
+    <%# ヘッダーを条件付きで表示(初回モーダル時は非表示) %>
     <%# @first_time が定義されている場合は first_time: @first_time を渡す %>
     <%# @first_time が定義されていない場合は first_time: false がデフォルトで使われる %>
     <% if show_header?(first_time: @first_time) %>
@@ -29,17 +29,18 @@
     <% end %>
 
     <%# メインコンテンツエリア(ボトムナビゲーションの有無で余白を変える) %>
-    <%# 【修正】ボトムナビゲーションの表示判定に first_time: @first_time を渡す %>
+    <%# 【修正】ヘッダーの高さ分（64px）だけ上にマージンを追加 %>
+    <%# ボトムナビゲーションの表示判定に first_time: @first_time を渡す %>
     <%# @first_time が定義されている場合は first_time: @first_time を渡す %>
     <%# @first_time が定義されていない場合は first_time: false がデフォルトで使われる %>
-    <main class="<%= show_bottom_navigation?(first_time: @first_time) ? 'pb-16' : 'pb-4' %>">
+    <main class="<%= show_bottom_navigation?(first_time: @first_time) ? 'pb-16' : 'pb-4' %>" style="padding-top: 64px;">
       <%# フラッシュメッセージをパーシャルで表示 %>
       <%= render 'shared/flash_message' %>
 
       <%= yield %>
     </main>
 
-    <%# 【修正】ボトムナビゲーションを条件付きで表示 %>
+    <%# ボトムナビゲーションを条件付きで表示 %>
     <%# @first_time が定義されている場合は first_time: @first_time を渡す %>
     <%# @first_time が定義されていない場合は first_time: false がデフォルトで使われる %>
     <% if show_bottom_navigation?(first_time: @first_time) %>
