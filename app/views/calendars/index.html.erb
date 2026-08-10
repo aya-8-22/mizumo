@@ -1,11 +1,74 @@
-<%# 【追加】app/views/calendars/index.html.erb %>
-<%# カレンダー画面（仮実装） %>
+<%# app/views/calendars/index.html.erb %>
+<%# カレンダー画面 %>
 
-<%# コンテナ: 中央寄せ、左右の余白、上の余白 %>
-<div class="container mx-auto px-4 pt-8">
-  <%# 見出し: テキストサイズ大、太字、グレー色、下に余白 %>
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">カレンダー</h1>
+<%# メインコンテンツ全体をアイボリー色の背景で表示、画面全体の高さを確保、上部寄せに変更 %>
+<%# 【修正】スマホ表示時の上下余白を削減(py-2に変更) %>
+<div class="bg-ivory min-h-screen flex items-start justify-center px-4 sm:px-6 py-2 sm:py-8">
   
-  <%# 仮実装のメッセージ %>
-  <p class="text-gray-600">カレンダー機能は現在開発中です。</p>
+  <%# 中央に白いカードを配置、設定画面と同じ最大幅(max-w-2xl)に変更、影を追加して立体感を出す %>
+  <%# 【修正】スマホ表示時の余白を削減(p-2に変更) %>
+  <div class="bg-pure-white p-2 sm:p-7 md:p-8 max-w-2xl w-full rounded-2xl shadow-lg">
+    
+    <%# ページタイトル: 設定画面と同じスタイルに統一 %>
+    <%# 【修正】スマホ表示時のタイトルサイズを維持しつつ下余白を削減(mb-2に変更) %>
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-2 sm:mb-8">
+      カレンダー
+    </h2>
+    
+    <%# カレンダーを表示 %>
+    <%= month_calendar(date: @start_date, events: @water_intakes, attribute: :recorded_at) do |date, water_intakes| %>
+      <%# 日付を表示 %>
+      <div class="text-center">
+        <%# 日付の数字を表示 %>
+        <%# 【修正】スマホ表示時の文字サイズを維持(text-lgのまま) %>
+        <div class="text-lg font-semibold text-brand-navy">
+          <%= date.day %>
+        </div>
+        
+        <%# 達成状況を表示 %>
+        <% if @goal_achievements[date] %>
+          <%# 達成した場合: インラインスタイルで緑色の○を表示 %>
+          <%# 【修正】スマホ表示時の文字サイズをやや縮小(text-xlに変更) %>
+          <div class="text-xl sm:text-2xl" style="color: #22c55e;">
+            ○
+          </div>
+        <% else %>
+          <%# 未達成の場合: インラインスタイルで灰色の×を表示 %>
+          <%# 【修正】スマホ表示時の文字サイズをやや縮小(text-xlに変更) %>
+          <div class="text-xl sm:text-2xl" style="color: #9ca3af;">
+            ×
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+  <%# 凡例を追加: カレンダーの下に表示 %>
+  <%# スマホ表示時の上余白を削減(mt-2に変更)、横並びのまま間隔を広げる(gap-8に変更) %>
+  <%# 【修正】「目標達成」と「目標未達成」の間隔をさらに広げる(gap-12に変更) %>
+  <div class="mt-2 sm:mt-6 flex justify-center items-center gap-12 sm:gap-8">
+    <%# 目標達成の凡例 %>
+    <%# ○とテキストの間隔を広げる(gap-3に変更) %>
+    <%# 【修正】○とテキストの間隔を少し狭める(gap-2に変更) %>
+    <div class="flex items-center gap-2">
+      <%# インラインスタイルで緑色の○を表示 %>
+      <%# スマホ表示時の文字サイズをやや縮小(text-xlに変更) %>
+      <span class="text-xl sm:text-2xl" style="color: #22c55e;">○</span>
+      <%# 目標達成のテキストを表示 %>
+      <%# スマホ表示時の文字サイズを維持(text-baseのまま) %>
+      <span class="text-base sm:text-lg text-brand-navy font-semibold">目標達成、</span>
+    </div>
+
+      
+      <%# 目標未達成の凡例 %>
+      <%# 【修正】×とテキストの間隔を広げる(gap-2に変更) %>
+      <div class="flex items-center gap-2">
+        <%# インラインスタイルで灰色の×を表示 %>
+        <%# 【修正】スマホ表示時の文字サイズをやや縮小(text-xlに変更) %>
+        <span class="text-xl sm:text-2xl" style="color: #9ca3af;">×</span>
+        <%# 目標未達成のテキストを表示 %>
+        <%# 【修正】スマホ表示時の文字サイズを維持(text-baseのまま) %>
+        <span class="text-base sm:text-lg text-brand-navy font-semibold">目標未達成</span>
+      </div>
+    </div>
+  </div>
 </div>

@@ -64,12 +64,16 @@ gem 'rails-i18n'
 # - エラーメッセージが自動的に日本語化される
 gem 'devise-i18n'
 
+# ===== 【追加】カレンダー表示 =====
+# Simple Calendar を使ってカレンダーを簡単に表示できる gem
+gem 'simple_calendar', '~> 2.0'
+
 # ===== Tailwind CSS =====
 # Tailwind CSS を使うための gem
 # ユーティリティファーストの CSS フレームワーク
 # - クラス名を組み合わせてスタイルを適用できる
 # - カスタマイズ性が高く、デザインの自由度が高い
-# 【修正】Sass との互換性のため v2 を使用
+# Sass との互換性のため v2 を使用
 gem 'tailwindcss-rails', '~> 2.0'
 
 # ===== 開発環境とテスト環境の両方で使用する gem =====
