@@ -3,6 +3,7 @@
 
 /* 【修正】Tailwind CSS を読み込むため、以下の記述のみ残す */
 /*
+ *= require simple_calendar
  *= require_tree .
  *= require_self
  */

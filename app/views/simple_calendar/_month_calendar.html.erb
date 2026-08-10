@@ -1,0 +1,64 @@
+<%# app/views/simple_calendar/_month_calendar.html.erb %>
+<%# カレンダーのテンプレート（カスタマイズ版） %>
+
+<%# カレンダー全体のコンテナ %>
+<div class="simple-calendar">
+  <%# カレンダーのヘッダー部分: 設定画面と同じスタイルに統一 %>
+  <%# スマホ表示時の下余白を削減(mb-3に変更) %>
+  <%# 【修正】さらに下余白を削減(mb-2に変更) %>
+  <div class="calendar-heading flex justify-between items-center mb-2 sm:mb-8">
+    <%# 前月へのリンク %>
+    <%# 【修正】スマホ表示時の文字サイズを維持(text-lgのまま) %>
+    <%= link_to calendar.url_for_previous_view, class: "text-brand-navy hover:opacity-90 transition font-bold text-lg sm:text-xl" do %>
+      ◀️前月
+    <% end %>
+
+<%# 現在の年月を表示: ネイビー色に変更 %>
+<%# スマホ表示時の文字サイズを維持(text-xlのまま) %>
+<span class="calendar-title text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy">
+  <%= I18n.l(start_date, format: :year_month) %>
+</span>
+
+<%# 次月へのリンク %>
+<%# スマホ表示時の文字サイズを維持(text-lgのまま) %>
+<%= link_to calendar.url_for_next_view, class: "text-brand-navy hover:opacity-90 transition font-bold text-lg sm:text-xl" do %>
+  次月▶️
+<% end %>
+</div>
+
+<%# カレンダーのテーブル部分 %>
+<table class="simple-calendar-table w-full border-collapse">
+  <%# 曜日のヘッダー行 %>
+  <thead>
+    <tr>
+      <%# 各曜日を表示: アイボリー背景、ネイビー文字に変更 %>
+      <%# スマホ表示時の上下余白を削減(p-2に変更) %>
+      <%# 【修正】さらに上下余白を削減(py-1に変更) %>
+      <% date_range.slice(0, 7).each do |day| %>
+        <th class="border border-gray-300 bg-ivory py-1 px-2 sm:p-4 text-center text-brand-navy font-bold text-sm sm:text-base">
+          <%= I18n.t('date.abbr_day_names')[day.wday] %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <%# カレンダーの本体部分 %>
+  <tbody>
+    <%# 週ごとに行を作成 %>
+    <% date_range.each_slice(7) do |week| %>
+      <tr>
+        <%# 各日付のセルを作成 %>
+        <% week.each do |day| %>
+          <%# 配列を文字列に変換してから結合、セルの高さを調整 %>
+          <%# スマホ表示時のセルの高さを削減(h-24に変更)、余白を削減(p-1に変更) %>
+          <%# 【修正】さらにセルの高さを削減(h-20に変更) %>
+          <%= content_tag :td, class: (calendar.td_classes_for(day) + ["border", "border-gray-300", "p-1", "sm:p-3", "h-20", "sm:h-32", "align-top", "bg-pure-white"]).join(" ") do %>
+            <%# ブロックで渡された内容を表示（日付と達成状況） %>
+            <% passed_block.call day.to_date, sorted_events.fetch(day.to_date, []) %>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
