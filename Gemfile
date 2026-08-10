@@ -76,6 +76,18 @@ gem 'simple_calendar', '~> 2.0'
 # Sass との互換性のため v2 を使用
 gem 'tailwindcss-rails', '~> 2.0'
 
+# ===== 【修正】バックグラウンドジョブ処理 =====
+# Sidekiq : バックグラウンドでジョブを処理するための gem（メール送信などを非同期で実行）
+gem 'sidekiq', '~> 7.1.0' 
+gem 'connection_pool', '~> 2.5.0'
+
+# Redis : Sidekiq がジョブのキューとして使用するインメモリデータベース
+gem 'redis'
+
+# ===== 【修正】環境変数管理 =====
+# dotenv-rails : .env ファイルから環境変数を読み込むための gem（開発環境で使用）
+gem 'dotenv-rails', groups: %i[development test]
+
 # ===== 開発環境とテスト環境の両方で使用する gem =====
 group :development, :test do
   # デバッグツール（binding.pry でコードを一時停止してデバッグできる）
@@ -118,6 +130,12 @@ group :development do
   #     ユーザー数分だけデータベースにアクセスしてしまう（無駄が多い）
   # Bullet はこのような問題を検出して警告してくれる
   gem 'bullet'
+
+  # 【修正】コードの変更を自動で検知してブラウザをリロードしてくれるツール
+  # ファイルを保存すると自動的にブラウザが更新されるため、開発効率が上がる
+  gem 'guard'
+  gem 'guard-livereload', require: false
+  gem 'rack-livereload'
 end
 
 # ===== テスト環境でのみ使用する gem =====

@@ -19,17 +19,21 @@ services:
     # カレントディレクトリ(.)をコンテナ内の /app にマウント
     volumes:
       - .:/app
-      - bundle:/usr/local/bundle #【変更】gem を永続化するためのボリュームをマウント
+      - bundle:/usr/local/bundle #gem を永続化するためのボリュームをマウント
     
     # ポートのマッピング（ホスト:コンテナ）
     # ホストの 3000 番ポートをコンテナの 3000 番ポートに接続
     ports:
       - "3000:3000"
     
-    # 依存関係の設定（db サービスが起動してから web を起動）
+    # 依存関係の設定（db と redis サービスが起動してから web を起動）
     depends_on:
       - db
-    
+      - redis # 【修正】redis サービスへの依存を追加
+  
+    # 【修正】.envファイルから環境変数を読み込む設定
+    env_file:
+      - .env
     # 環境変数の設定（Rails から DB に接続するための情報）
     environment:
       # データベースのホスト名（サービス名 db を指定）
@@ -67,8 +71,58 @@ services:
     ports:
       - "5432:5432"
 
+  # Redis サーバー用のサービス（Sidekiq のジョブキューとして使用）
+  redis:
+    # Docker Hub から Redis 7 の Alpine Linux 版イメージを取得（軽量版）
+    image: redis:7-alpine
+    # ポートのマッピング（ホスト:コンテナ）
+    # ホストの 6379 番ポートをコンテナの 6379 番ポートに接続
+    ports:
+      - "6379:6379"
+    # Redis のデータを永続化（コンテナを削除してもデータが残る）
+    volumes:
+      # 名前付きボリューム redis_data をコンテナ内の /data にマウント
+      - redis_data:/data
+    # Redis サーバーを AOF（Append Only File）モードで起動（データの永続化を有効化）
+    command: redis-server --appendonly yes
+
+  # 【追加】Sidekiq サービス（バックグラウンドでジョブを処理するワーカー）
+  sidekiq:
+    # Dockerfile からイメージをビルド（web サービスと同じイメージを使用）
+    build: .
+    # Sidekiq を起動するコマンド（config/sidekiq.yml の設定を読み込む）
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    # ホストとコンテナ間でファイルを共有（マウント）
+    volumes:
+      # カレントディレクトリ(.)をコンテナ内の /app にマウント（ソースコードの同期）
+      - .:/app
+      # gem を永続化するためのボリュームをマウント（bundle install の結果を保存）
+      - bundle:/usr/local/bundle
+    # 依存関係の設定（db と redis サービスが起動してから sidekiq を起動）
+    depends_on:
+      # データベースサービスへの依存
+      - db
+      # Redis サービスへの依存
+      - redis
+    # 【修正】.envファイルから環境変数を読み込む設定　【Redis の接続URL（Sidekiq が使用）】
+    env_file:
+      - .env 
+    # 環境変数の設定（Sidekiq から DB や Redis に接続するための情報）
+    environment:
+      # データベースのホスト名（サービス名 db を指定）
+      DATABASE_HOST: db
+      # データベースのユーザー名
+      DATABASE_USER: postgres
+      # データベースのパスワード
+      DATABASE_PASSWORD: password
+      # Redis の接続URL（Sidekiq が使用）
+      # REDIS_URL: redis://redis:○
+
 # 名前付きボリュームの定義（データを永続化するための領域）
 volumes:
   # PostgreSQL のデータを保存するボリューム
   postgres_data:
-  bundle: #【変更】gem を永続化するためのボリューム
+  # gem を永続化するためのボリューム
+  bundle:
+  # 【修正】Redis のデータを保存するボリューム
+  redis_data:

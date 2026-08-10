@@ -23,10 +23,10 @@ module App
     # Rails 7.0 のデフォルト設定を読み込む
     config.load_defaults 7.0
 
-    # 【修正】タイムゾーンを日本時間に設定
+    # タイムゾーンを日本時間に設定
     config.time_zone = 'Tokyo'
     
-    # 【修正】データベースに保存する時刻も日本時間にする
+    # データベースに保存する時刻も日本時間にする
     config.active_record.default_timezone = :local
 
     # エラーメッセージや日付フォーマットなどが日本語で表示
@@ -37,6 +37,10 @@ module App
 
     # 翻訳ファイルのパスを指定（config/locales 配下のすべての yml ファイルを読み込む）
     config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
+
+    # 【追加】バックグラウンドジョブの処理に Sidekiq を使用する設定
+    config.active_job.queue_adapter = :sidekiq
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
