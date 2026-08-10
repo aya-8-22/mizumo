@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
 # config/routes.rb
+
+# 【追加】Sidekiq の Web UI を使うために必要なライブラリを読み込む
+require 'sidekiq/web'
+
 # 「URL」と「処理（Controller）」をつなぐ仲介役
 Rails.application.routes.draw do
+  # 【追加】Sidekiq の Web UI を /sidekiq にマウント
+  # ブラウザで http://localhost:3000/sidekiq にアクセスすると管理画面が表示される
+  mount Sidekiq::Web => '/sidekiq'
+
   # get 'password_settings/edit'
   # get 'password_settings/update'
   # get 'notification_time_settings/edit'
@@ -20,11 +28,17 @@ Rails.application.routes.draw do
 
   # Devise のパスをカスタマイズ（ヘッダーで使うパス名に合わせる）
   devise_scope :user do
-    # ログインページのルート
+    # GET /login → ログインページを表示
+    # users/sessions コントローラーの new アクションを実行
     get 'login', to: 'users/sessions#new'
-    # ログアウトのルート
+
+    # DELETE /logout → ログアウト処理を実行
+    # users/sessions コントローラーの destroy アクションを実行
     delete 'logout', to: 'users/sessions#destroy'
-    # 登録完了画面のルートを devise_scope の中に移動
+
+    # GET /users/registration/complete → 登録完了画面を表示
+    # users/registrations コントローラーの complete アクションを実行
+    # as: :users_registration_complete により、users_registration_complete_path というヘルパーメソッドが生成される
     get 'users/registration/complete', to: 'users/registrations#complete', as: :users_registration_complete
   end
 
@@ -44,7 +58,7 @@ Rails.application.routes.draw do
   # ルート URL（ / ）にアクセスしたときに static_pages コントローラーの top アクションを実行
   root 'static_pages#top'
 
-  # 【修正】飲水記録のルーティング
+  # 飲水記録のルーティング
   # resources: RESTfulなルーティングを自動生成する
   # only: 使用するアクションだけを指定(index, create, destroy)
   # | index | GET | /water_intakes | 記録一覧を表示 |
@@ -55,7 +69,8 @@ Rails.application.routes.draw do
   # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
   # resources :users, only: [:edit, :update]
 
-  # カレンダー画面（/calendar）のルーティング
+  # GET /calendar → カレンダー画面を表示
+  # calendars コントローラーの index アクションを実行
   get 'calendar', to: 'calendars#index'
 
   # 体重設定画面のルーティング（単数リソース）
