@@ -9,17 +9,18 @@ services:
     # Dockerfile からイメージをビルド（カレントディレクトリの Dockerfile を使用）
     build: .
     
-    # 修正 コンテナ起動時に実行するコマンド
+    # コンテナ起動時に実行するコマンド
     # rm -f tmp/pids/server.pid : 前回起動時のプロセスIDファイルを削除（エラー防止）
     # -p 3000 : ポート番号を明示的に指定
     # -b '0.0.0.0' : 外部からのアクセスを許可
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     
     # ホストとコンテナ間でファイルを共有（マウント）
-    # カレントディレクトリ(.)をコンテナ内の /app にマウント
     volumes:
+      # カレントディレクトリ(.)をコンテナ内の /app にマウント
       - .:/app
-      - bundle:/usr/local/bundle #gem を永続化するためのボリュームをマウント
+      #gem を永続化するためのボリュームをマウント
+      - bundle:/usr/local/bundle 
     
     # ポートのマッピング（ホスト:コンテナ）
     # ホストの 3000 番ポートをコンテナの 3000 番ポートに接続
@@ -29,19 +30,11 @@ services:
     # 依存関係の設定（db と redis サービスが起動してから web を起動）
     depends_on:
       - db
-      - redis # 【修正】redis サービスへの依存を追加
+      - redis # redis サービスへの依存を追加
   
     # 【修正】.envファイルから環境変数を読み込む設定
     env_file:
       - .env
-    # 環境変数の設定（Rails から DB に接続するための情報）
-    environment:
-      # データベースのホスト名（サービス名 db を指定）
-      DATABASE_HOST: db
-      # データベースのユーザー名
-      DATABASE_USER: postgres
-      # データベースのパスワード
-      DATABASE_PASSWORD: password
     
     # ターミナルを有効化（pry や byebug などのデバッグツールを使えるようにする）
     tty: true
@@ -107,16 +100,6 @@ services:
     # 【修正】.envファイルから環境変数を読み込む設定　【Redis の接続URL（Sidekiq が使用）】
     env_file:
       - .env 
-    # 環境変数の設定（Sidekiq から DB や Redis に接続するための情報）
-    environment:
-      # データベースのホスト名（サービス名 db を指定）
-      DATABASE_HOST: db
-      # データベースのユーザー名
-      DATABASE_USER: postgres
-      # データベースのパスワード
-      DATABASE_PASSWORD: password
-      # Redis の接続URL（Sidekiq が使用）
-      # REDIS_URL: redis://redis:○
 
 # 名前付きボリュームの定義（データを永続化するための領域）
 volumes:

@@ -38,7 +38,8 @@ module App
     # 翻訳ファイルのパスを指定（config/locales 配下のすべての yml ファイルを読み込む）
     config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
 
-    # 【追加】バックグラウンドジョブの処理に Sidekiq を使用する設定
+    # バックグラウンドジョブの処理に Sidekiq を使用する設定
+    # 【修正】Active Job で Sidekiq を使うように設定
     config.active_job.queue_adapter = :sidekiq
 
     # Configuration for the application, engines, and railties goes here.
