@@ -2,12 +2,12 @@
 
 # config/routes.rb
 
-# 【追加】Sidekiq の Web UI を使うために必要なライブラリを読み込む
+# Sidekiq の Web UI を使うために必要なライブラリを読み込む
 require 'sidekiq/web'
 
 # 「URL」と「処理（Controller）」をつなぐ仲介役
 Rails.application.routes.draw do
-  # 【追加】Sidekiq の Web UI を /sidekiq にマウント
+  # Sidekiq の Web UI を /sidekiq にマウント
   # ブラウザで http://localhost:3000/sidekiq にアクセスすると管理画面が表示される
   mount Sidekiq::Web => '/sidekiq'
 
@@ -65,6 +65,9 @@ Rails.application.routes.draw do
   # | create | POST | /water_intakes | 記録を作成 |
   # | destroy | DELETE | /water_intakes/:id | 記録を削除 |
   resources :water_intakes, only: [:index, :create, :destroy]
+
+  # 【修正】開発環境でメールを確認できるようにする
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
   # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
   # resources :users, only: [:edit, :update]
