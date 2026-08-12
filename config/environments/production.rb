@@ -52,6 +52,23 @@ Rails.application.configure do
   # プリコンパイル済みアセットのみ使用
   config.assets.compile = false
 
+  # 【修正】Sass プロセッサーを無効化（sassc エラーを解決）
+  # Sprockets が Sass ファイルを処理しようとするのを防ぐ
+  config.assets.configure do |env|
+    # Sprockets::SassCompressor が定義されている場合のみ登録解除
+    if defined?(Sprockets::SassCompressor)
+      env.unregister_preprocessor('text/css', Sprockets::SassCompressor)
+    end
+    # Sprockets::ScssTemplate が定義されている場合のみ登録解除
+    if defined?(Sprockets::ScssTemplate)
+      env.unregister_preprocessor('text/css', Sprockets::ScssTemplate)
+    end
+    # Sprockets::SasscProcessor が定義されている場合のみ登録解除
+    if defined?(Sprockets::SasscProcessor)
+      env.unregister_preprocessor('text/css', Sprockets::SasscProcessor)
+    end
+  end
+  
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
   # CDN 使用時の設定（コメントアウト中）
@@ -106,16 +123,16 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # 【修正】メール送信エラーを通知
+  # メール送信エラーを通知
   config.action_mailer.raise_delivery_errors = true
 
-  # 【修正】本番環境ではメール送信を有効化
+  # 本番環境ではメール送信を有効化
   config.action_mailer.perform_deliveries = true
 
-  # 【修正】メール配信方法としてResendを指定
+  # メール配信方法としてResendを指定
   config.action_mailer.delivery_method = :resend
 
-  # 【追加】メール内のリンク生成用ホスト設定
+  # メール内のリンク生成用ホスト設定
   config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
 
   # ===== 国際化設定 =====
