@@ -64,7 +64,7 @@ gem 'rails-i18n'
 # - エラーメッセージが自動的に日本語化される
 gem 'devise-i18n'
 
-# ===== 【追加】カレンダー表示 =====
+# ===== カレンダー表示 =====
 # Simple Calendar を使ってカレンダーを簡単に表示できる gem
 gem 'simple_calendar', '~> 2.0'
 
@@ -89,10 +89,13 @@ gem 'redis'
 # dotenv-rails : .env ファイルから環境変数を読み込むための gem（開発環境で使用）
 gem 'dotenv-rails', groups: %i[development test]
 
-# ===== 【修正】メール送信テスト（開発環境） =====
+# ===== メール送信テスト（開発環境） =====
 # letter_opener_web : 開発環境でメールをブラウザで確認できる gem
 # メールを実際に送信せず、ブラウザで内容を確認できる
 gem 'letter_opener_web', group: :development
+
+# ===== 【修正】メール配信サービスResendのRuby SDK =====
+gem 'resend'
 
 # ===== 開発環境とテスト環境の両方で使用する gem =====
 group :development, :test do

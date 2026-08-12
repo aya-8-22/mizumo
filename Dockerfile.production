@@ -1,5 +1,6 @@
-# 本番環境用 Dockerfile (Render向け)
-FROM ruby:3.1.4
+# Dockerfile.production 
+# 【修正】本番環境用 Dockerfile (Render向け)
+FROM ruby:3.2.4
 
 # 必要なパッケージをインストール
 RUN apt-get update -qq && apt-get install -y \
@@ -9,7 +10,8 @@ RUN apt-get update -qq && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# 作業ディレクトリを設定
+# 【修正】作業ディレクトリを設定
+RUN mkdir /app
 WORKDIR /app
 
 # 環境変数を設定
@@ -22,6 +24,9 @@ ENV RAILS_LOG_TO_STDOUT=true
 # 開発・テスト環境用のgemをインストールしない設定
 ENV BUNDLE_WITHOUT="development:test"
 
+# 【修正】Bundler のバージョンを指定
+RUN gem install bundler:2.3.17
+
 # Gemfile と Gemfile.lock をコピー
 COPY Gemfile Gemfile.lock ./
 
@@ -31,10 +36,10 @@ RUN bundle install
 # アプリケーションのコードをコピー
 COPY . .
 
-# 【修正】Tailwind CSS をビルド（エラーが出ても続行）
-RUN bundle exec rails tailwindcss:build || true
+# Tailwind CSS をビルド（エラーが出ても続行）
+# RUN bundle exec rails tailwindcss:build || true
 
-# 【修正】アセットをプリコンパイル（環境変数を明示）
+# アセットをプリコンパイル（環境変数を明示）
 RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_for_precompile bundle exec rails assets:precompile
 
 # ポートを公開

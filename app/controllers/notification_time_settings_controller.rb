@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/controllers/notification_time_settings_controller.rb
 # 設定(通知時間)を管理するコントローラー
 class NotificationTimeSettingsController < ApplicationController

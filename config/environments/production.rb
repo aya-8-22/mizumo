@@ -106,8 +106,17 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # メール送信エラーを無視（コメントアウト中）
-  # config.action_mailer.raise_delivery_errors = false
+  # 【修正】メール送信エラーを通知
+  config.action_mailer.raise_delivery_errors = true
+
+  # 【修正】本番環境ではメール送信を有効化
+  config.action_mailer.perform_deliveries = true
+
+  # 【修正】メール配信方法としてResendを指定
+  config.action_mailer.delivery_method = :resend
+
+  # 【追加】メール内のリンク生成用ホスト設定
+  config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
 
   # ===== 国際化設定 =====
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -133,8 +142,6 @@ Rails.application.configure do
 
   # Renderのホストを許可
   config.hosts << 'mizumo.onrender.com'
-  # 【追加】Renderのドメインを許可
-  config.hosts << 'mizumo-db-neon.onrender.com'
 
   # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear

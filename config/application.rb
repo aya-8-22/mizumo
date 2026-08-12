@@ -26,8 +26,8 @@ module App
     # タイムゾーンを日本時間に設定
     config.time_zone = 'Tokyo'
     
-    # データベースに保存する時刻も日本時間にする
-    config.active_record.default_timezone = :local
+    # 【修正】データベースのタイムゾーンを 世界標準のUTC に設定
+    config.active_record.default_timezone = :utc
 
     # エラーメッセージや日付フォーマットなどが日本語で表示
     config.i18n.default_locale = :ja
