@@ -26,7 +26,7 @@ module App
     # タイムゾーンを日本時間に設定
     config.time_zone = 'Tokyo'
     
-    # 【修正】データベースのタイムゾーンを 世界標準のUTC に設定
+    # データベースのタイムゾーンを 世界標準のUTC に設定
     config.active_record.default_timezone = :utc
 
     # エラーメッセージや日付フォーマットなどが日本語で表示
@@ -39,8 +39,25 @@ module App
     config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
 
     # バックグラウンドジョブの処理に Sidekiq を使用する設定
-    # 【修正】Active Job で Sidekiq を使うように設定
+    # Active Job で Sidekiq を使うように設定
     config.active_job.queue_adapter = :sidekiq
+
+    # 【追加】Sass プロセッサーを無効化（sassc エラーを解決）
+    # Sprockets が Sass ファイルを処理しようとするのを防ぐ
+    config.assets.configure do |env|
+      # Sprockets::SassCompressor が定義されている場合のみ登録解除
+      if defined?(Sprockets::SassCompressor)
+        env.unregister_preprocessor('text/css', Sprockets::SassCompressor)
+      end
+      # Sprockets::ScssTemplate が定義されている場合のみ登録解除
+      if defined?(Sprockets::ScssTemplate)
+        env.unregister_preprocessor('text/css', Sprockets::ScssTemplate)
+      end
+      # Sprockets::SasscProcessor が定義されている場合のみ登録解除
+      if defined?(Sprockets::SasscProcessor)
+        env.unregister_preprocessor('text/css', Sprockets::SasscProcessor)
+      end
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #
