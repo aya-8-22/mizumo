@@ -52,7 +52,7 @@ Rails.application.configure do
   # プリコンパイル済みアセットのみ使用
   config.assets.compile = false
 
-  # 【修正】Sass プロセッサーを無効化（sassc エラーを解決）
+  # Sass プロセッサーを無効化（sassc エラーを解決）
   # Sprockets が Sass ファイルを処理しようとするのを防ぐ
   config.assets.configure do |env|
     # Sprockets::SassCompressor が定義されている場合のみ登録解除
@@ -129,11 +129,33 @@ Rails.application.configure do
   # 本番環境ではメール送信を有効化
   config.action_mailer.perform_deliveries = true
 
-  # メール配信方法としてResendを指定
-  config.action_mailer.delivery_method = :resend
+  # 【修正】メール配信方法として SMTP を指定（Resend 使用）
+  config.action_mailer.delivery_method = :smtp
+
+  # 【修正】Resend の SMTP 設定を追加
+  config.action_mailer.smtp_settings = {
+    # Resend の SMTP サーバーアドレス
+    address: 'smtp.resend.com',
+    # SMTP ポート番号（587 は TLS 用）
+    port: 587,
+    # SMTP ドメイン
+    domain: 'resend.com',
+    # SMTP ユーザー名（Resend では固定で 'resend'）
+    user_name: 'resend',
+    # Resend の API キー（環境変数から取得）
+    password: ENV['RESEND_API_KEY'],
+    # 認証方式（plain 認証）
+    authentication: 'plain',
+     # TLS を自動的に有効化
+    enable_starttls_auto: true
+  }
+
 
   # メール内のリンク生成用ホスト設定
-  config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
+  # config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
+
+  # メール内のリンク生成用ホスト設定
+  config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com' }
 
   # ===== 国際化設定 =====
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -158,7 +180,7 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   # Renderのホストを許可
-  config.hosts << 'mizumo.onrender.com'
+  # config.hosts << 'mizumo.onrender.com'
 
   # Render のホスト名を許可
   config.hosts << "mizumo-db-neon.onrender.com"
@@ -169,8 +191,11 @@ Rails.application.configure do
   # ===== 標準出力へのログ設定 =====
   # 環境変数が設定されている場合、標準出力にログを出力
   if ENV['RAILS_LOG_TO_STDOUT'].present?
+    # 標準出力用のロガーを作成
     logger           = ActiveSupport::Logger.new($stdout)
+    # ログフォーマットを設定
     logger.formatter = config.log_formatter
+     # タグ付きロガーを設定
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
