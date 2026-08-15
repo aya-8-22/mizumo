@@ -98,6 +98,7 @@ gem 'dotenv-rails', groups: %i[development test]
 gem 'letter_opener_web', group: :development
 
 # ===== メール配信サービスResendのRuby SDK =====
+# Resend の HTTP API を使用するための gem
 gem 'resend'
 
 # ===== 開発環境とテスト環境の両方で使用する gem =====
