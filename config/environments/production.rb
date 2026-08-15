@@ -129,27 +129,37 @@ Rails.application.configure do
   # 本番環境ではメール送信を有効化
   config.action_mailer.perform_deliveries = true
 
-  # 【修正】メール配信方法として SMTP を指定（Resend 使用）
-  config.action_mailer.delivery_method = :smtp
+  # 【修正】メール配信方法として Resend の HTTP API を指定
+  config.action_mailer.delivery_method = :resend
 
-  # 【修正】Resend の SMTP 設定を追加
-  config.action_mailer.smtp_settings = {
-    # Resend の SMTP サーバーアドレス
-    address: 'smtp.resend.com',
-    # SMTP ポート番号（587 は TLS 用）
-    port: 587,
-    # SMTP ドメイン
-    domain: 'resend.com',
-    # SMTP ユーザー名（Resend では固定で 'resend'）
-    user_name: 'resend',
-    # Resend の API キー（環境変数から取得）
-    password: ENV['RESEND_API_KEY'],
-    # 認証方式（plain 認証）
-    authentication: 'plain',
-     # TLS を自動的に有効化
-    enable_starttls_auto: true
+  # 【修正】Resend の API キー設定
+  config.action_mailer.resend_settings = {
+    # 環境変数から Resend の API キーを取得
+    api_key: ENV['RESEND_API_KEY']
   }
 
+  # Render の無料プランではポート 587 がブロックされるため、SMTP 方式ではメール送信できません
+  # HTTP API 方式に変更することで、ポート 443（HTTPS）を使用してメール送信できるようにしています
+  # 以下は参考のためコメントアウトして残しています
+  # メール配信方法として SMTP を指定（Resend 使用）
+  # config.action_mailer.delivery_method = :smtp
+  # Resend の SMTP 設定を追加
+  # config.action_mailer.smtp_settings = {
+    # Resend の SMTP サーバーアドレス
+    # address: 'smtp.resend.com',
+    # SMTP ポート番号（587 は TLS 用）
+    # port: 587,
+    # SMTP ドメイン
+    # domain: 'resend.com',
+    # SMTP ユーザー名（Resend では固定で 'resend'）
+    # user_name: 'resend',
+    # Resend の API キー（環境変数から取得）
+    # password: ENV['RESEND_API_KEY'],
+    # 認証方式（plain 認証）
+    # authentication: 'plain',
+     # TLS を自動的に有効化
+     # enable_starttls_auto: true
+  # }
 
   # メール内のリンク生成用ホスト設定
   # config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
