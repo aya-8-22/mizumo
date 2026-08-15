@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
-# 【追加】lib/tasks/notification.rake
+# lib/tasks/notification.rake
 # 通知メールを送信するRakeタスク
 
 # notification という名前空間を定義
 namespace :notification do
-  # send_reminders というタスクを定義
+  # タスクの説明
   desc '通知メールを送信する'
-  task send_reminders: :environment do
+  # タスクの定義（:environment は Rails の環境を読み込むために必要）
+  task send_scheduled: :environment do
     # 現在時刻を取得（日本時間）
     current_time = Time.current
-
-    # 8つの通知タイプを配列で定義
+    
+    # 通知タイプの一覧を定義
+    # type: 通知の種類、time_field: 時刻のカラム名、enabled_field: 有効/無効のカラム名
     notification_types = [
       { type: 'wake_up', time_field: :wake_up_time, enabled_field: :wake_up_enabled },
       { type: 'breakfast', time_field: :breakfast_time, enabled_field: :breakfast_enabled },
@@ -23,30 +25,27 @@ namespace :notification do
       { type: 'bedtime', time_field: :bedtime, enabled_field: :bedtime_enabled }
     ]
 
-    # 各通知タイプごとに処理
+    # 通知タイプごとに処理を実行
     notification_types.each do |notification|
       # 通知が有効なユーザーを取得
       users = User.where(notification[:enabled_field] => true)
 
-      # 各ユーザーに対して処理
+      # ユーザーごとに処理を実行（メモリ効率のため find_each を使用）
       users.find_each do |user|
-        # ユーザーの通知時間を取得
+        # ユーザーの通知時刻を取得
         notification_time = user.send(notification[:time_field])
-
-        # 通知時間が設定されていない場合はスキップ
+        # 通知時刻が設定されていない場合はスキップ
         next if notification_time.blank?
 
-        # 通知時間を Time オブジェクトに変換（今日の日付で）
+        # 通知時刻を今日の日付と組み合わせて Time オブジェクトに変換
         notification_datetime = Time.zone.parse("#{current_time.to_date} #{notification_time.strftime('%H:%M')}")
-
-        # 現在時刻と通知時間の差分を計算（分単位）
+        # 現在時刻と通知時刻の差分を分単位で計算（絶対値）
         time_diff = ((current_time - notification_datetime) / 60).abs
 
-        # 差分が5分以内の場合にメールを送信
+        # 差分が5分以内の場合
         if time_diff <= 5
-          # バックグラウンドジョブでメールを送信
+          # メール送信ジョブをキューに追加
           NotificationJob.perform_later(user.id, notification[:type])
-          
           # ログに記録
           Rails.logger.info "通知メール送信: #{user.email} (#{notification[:type]})"
         end
