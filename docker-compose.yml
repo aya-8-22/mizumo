@@ -32,7 +32,7 @@ services:
       - db
       - redis # redis サービスへの依存を追加
   
-    # 【修正】.envファイルから環境変数を読み込む設定
+    # .envファイルから環境変数を読み込む設定
     env_file:
       - .env
     
@@ -79,7 +79,7 @@ services:
     # Redis サーバーを AOF（Append Only File）モードで起動（データの永続化を有効化）
     command: redis-server --appendonly yes
 
-  # 【追加】Sidekiq サービス（バックグラウンドでジョブを処理するワーカー）
+  # Sidekiq サービス（バックグラウンドでジョブを処理するワーカー）
   sidekiq:
     # Dockerfile からイメージをビルド（web サービスと同じイメージを使用）
     build: .
@@ -97,7 +97,7 @@ services:
       - db
       # Redis サービスへの依存
       - redis
-    # 【修正】.envファイルから環境変数を読み込む設定　【Redis の接続URL（Sidekiq が使用）】
+    # .envファイルから環境変数を読み込む設定　【Redis の接続URL（Sidekiq が使用）】
     env_file:
       - .env 
 
@@ -107,5 +107,5 @@ volumes:
   postgres_data:
   # gem を永続化するためのボリューム
   bundle:
-  # 【修正】Redis のデータを保存するボリューム
+  # Redis のデータを保存するボリューム
   redis_data:

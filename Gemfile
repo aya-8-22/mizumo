@@ -97,7 +97,7 @@ gem 'dotenv-rails', groups: %i[development test]
 # メールを実際に送信せず、ブラウザで内容を確認できる
 gem 'letter_opener_web', group: :development
 
-# ===== 【修正】メール配信サービスResendのRuby SDK =====
+# ===== メール配信サービスResendのRuby SDK =====
 gem 'resend'
 
 # ===== 開発環境とテスト環境の両方で使用する gem =====
