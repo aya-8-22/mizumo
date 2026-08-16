@@ -11,6 +11,17 @@ namespace :notification do
   task send_scheduled: :environment do
     # 現在時刻を取得（日本時間）
     current_time = Time.current
+
+    # 【修正】現在の時刻が5分刻みかどうかをチェック
+    # 5分刻みでない場合は処理をスキップ
+    # 例:8時12分の場合は処理をスキップ
+    # 例:8時10分の場合は処理を実行
+    unless current_time.min % 5 == 0
+      # ログに記録
+      Rails.logger.info "現在時刻が5分刻みではないため、処理をスキップしました: #{current_time}"
+      # 処理を終了
+      next
+    end
     
     # 通知タイプの一覧を定義
     # type: 通知の種類、time_field: 時刻のカラム名、enabled_field: 有効/無効のカラム名
@@ -37,17 +48,22 @@ namespace :notification do
         # 通知時刻が設定されていない場合はスキップ
         next if notification_time.blank?
 
-        # 通知時刻を今日の日付と組み合わせて Time オブジェクトに変換
-        notification_datetime = Time.zone.parse("#{current_time.to_date} #{notification_time.strftime('%H:%M')}")
-        # 現在時刻と通知時刻の差分を分単位で計算（絶対値）
-        time_diff = ((current_time - notification_datetime) / 60).abs
-
-        # 差分が5分以内の場合
-        if time_diff <= 5
+        # 【修正】通知時刻の「時」と「分」を取得
+        notification_hour = notification_time.hour
+        notification_min = notification_time.min
+        
+        # 【修正】現在時刻の「時」と「分」を取得
+        current_hour = current_time.hour
+        current_min = current_time.min
+        
+        # 【修正】通知時刻と現在時刻が完全に一致する場合のみメール送信
+        # 例:通知時刻が8時10分で、現在時刻が8時10分の場合のみ送信
+        # 例:通知時刻が8時12分で、現在時刻が8時10分の場合は送信しない
+        if notification_hour == current_hour && notification_min == current_min
           # メール送信ジョブをキューに追加
           NotificationJob.perform_later(user.id, notification[:type])
           # ログに記録
-          Rails.logger.info "通知メール送信: #{user.email} (#{notification[:type]})"
+          Rails.logger.info "通知メール送信: #{user.email} (#{notification[:type]}) at #{current_time}"
         end
       end
     end

@@ -69,13 +69,13 @@ Rails.application.configure do
   # メールのキャッシュを無効化
   config.action_mailer.perform_caching = false
 
-  # メール送信時のURL設定(Docker環境のためホスト名を文字列で指定)
-  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  # 【修正】メール送信時のURL設定(開発環境のホスト名とポート番号)
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   # letter_opener_web を使う場合（パスワードリセット機能で使います）
   config.action_mailer.delivery_method = :letter_opener_web
 
-  # 【修正】開発環境では引き続きletter_opener_webなどを使用する想定
+  # 開発環境では引き続きletter_opener_webなどを使用する想定
   # Resendを試す場合は以下のコメントアウトを外す
   # config.action_mailer.perform_deliveries = true
   # config.action_mailer.delivery_method = :resend

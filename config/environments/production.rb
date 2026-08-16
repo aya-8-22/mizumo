@@ -129,14 +129,17 @@ Rails.application.configure do
   # 本番環境ではメール送信を有効化
   config.action_mailer.perform_deliveries = true
 
-  # 【修正】メール配信方法として Resend の HTTP API を指定
+  # メール配信方法として Resend の HTTP API を指定
   config.action_mailer.delivery_method = :resend
 
-  # 【修正】Resend の API キー設定
+  # Resend の API キー設定
   config.action_mailer.resend_settings = {
     # 環境変数から Resend の API キーを取得
     api_key: ENV['RESEND_API_KEY']
   }
+
+  # 【修正】メール内のリンク生成用ホスト設定（本番環境のURL）
+  config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com', protocol: 'https' }
 
   # Render の無料プランではポート 587 がブロックされるため、SMTP 方式ではメール送信できません
   # HTTP API 方式に変更することで、ポート 443（HTTPS）を使用してメール送信できるようにしています
@@ -160,12 +163,6 @@ Rails.application.configure do
      # TLS を自動的に有効化
      # enable_starttls_auto: true
   # }
-
-  # メール内のリンク生成用ホスト設定
-  # config.action_mailer.default_url_options = { host: 'mizumo.onrender.com' }
-
-  # メール内のリンク生成用ホスト設定
-  config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com' }
 
   # ===== 国際化設定 =====
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

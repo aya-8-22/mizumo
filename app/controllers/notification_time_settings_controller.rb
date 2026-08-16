@@ -22,10 +22,35 @@ class NotificationTimeSettingsController < ApplicationController
     # 現在ログインしているユーザー情報を取得
     @user = current_user
 
-    # 【修正】初回かどうかを判定(最初に判定を保存)
+    # 初回かどうかを判定(最初に判定を保存)
     # この時点で判定を保存しておくことで、バリデーションエラー時も判定が維持される
     # DBの値を使って判定するので、確実に初回かどうかを判定できる
     @first_time = !@user.notification_times_confirmed
+
+    # 【修正】「時」と「分」を結合して時刻を作成
+    # 8つの時間帯のフィールド名を配列で定義
+    time_fields = [
+      :wake_up_time, :breakfast_time, :morning_time, :lunch_time,
+      :afternoon_time, :bath_time, :dinner_time, :bedtime
+    ]
+
+    # 【修正】各時間帯について「時」と「分」を結合
+    time_fields.each do |field|
+      # パラメータから「時」を取得(例: "wake_up_time_hour" => "8")
+      hour = params[:user]["#{field}_hour"]
+      # パラメータから「分」を取得(例: "wake_up_time_min" => "30")
+      min = params[:user]["#{field}_min"]
+      
+      # 「時」と「分」が両方存在する場合のみ時刻を作成
+      if hour.present? && min.present?
+        # Time.zone.parseで時刻を作成してパラメータに設定(例: "8:30" → Time型に変換)
+        params[:user][field] = Time.zone.parse("#{hour}:#{min}")
+      end
+      
+      # 「時」と「分」のパラメータを削除(不要なため)
+      params[:user].delete("#{field}_hour")
+      params[:user].delete("#{field}_min")
+    end
 
     # まず通知時間だけを更新してバリデーションを実行
     @user.assign_attributes(notification_time_params)
@@ -46,7 +71,7 @@ class NotificationTimeSettingsController < ApplicationController
         redirect_to edit_notification_time_setting_path, notice: t('.update.success')
       end
     else
-      # 【修正】バリデーション失敗時
+      # バリデーション失敗時
       # @first_time はそのまま維持される(DBの値から判定しているので確実)
       # バリデーションエラー時も初回判定が変わらないので、正しいボタンが表示される
       # render :edit の前に action_name を 'edit' に変更する
