@@ -10,8 +10,9 @@ class NotificationJob < ApplicationJob
   # user_id: 送信対象のユーザーID
   # notification_type: 通知タイプ（wake_up, breakfast など）
   def perform(user_id, notification_type)
-    # ユーザーを取得
-    user = User.find(user_id)
+    # User が見つからない場合は処理をスキップ
+    user = User.find_by(id: user_id)
+    return unless user
     
     # メールを送信
     NotificationMailer.send_notification(user, notification_type).deliver_now
