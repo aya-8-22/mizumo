@@ -16,23 +16,26 @@ class PasswordSettingsController < ApplicationController
     @user = current_user
   end
 
-  # 【修正】パスワード変更処理を実行するアクション
+  # パスワード変更処理を実行するアクション
   # PATCH /password_setting
   def update
     # 現在ログイン中のユーザー（current_user）を取得
     @user = current_user
 
-    # 【修正】新しいパスワードが空欄かどうかをチェック
+    # 【修正】パスワード変更時は体重のバリデーションをスキップする
+    @user.skip_weight_validation = true
+
+    # 新しいパスワードが空欄かどうかをチェック
     # password_params[:password] が空欄の場合、バリデーションエラーを追加
     if password_params[:password].blank?
-      # 【修正】エラーメッセージを @user.errors に追加
+      # エラーメッセージを @user.errors に追加
       # :password は、エラーが発生したフィールドを指定
       # 第二引数は、エラーメッセージの内容
       @user.errors.add(:password, I18n.t('errors.messages.blank'))
-      # 【修正】edit.html.erb を再度表示
+      # edit.html.erb を再度表示
       # status: :unprocessable_entity は、422エラー(処理できないエンティティ)を返す
       render :edit, status: :unprocessable_entity
-      # 【修正】return で処理を終了し、以降のコードを実行しないようにする
+      # return で処理を終了し、以降のコードを実行しないようにする
       return
     end
 
@@ -61,7 +64,7 @@ class PasswordSettingsController < ApplicationController
     end
   end
 
-  # 【修正】パスワード変更完了画面を表示するアクション
+  # パスワード変更完了画面を表示するアクション
   # GET /password_settings/complete
   def complete
     # complete.html.erb を表示するだけのアクション
