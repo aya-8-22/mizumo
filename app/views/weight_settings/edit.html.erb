@@ -1,8 +1,8 @@
 <!-- app/views/weight_settings/edit.html.erb -->
 <!-- 設定（体重）画面の見た目（HTML）を作るためのファイル -->
 
-<!-- エラーメッセージをここに表示 -->
-<%= render 'shared/error_messages', object: current_user %>
+<!-- 【修正】@user に保存されているエラー情報を表示 -->
+<%= render 'shared/error_messages', object: @user %>
 
 <!-- メインコンテンツ全体をアイボリー色の背景で表示、画面全体の高さを確保、中央配置、白いカードを上部に配置-->
 <div class="bg-ivory min-h-screen flex items-start justify-center px-4 sm:px-6 py-6 sm:py-8">
@@ -14,22 +14,6 @@
     <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-6 sm:mb-8">
       設定（体重）
     </h2>
-
-    <!-- カスタムCSS（number入力欄の矢印を非表示にする） -->
-    <style>
-      /* Chrome, Safari, Edge, Opera用 */
-      /* number型入力欄の上下矢印ボタンを非表示にする */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      /* Firefox用 */
-      /* number型入力欄の上下矢印ボタンを非表示にする */
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
-    </style>
 
     <!-- 体重入力エリア全体の表示制御：初回保存後は非表示 -->
     <!-- @show_next_button が false の場合（初回表示時または2回目以降）のみ表示 -->
@@ -49,54 +33,25 @@
           <div class="flex-1 border-t-2 border-brand-navy"></div>
         </div>
 
-        <!-- フォーム開始: current_userの情報を更新するフォーム -->
-        <!-- url を weight_setting_path に設定、method を patch に指定 -->
-        <%= form_with(model: current_user, url: weight_setting_path, method: :patch, data: { turbo: false }) do |f| %>  
+        <!-- 【修正】@user の情報を更新するフォーム -->
+        <%= form_with(model: @user, url: weight_setting_path, method: :patch, data: { turbo: false }) do |f| %>  
           
-          <!-- 体重入力フィールド（プラス・マイナスボタン付き） -->
+         <!-- 【修正】体重選択フィールド（セレクトボックス） -->
           <div class="mb-6">
-            <!-- プラス・マイナスボタンと入力欄を横並びで表示 -->
+            <!-- セレクトボックスと単位を横並びで表示 -->
             <div class="flex items-center justify-center space-x-4">
               
-              <!-- マイナスボタン（下向き三角形の中にマイナス記号） -->
-              <button type="button" 
-                      onclick="decrementWeight()" 
-                      class="w-16 h-16 sm:w-20 sm:h-20 bg-brand-navy text-pure-white rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition relative">
-                <!-- 下向き三角形（▼） -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="absolute w-full h-full" viewBox="0 0 100 100">
-                  <!-- 三角形の位置を中央に調整 -->
-                  <polygon points="50,70 20,30 80,30" fill="currentColor"/>
-                </svg>
-                <!-- マイナス記号を三角の中に配置 -->
-                <span class="absolute text-2xl sm:text-3xl font-bold text-brand-navy" style="top: 20%;">−</span>
-              </button>
-
-              <!-- 体重表示エリア（大きく表示） -->
-              <div class="flex items-center space-x-2">
-                <!-- 体重の数値部分（大きく表示） -->
-                <%= f.number_field :weight, 
-                    id: "weight_input",
-                    class: "w-32 sm:w-40 text-4xl sm:text-5xl md:text-6xl font-bold text-charcoal text-center border-0 bg-transparent focus:outline-none",
-                    placeholder: "50.0",
-                    step: "0.1",
-                    min: "0",
-                    value: current_user.weight || 50.0 %>
-                <!-- 単位「kg」を表示 -->
-                <span class="text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal">kg</span>
-              </div>
-
-              <!-- プラスボタン（上向き三角形の中にプラス記号） -->
-              <button type="button" 
-                      onclick="incrementWeight()" 
-                      class="w-16 h-16 sm:w-20 sm:h-20 bg-brand-navy text-pure-white rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition relative">
-                <!-- 上向き三角形（▲） -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="absolute w-full h-full" viewBox="0 0 100 100">
-                  <!-- 三角形の位置を中央に調整 -->
-                  <polygon points="50,30 20,70 80,70" fill="currentColor"/>
-                </svg>
-                <!-- プラス記号を中央に配置 -->
-                <span class="absolute text-2xl sm:text-3xl font-bold text-brand-navy flex items-center justify-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">+</span>
-              </button>
+              <!-- 【修正】体重のセレクトボックス（@user.weight.to_i で整数に変換してデフォルト値に設定） -->
+              <%= f.select :weight, 
+                  options_for_select(
+                    (20..200).map { |weight| [weight, weight] },
+                    @user.weight.to_i
+                  ),
+                  {},
+                  class: "w-32 sm:w-40 px-2 sm:px-4 py-4 sm:py-5 border-2 border-brand-navy rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-navy text-3xl sm:text-4xl md:text-5xl font-bold text-center" %>
+              
+              <!-- 単位「kg」を表示 -->
+              <span class="text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal">kg</span>
             </div>
           </div>
 
@@ -115,33 +70,6 @@
     <% end %>
     <!-- 【修正】体重入力エリア全体の表示制御の閉じタグ -->
 
-
-    <!-- JavaScript（プラス・マイナスボタンの動作） -->
-    <script>
-      // 体重を0.1kg増やす関数
-      function incrementWeight() {
-        // 入力欄の要素を取得
-        const input = document.getElementById('weight_input');
-        // 現在の値を取得（値がない場合は50.0を使用）
-        const currentValue = parseFloat(input.value) || 50.0;
-        // 0.1を足して小数第一位まで表示
-        input.value = (currentValue + 0.1).toFixed(1);
-      }
-
-      // 体重を0.1kg減らす関数
-      function decrementWeight() {
-        // 入力欄の要素を取得
-        const input = document.getElementById('weight_input');
-        // 現在の値を取得（値がない場合は50.0を使用）
-        const currentValue = parseFloat(input.value) || 50.0;
-        // 0.1より大きい場合のみ減らす
-        if (currentValue > 0.1) {
-          // 0.1を引いて小数第一位まで表示
-          input.value = (currentValue - 0.1).toFixed(1);
-        }
-      }
-    </script>
-
     <!-- 「1日の目標水分摂取量」のエリア -->
     <div class="bg-ivory border-2 border-ivory p-6 rounded-2xl">
       
@@ -157,16 +85,16 @@
         <div class="flex-1 border-t-2 border-brand-navy"></div>
       </div>
 
-      <!-- 【修正】目標水分摂取量の表示 -->
-      <% if current_user.weight.present? %>
-        <!-- 目標水分摂取量を大きく表示（例：1800ml / 日） -->
+      <!-- 【修正】目標水分摂取量の表示(@user.weight を使用) -->
+      <% if @user.weight.present? %>
+        <!-- 目標水分摂取量を大きく表示 -->
         <p class="text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal text-center mt-3">
-          <%= current_user.calculate_target_water_intake %>ml / 日
+          <%= @user.calculate_target_water_intake %>ml / 日
         </p>
        
-        <!-- 計算式を表示（例：(体重 60kg × 30ml)） -->
+        <!-- 計算式を表示（整数表示に変更） -->
         <p class="text-base sm:text-lg font-bold text-charcoal text-center mt-2">
-          (体重 <%= current_user.weight %>kg × 30ml)
+          (体重 <%= @user.weight.to_i %>kg × 30ml)
         </p>
 
       <% else %>

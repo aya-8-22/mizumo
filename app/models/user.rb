@@ -15,9 +15,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # 利用規約の同意チェック（新規登録時のみ必須）
+  # 【追加】利用規約の同意チェック（新規登録時のみ必須）
   # acceptance: true で利用規約にチェックが入っていない場合にエラーを表示
   # on: :create で新規登録時のみバリデーションを実行
+  # message: オプションを削除して、config/locales/activerecord/ja.yml の設定を優先
   validates :terms_of_service, acceptance: true, on: :create
 
   # 体重のバリデーション（任意入力）
@@ -25,33 +26,27 @@ class User < ApplicationRecord
   validates :weight, numericality: {
                        # greater_than_or_equal_to: 20 で体重が20以上の値かをチェック
                        greater_than_or_equal_to: 20,
-                       # less_than_or_equal_to: 222.2でデータベースの制約に合わせてを設定
-                       # データベースの precision: 4, scale: 1 の制約により、999.9が最大値
-                       less_than_or_equal_to: 200.0
+                       # less_than_or_equal_to: 200 で体重が200以下の値かをチェック
+                       less_than_or_equal_to: 200,
+                       # only_integer: true で整数のみを許可
+                       only_integer: true
                      },
                      # allow_nil: true で体重が未入力（nil）でもエラーにならない
                      # これにより、新規登録時は体重を入力しなくても登録できる
                      # 設定（体重）画面での必須チェックは、コントローラーで実行する
-                     allow_nil: true
+                     allow_nil: true,
+                     # 【修正】unless: :skip_weight_validation で skip_weight_validation が true の場合はバリデーションをスキップ
+                     unless: :skip_weight_validation
 
-  # 目標水分摂取量のバリデーション（任意入力）
-  # 入力された場合のみ、数値であることと範囲をチェック
-  # validates :target_water_intake, numericality: {
-                                    # greater_than: 0 で目標水分摂取量が0より大きい値かをチェック
-                                    # greater_than: 0,
-                                    # only_integer: true で整数のみを許可
-                                    # only_integer: true
-                                  # },
-                                  # allow_nil: true で目標水分摂取量が未入力（nil）でもエラーにならない
-                                  # allow_nil: true
-
-  # カスタムバリデーション:少なくとも1つの通知時間がオンになっているかチェック
-  # validate メソッドでカスタムバリデーションを定義
-  # at_least_one_notification_enabled メソッドを実行してバリデーションを行う
-  validate :at_least_one_notification_enabled
+  # 【修正】同一時刻のバリデーション（通知時間設定画面でも実行する）
+  validate :no_duplicate_notification_times
 
   # ユーザーは複数の飲水記録を持つ
   has_many :water_intakes, dependent: :destroy
+
+  # 【修正】体重のバリデーションをスキップするかどうかを判定する属性
+  # attr_accessor で仮想属性を定義（DBには保存されない）
+  attr_accessor :skip_weight_validation
 
   # 初回設定完了フラグで判定（デフォルト値があっても初回かどうかを判定できる）
   def notification_times_set?
@@ -59,7 +54,7 @@ class User < ApplicationRecord
     notification_times_confirmed
   end
 
-  # 【修正】目標水分摂取量を計算するメソッド メソッド名を変更（カラム名と衝突しないように）
+  # 目標水分摂取量を計算するメソッド メソッド名を変更（カラム名と衝突しないように）
   def calculate_target_water_intake
     # 体重が設定されている場合のみ計算
     # weight が nil または 0 の場合は 0 を返す
@@ -72,28 +67,35 @@ class User < ApplicationRecord
 
   private
 
-  # カスタムバリデーションメソッド:少なくとも1つの通知時間がオンになっているかチェック
-  def at_least_one_notification_enabled
-    # 8つの通知時間の有・無状態を配列にまとめる
-    enabled_notifications = [
-      wake_up_enabled,       # 起床時の有・無
-      breakfast_enabled,     # 朝食時の有・無
-      morning_enabled,       # 10時頃の有・無
-      lunch_enabled,         # 昼食時の有・無
-      afternoon_enabled,     # 15時頃の有・無
-      bath_enabled,          # 入浴時の有・無
-      dinner_enabled,        # 夕食時の有・無
-      bedtime_enabled        # 就寝時の有・無
+  # 【修正】カスタムバリデーションメソッド:同一時刻が設定されていないかチェック
+  def no_duplicate_notification_times
+    # 【修正】体重設定時はバリデーションをスキップ
+    return if skip_weight_validation
+    # 8つの通知時間を配列にまとめる
+    times = [
+      wake_up_time,
+      breakfast_time,
+      morning_time,
+      lunch_time,
+      afternoon_time,
+      bath_time,
+      dinner_time,
+      bedtime
     ]
 
-    # 配列の中に true が1つもない場合（すべて false の場合）
-    # any? メソッドで配列の中に true が1つでもあるかをチェック
-    # unless で「true が1つもない場合」にエラーを追加
-    return if enabled_notifications.any?
+    # nil を除外する
+    times = times.compact
 
-    # エラーメッセージを追加
-    # errors.add(:base, 'メッセージ') で全体に対するエラーを追加
-    # :base を使うことで、特定のフィールドではなく全体のエラーとして表示される
-    errors.add(:base, '少なくとも1つの通知時間を「通知有」にしてください')
+    # 【修正】時刻が1つも設定されていない場合はバリデーションをスキップ
+    return if times.empty?
+
+    # 時刻を「時:分」の文字列に変換する
+    time_strings = times.map { |t| t.strftime('%H:%M') }
+
+    # 重複があるかチェックする
+    if time_strings.size != time_strings.uniq.size
+      # 重複がある場合はエラーを追加
+      errors.add(:base, '同一時刻が設定されていますので変更してください')
+    end
   end
 end

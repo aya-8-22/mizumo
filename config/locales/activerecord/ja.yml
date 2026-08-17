@@ -43,7 +43,7 @@ ja: # 日本語設定の開始
         user: # User モデル固有のエラーメッセージ
           attributes: # 属性ごとのエラーメッセージ
             email: # email カラム固有のエラーメッセージ
-              taken: が使用できないものになっています。別のメールアドレスをご使用ください # 【修正】email 専用の taken メッセージ
+              taken: が使用できないものになっています。別のメールアドレスをご使用ください # mail 専用の taken メッセージ
               blank: を入力してください # email が空の場合のメッセージ
               invalid: の形式が正しくありません # email の形式が不正な場合のメッセージ
             password: # password カラム固有のエラーメッセージ
@@ -53,16 +53,14 @@ ja: # 日本語設定の開始
               confirmation: とパスワードが一致しません # password と password_confirmation が一致しない場合のメッセージ
             terms_of_service: # terms_of_service カラム固有のエラーメッセージ
               accepted: に同意して、レ点チェックを入れてください # 利用規約にチェックが入っていない場合のメッセージ
+            base:
+              duplicate_notification_times: 同一時刻が設定されていますので変更してください # 【修正】base エラー用の翻訳を追加
 
-        water_intake: # 【修正】
+        water_intake: 
           attributes:
             amount_ml:
-              # 必須入力エラー
-              blank: を入力してください
-              # 許可された値以外が入力された場合のエラー
-              inclusion: は150ml、200ml、250mlのいずれかを選択してください
+              blank: を入力してください # 必須入力エラー
+              inclusion: は150ml、200ml、250mlのいずれかを選択してください  # 許可された値以外が入力された場合のエラー
             recorded_at:
-              # 必須入力エラー
-              blank: を入力してください
-              # 未来の時刻が入力された場合のエラー
-              cannot_be_in_the_future: は未来の時刻を入力できません
+              blank: を入力してください # 必須入力エラー
+              cannot_be_in_the_future: は未来の時刻を入力できません # 未来の時刻が入力された場合のエラー

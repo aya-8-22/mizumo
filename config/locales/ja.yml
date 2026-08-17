@@ -17,9 +17,12 @@ ja:
       success: '体重を保存しました' # 体重保存成功時のメッセージ
 
   # ユーザー登録関連のメッセージ
-  # users:
-    # registrations:
-      # terms_not_agreed: 利用規約とプライバシーポリシーに同意してください
+  users:
+    registrations:
+      # 【修正】利用規約に同意していない場合のエラーメッセージを追加
+      terms_not_agreed: 利用規約とプライバシーポリシーに同意してください
+      # 【修正】登録完了時のフラッシュメッセージを追加
+      signed_up: 新規登録が完了しました
   
   # パスワード変更のフラッシュメッセージ
   password_settings:

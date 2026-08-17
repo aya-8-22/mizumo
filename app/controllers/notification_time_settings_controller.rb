@@ -52,6 +52,10 @@ class NotificationTimeSettingsController < ApplicationController
       params[:user].delete("#{field}_min")
     end
 
+    # 【修正】体重のバリデーションをスキップするフラグを設定
+    # skip_weight_validation を true にすることで、体重のバリデーションをスキップする
+    @user.skip_weight_validation = true
+
     # まず通知時間だけを更新してバリデーションを実行
     @user.assign_attributes(notification_time_params)
 

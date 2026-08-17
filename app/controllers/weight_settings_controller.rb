@@ -12,7 +12,7 @@ class WeightSettingsController < ApplicationController
     # ログインしているユーザーの情報を取得
     @user = current_user
 
-    # 【修正】初回表示時は @show_next_button を false に設定
+    # 初回表示時は @show_next_button を false に設定
     @show_next_button = false
 
     # 初回表示時（体重未登録時）は modal レイアウトを使用
@@ -27,20 +27,20 @@ class WeightSettingsController < ApplicationController
 
     # 体重が空の場合はエラーメッセージを表示
     if weight_params[:weight].blank?
-      # 【修正】エラー処理をメソッドに分割
+      # エラー処理をメソッドに分割
       handle_weight_blank_error
       return
     end
 
-    # 【修正】初回保存かどうかを判定（更新前の体重が空かどうか）
+    # 初回保存かどうかを判定（更新前の体重が空かどうか）
     first_time = @user.weight.blank?
-
-    # ユーザーの体重を更新
+    
+    # 【修正】update メソッドで体重を更新（パラメータをそのまま渡す）
     if @user.update(weight_params)
-      # 【修正】保存成功時の処理をメソッドに分割
+      # 保存成功時の処理をメソッドに分割
       handle_weight_update_success(first_time)
     else
-      # 【修正】保存失敗時の処理をメソッドに分割
+      # 保存失敗時の処理をメソッドに分割
       handle_weight_update_failure(first_time)
     end
   end
@@ -52,7 +52,7 @@ class WeightSettingsController < ApplicationController
     params.require(:user).permit(:weight)
   end
 
-  # 【修正】体重が空の場合のエラー処理
+  # 体重が空の場合のエラー処理
   def handle_weight_blank_error
     # バリデーションエラーメッセージを追加
     @user.errors.add(:weight, 'を入力してください')
@@ -64,7 +64,7 @@ class WeightSettingsController < ApplicationController
     render :edit, layout: (@user.weight.blank? ? 'modal' : 'application'), status: :unprocessable_entity
   end
 
-  # 【修正】体重更新成功時の処理
+  # 体重更新成功時の処理
   def handle_weight_update_success(first_time)
     # 保存成功時は「次へ」ボタンの表示を判定
     @show_next_button = first_time
@@ -77,7 +77,7 @@ class WeightSettingsController < ApplicationController
     render :edit, layout: (first_time ? 'modal' : 'application')
   end
 
-  # 【修正】体重更新失敗時の処理
+  # 体重更新失敗時の処理
   def handle_weight_update_failure(first_time)
     # 保存失敗時は「次へ」ボタンを表示しない
     @show_next_button = false
