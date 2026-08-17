@@ -1,8 +1,8 @@
 <%# app/views/notification_time_settings/edit.html.erb %>
 <%# 設定(メール通知時間)画面のビュー設定 %>
 
-<!-- エラーメッセージをここに表示 -->
-<%= render 'shared/error_messages', object: current_user %>
+<!-- 【修正】エラーメッセージをここに表示 -->
+<%= render 'shared/error_messages', object: @user %>
 
 <%# メイン画面:画面全体を中央揃えにして、上部に余白を追加 %>
 <main class="flex justify-center items-start min-h-screen bg-ivory pt-6 sm:pt-8 px-4 sm:px-6">
@@ -45,6 +45,11 @@
           <p class="flex-1">設定後:「保存」ボタン押す</p>
         </div>
       <% end %>
+
+      <%# 注意：同一時間のバリデーション未のため、注意書きを記載 %>
+      <div class="flex items-start mb-3 sm:mb-4">
+        <p class="flex-1">注意：同一時間に設定しないでください</p>
+      </div>
     </div>
 
     <%# フォーム開始:PATCH メソッドで notification_time_setting_path に送信 %>

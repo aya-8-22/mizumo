@@ -6,8 +6,6 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     # ユーザー更新時に体重(weight)パラメーターを許可
     before_action :configure_account_update_params, only: [:update]
-    # 【追加】利用規約への同意をチェック
-    before_action :check_terms_of_service, only: [:create]
 
     # 登録完了画面を表示するアクション
     def complete
@@ -22,7 +20,7 @@ module Users
       users_registration_complete_path
     end
 
-    # 【追加】新規登録後のログイン時のリダイレクト先を登録完了画面に変更
+    # 新規登録後のログイン時のリダイレクト先を登録完了画面に変更
     def after_sign_in_path_for(resource)
       # 新規登録直後かどうかを判定
       # resource.created_at が1分以内の場合は新規登録直後と判断
@@ -64,19 +62,6 @@ module Users
         # パスワードが入力されている場合は、通常の更新処理
         resource.update_with_password(params)
       end
-    end
-
-    private
-
-    # 【追加】利用規約への同意をチェックするメソッド
-    def check_terms_of_service
-      # 利用規約に同意済みなら何もしない
-      return if params.dig(:user, :terms_of_service) == '1'
-
-      # エラーメッセージを設定
-      flash[:alert] = t('users.registrations.terms_not_agreed')
-      # 新規登録画面に戻る
-      redirect_to new_user_registration_path
     end
   end
 end

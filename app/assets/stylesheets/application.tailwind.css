@@ -9,7 +9,12 @@
 /* Tailwind CSS のユーティリティクラスを読み込む */
 @tailwind utilities;
 
-/* 【修正】ヘッダーの高さを定義（カスタムプロパティ） */
+/* ヘッダーの高さを定義（カスタムプロパティ） */
 :root {
   --header-height: 64px;
+}
+
+/* 【修正】カレンダーの曜日を中央表示にする */
+.simple-calendar-table th {
+  text-align: center;
 }

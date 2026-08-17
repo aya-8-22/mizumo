@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_07_27_153215) do
+ActiveRecord::Schema[7.0].define(version: 2026_08_16_131843) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,14 +26,14 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_27_153215) do
     t.integer "target_water_intake", default: 2000, null: false
     t.time "notification_time"
     t.boolean "terms_of_service", default: false, null: false
-    t.time "wake_up_time", default: "2000-01-01 06:00:00"
-    t.time "breakfast_time", default: "2000-01-01 08:00:00"
-    t.time "morning_time", default: "2000-01-01 10:00:00"
-    t.time "lunch_time", default: "2000-01-01 12:00:00"
-    t.time "afternoon_time", default: "2000-01-01 15:00:00"
-    t.time "bath_time", default: "2000-01-01 17:00:00"
-    t.time "dinner_time", default: "2000-01-01 19:00:00"
-    t.time "bedtime", default: "2000-01-01 21:00:00"
+    t.time "wake_up_time", default: "2000-01-01 21:00:00"
+    t.time "breakfast_time", default: "2000-01-01 23:00:00"
+    t.time "morning_time", default: "2000-01-01 01:00:00"
+    t.time "lunch_time", default: "2000-01-01 03:00:00"
+    t.time "afternoon_time", default: "2000-01-01 06:00:00"
+    t.time "bath_time", default: "2000-01-01 08:00:00"
+    t.time "dinner_time", default: "2000-01-01 10:00:00"
+    t.time "bedtime", default: "2000-01-01 12:00:00"
     t.boolean "wake_up_enabled", default: true
     t.boolean "breakfast_enabled", default: true
     t.boolean "morning_enabled", default: true
