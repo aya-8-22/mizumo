@@ -1,6 +1,9 @@
 <!-- app/views/devise/sessions/new.html.erb -->
 <!-- ログイン画面の見た目を決めている設計図 -->
 
+<!-- 【修正】エラーメッセージ表示 -->
+<%= render 'devise/shared/error_messages', resource: resource %>
+
 <!-- メイン画面(フレックスボックス、中央揃え、最小高さ、背景色、上下の余白を設定) -->
 <main class="flex justify-center items-start min-h-screen bg-ivory px-4 sm:px-6 py-8 sm:py-12">
   <!-- ログインフォームのコンテナ(背景色、余白、角丸、影、最大幅を設定一覧ページと統一) -->

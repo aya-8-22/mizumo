@@ -19,7 +19,7 @@ ja: # 日本語設定の開始
         # first_name: 名 # first_name カラムの日本語表示名
         # last_name: 姓 # last_name カラムの日本語表示名
 
-      water_intake: # 【追加】WaterIntake モデルの属性
+      water_intake: # WaterIntake モデルの属性
         amount_ml: 水分摂取量 # amount_ml カラムの日本語表示名
         recorded_at: 記録日時 # recorded_at カラムの日本語表示名
         time_slot: 時間帯 # time_slot カラムの日本語表示名
@@ -30,7 +30,7 @@ ja: # 日本語設定の開始
         too_short: は%{count}文字以上で入力してください # 最小文字数未満の場合のメッセージ
         too_long: は%{count}文字以内で入力してください # 最大文字数超過の場合のメッセージ
         invalid: は不正な値です # 形式が不正な場合のメッセージ
-        taken: はすでに存在します # 重複している場合のメッセージ
+        taken: が使用できないものになっています。別のメールアドレスをご使用ください # 重複している場合のメッセージ
         not_a_number: は数値で入力してください # 数値でない場合のメッセージ
         greater_than: は%{count}より大きい値にしてください # 指定値より大きい必要がある場合のメッセージ
         greater_than_or_equal_to: は%{count}以上の値にしてください # 指定値以上である必要がある場合のメッセージ
@@ -53,8 +53,9 @@ ja: # 日本語設定の開始
               confirmation: とパスワードが一致しません # password と password_confirmation が一致しない場合のメッセージ
             terms_of_service: # terms_of_service カラム固有のエラーメッセージ
               accepted: に同意して、レ点チェックを入れてください # 利用規約にチェックが入っていない場合のメッセージ
-            base:
-              duplicate_notification_times: 同一時刻が設定されていますので変更してください # 【修正】base エラー用の翻訳を追加
+            base: # 【修正】base エラー用の翻訳を追加
+              duplicate_notification_times: 同一時刻が設定されていますので変更してください 
+              invalid_login: メールアドレスまたはパスワードが違います。 # 【修正】ログイン失敗時のエラーメッセージを追加
 
         water_intake: 
           attributes:

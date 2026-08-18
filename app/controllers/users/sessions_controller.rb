@@ -14,13 +14,31 @@ module Users
     #   super
     # end
 
-    # POST /resource/sign_in
-    # 【修正】createアクションをコメントアウトして、チェックボックスの状態に応じて remember_me を設定する
-    # def create
-    #   # 【修正前】remember_me を強制的に有効にする処理を削除
-    #   # params[:user][:remember_me] = '1' if params[:user]
-    #   super
-    # end
+    # 【修正】POST /resource/sign_in
+    def create
+      # 親クラスのログイン処理を実行してユーザー情報を取得
+      self.resource = warden.authenticate(auth_options)
+      
+      # ログインに成功した場合の処理
+      if resource
+        # ログイン成功メッセージを設定
+        set_flash_message!(:notice, :signed_in)
+        # ユーザーをログイン状態にする
+        sign_in(resource_name, resource)
+        # ブロックが渡されていれば実行する
+        yield resource if block_given?
+        # ログイン成功後のリダイレクト先に遷移
+        respond_with resource, location: after_sign_in_path_for(resource)
+      else
+        # ログインに失敗した場合の処理
+        # 新しいユーザーオブジェクトを作成（エラーメッセージ表示用）
+        self.resource = resource_class.new(sign_in_params)
+        # baseエラーとしてinvalid_loginメッセージを追加
+        resource.errors.add(:base, :invalid_login)
+        # ログイン画面を再表示（422ステータスコードで返す）
+        render :new, status: :unprocessable_entity
+      end
+    end
 
     # DELETE /resource/sign_out
     # def destroy
@@ -29,7 +47,7 @@ module Users
 
     protected
 
-    # 【追加】ログイン成功後のリダイレクト先を設定
+    # ログイン成功後のリダイレクト先を設定
     # ログイン成功後は記録画面に遷移
     def after_sign_in_path_for(_resource)
       # メール通知からのアクセスの場合はセッションを削除
