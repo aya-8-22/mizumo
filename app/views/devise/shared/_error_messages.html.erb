@@ -5,13 +5,9 @@
 <% if resource.errors.any? %>
    <!-- エラーメッセージ表示エリア -->
   <div id="error_explanation" data-turbo-temporary class="bg-red-50 border-2 border-red-400 text-red-700 px-4 sm:px-6 py-4 rounded-lg mb-6 shadow-lg max-h-[50vh] overflow-y-auto" role="alert" aria-live="assertive">
-    <%# エラーメッセージのタイトル部分(文字サイズを1段階大きく) %>
+    <%# エラーメッセージのタイトル部分 %>
     <h2 class="text-2xl sm:text-2xl font-bold text-red-700 mb-3">
-      <%# I18n.t で多言語対応のエラーメッセージを表示 %>
-      <%= I18n.t("errors.messages.not_saved",
-                 count: resource.errors.count,
-                 resource: resource.class.model_name.human.downcase)
-       %>
+      <%= resource.errors.count %>個のエラーがあります
     </h2>
     <%# エラーメッセージの一覧(文字サイズを1段階大きく) %>
     <ul class="list-disc list-inside text-lg sm:text-xl text-red-700 space-y-2 leading-relaxed">

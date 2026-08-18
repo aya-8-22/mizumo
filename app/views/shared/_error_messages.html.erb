@@ -10,10 +10,9 @@
     </h2>
     <%# エラーメッセージの一覧（文字サイズを1段階大きく、space-y-2、leading-relaxedを追加） %>
     <ul class="mb-0 list-disc list-inside text-lg sm:text-xl text-red-700 space-y-2 leading-relaxed">
-      <%# 各エラーメッセージを表示 %>
-      <% object.errors.each do |error| %>
-        <%# 1件ずつエラーメッセージを表示 %>
-        <li><%= error.full_message %></li>
+      <%# 【修正】全てのエラーメッセージを表示（base エラーも含む） %>
+      <% object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
       <% end %>
     </ul>
   </div>
