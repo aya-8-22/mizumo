@@ -15,7 +15,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # 【追加】利用規約の同意チェック（新規登録時のみ必須）
+  # 利用規約の同意チェック（新規登録時のみ必須）
   # acceptance: true で利用規約にチェックが入っていない場合にエラーを表示
   # on: :create で新規登録時のみバリデーションを実行
   # message: オプションを削除して、config/locales/activerecord/ja.yml の設定を優先
@@ -35,16 +35,16 @@ class User < ApplicationRecord
                      # これにより、新規登録時は体重を入力しなくても登録できる
                      # 設定（体重）画面での必須チェックは、コントローラーで実行する
                      allow_nil: true,
-                     # 【修正】unless: :skip_weight_validation で skip_weight_validation が true の場合はバリデーションをスキップ
+                     # unless: :skip_weight_validation で skip_weight_validation が true の場合はバリデーションをスキップ
                      unless: :skip_weight_validation
 
-  # 【修正】同一時刻のバリデーション（通知時間設定画面でも実行する）
+  # 同一時刻のバリデーション（通知時間設定画面でも実行する）
   validate :no_duplicate_notification_times
 
   # ユーザーは複数の飲水記録を持つ
   has_many :water_intakes, dependent: :destroy
 
-  # 【修正】体重のバリデーションをスキップするかどうかを判定する属性
+  # 体重のバリデーションをスキップするかどうかを判定する属性
   # attr_accessor で仮想属性を定義（DBには保存されない）
   attr_accessor :skip_weight_validation
 
@@ -67,35 +67,30 @@ class User < ApplicationRecord
 
   private
 
-  # 【修正】カスタムバリデーションメソッド:同一時刻が設定されていないかチェック
   def no_duplicate_notification_times
-    # 【修正】体重設定時はバリデーションをスキップ
-    return if skip_weight_validation
-    # 8つの通知時間を配列にまとめる
-    times = [
-      wake_up_time,
-      breakfast_time,
-      morning_time,
-      lunch_time,
-      afternoon_time,
-      bath_time,
-      dinner_time,
-      bedtime
-    ]
+    # 通知が有効な時間帯のみを取得
+    enabled_times = []
+  
+    # 8つの時間帯について、通知が有効な場合のみ時刻を配列に追加
+    enabled_times << wake_up_time if ActiveModel::Type::Boolean.new.cast(wake_up_enabled) && wake_up_time.present?
+    enabled_times << breakfast_time if ActiveModel::Type::Boolean.new.cast(breakfast_enabled) && breakfast_time.present?
+    enabled_times << morning_time if ActiveModel::Type::Boolean.new.cast(morning_enabled) && morning_time.present?
+    enabled_times << lunch_time if ActiveModel::Type::Boolean.new.cast(lunch_enabled) && lunch_time.present?
+    enabled_times << afternoon_time if ActiveModel::Type::Boolean.new.cast(afternoon_enabled) && afternoon_time.present?
+    enabled_times << bath_time if ActiveModel::Type::Boolean.new.cast(bath_enabled) && bath_time.present?
+    enabled_times << dinner_time if ActiveModel::Type::Boolean.new.cast(dinner_enabled) && dinner_time.present?
+    enabled_times << bedtime if ActiveModel::Type::Boolean.new.cast(bedtime_enabled) && bedtime.present?
 
-    # nil を除外する
-    times = times.compact
-
-    # 【修正】時刻が1つも設定されていない場合はバリデーションをスキップ
-    return if times.empty?
+    # 時刻が1つも設定されていない場合はバリデーションをスキップ
+    return if enabled_times.empty?
 
     # 時刻を「時:分」の文字列に変換する
-    time_strings = times.map { |t| t.strftime('%H:%M') }
+    time_strings = enabled_times.map { |t| t.strftime('%H:%M') }
 
-    # 重複があるかチェックする
+    # 重複があるかチェックする（配列のサイズと重複を除いた配列のサイズを比較）
     if time_strings.size != time_strings.uniq.size
-      # 重複がある場合はエラーを追加
-      errors.add(:base, '同一時刻が設定されていますので変更してください')
+      # 重複が検出された場合、エラーメッセージを追加
+      errors.add(:base, :duplicate_notification_times)
     end
   end
 end

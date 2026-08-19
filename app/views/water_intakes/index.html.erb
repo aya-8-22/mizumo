@@ -148,6 +148,12 @@
               250ml
             </button>
           </div>
+
+          <%# 【追加】補足テキスト「＊補足:コップ1杯は200ml」 %>
+          <p class="text-sm sm:text-base text-charcoal text-center mt-3 font-bold" style="font-family: 'Noto Sans JP', sans-serif;">
+            ＊コップ1杯は200mlが目安の量です
+          </p>
+
           <%# 隠しフィールド(JavaScriptで値を設定) %>
           <%= hidden_field_tag :amount_ml, nil, id: 'amount-ml-input' %>
         </div>
@@ -215,7 +221,7 @@
       </svg>
       <%# 注意事項のテキスト %>
       <div>
-        <p class="text-sm sm:text-base text-charcoal leading-relaxed">
+        <p class="text-sm sm:text-base text-charcoal leading-relaxed ">
           ・【削除ボタン】削除すると復元不可です<br>
           ・【追加記録】時間変更で、記載可能です<br>
           ・【目標達成状況】カレンダー画面から確認可能です<br>

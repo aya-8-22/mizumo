@@ -27,14 +27,14 @@ class NotificationTimeSettingsController < ApplicationController
     # DBの値を使って判定するので、確実に初回かどうかを判定できる
     @first_time = !@user.notification_times_confirmed
 
-    # 【修正】「時」と「分」を結合して時刻を作成
+    # 「時」と「分」を結合して時刻を作成
     # 8つの時間帯のフィールド名を配列で定義
     time_fields = [
       :wake_up_time, :breakfast_time, :morning_time, :lunch_time,
       :afternoon_time, :bath_time, :dinner_time, :bedtime
     ]
 
-    # 【修正】各時間帯について「時」と「分」を結合
+    # 各時間帯について「時」と「分」を結合
     time_fields.each do |field|
       # パラメータから「時」を取得(例: "wake_up_time_hour" => "8")
       hour = params[:user]["#{field}_hour"]
@@ -52,34 +52,45 @@ class NotificationTimeSettingsController < ApplicationController
       params[:user].delete("#{field}_min")
     end
 
-    # 【修正】体重のバリデーションをスキップするフラグを設定
+    # enabled パラメータを boolean 型に変換
+    # フォームから送信される "1" または "0" を true または false に変換
+    enabled_fields = [
+      :wake_up_enabled, :breakfast_enabled, :morning_enabled, :lunch_enabled,
+      :afternoon_enabled, :bath_enabled, :dinner_enabled, :bedtime_enabled
+    ]
+
+    # 各 enabled フィールドについて、Rails の標準的な方法で boolean に変換
+    enabled_fields.each do |field|
+      # ActiveModel::Type::Boolean.new.cast で Rails の型変換ルールに従って変換
+      # "1", "true", "t", "yes", "y", "on", 1, true → true
+      # "0", "false", "f", "no", "n", "off", 0, false, nil → false
+      params[:user][field] = ActiveModel::Type::Boolean.new.cast(params[:user][field])
+    end
+
+    # 体重のバリデーションをスキップするフラグを設定
     # skip_weight_validation を true にすることで、体重のバリデーションをスキップする
     @user.skip_weight_validation = true
 
-    # まず通知時間だけを更新してバリデーションを実行
+    # 通知時間を更新してバリデーションを実行
     @user.assign_attributes(notification_time_params)
 
-    # バリデーションが成功した場合のみ notification_times_confirmed を true にする
+    # バリデーションが成功した場合のみ保存する
     if @user.valid?
-      # バリデーション成功時に notification_times_confirmed を true にする
-      @user.notification_times_confirmed = true
-      # 保存する
+      # DBに保存
       @user.save
+      # 初回の場合のみ notification_times_confirmed を true にする
+      @user.update_column(:notification_times_confirmed, true) if @first_time
 
       # @first_time で遷移先を判定
       if @first_time
-        # 初回の場合は記録画面へ遷移(メール通知時間を設定しました)
+        # 初回の場合は記録画面へ遷移
         redirect_to water_intakes_path, notice: t('.create.success')
       else
-        # 2回目以降は同じ画面に留まる(メール通知時間を更新しました)
+        # 2回目以降は同じ画面に留まる
         redirect_to edit_notification_time_setting_path, notice: t('.update.success')
       end
     else
-      # バリデーション失敗時
-      # @first_time はそのまま維持される(DBの値から判定しているので確実)
-      # バリデーションエラー時も初回判定が変わらないので、正しいボタンが表示される
-      # render :edit の前に action_name を 'edit' に変更する
-      params[:action] = 'edit'
+      # バリデーション失敗時は編集画面を再表示
       render :edit, status: :unprocessable_entity
     end
   end
