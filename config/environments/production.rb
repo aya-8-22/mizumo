@@ -139,7 +139,13 @@ Rails.application.configure do
   }
 
   # 【修正】メール内のリンク生成用ホスト設定（本番環境のURL）
-  config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com', protocol: 'https' }
+  # config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com', protocol: 'https' }
+
+  # 【修正】メール内のリンク生成用ホスト設定を独自ドメインに変更
+  config.action_mailer.default_url_options = { host: 'mizumo-app.com', protocol: 'https' }
+
+  # 【修正】デフォルトの送信元アドレス（From）を独自ドメインのアドレスに設定
+  config.action_mailer.default_options = { from: 'info@mizumo-app.com' }
 
   # Render の無料プランではポート 587 がブロックされるため、SMTP 方式ではメール送信できません
   # HTTP API 方式に変更することで、ポート 443（HTTPS）を使用してメール送信できるようにしています
@@ -190,7 +196,10 @@ Rails.application.configure do
   # config.hosts << 'mizumo.onrender.com'
 
   # Render のホスト名を許可
-  config.hosts << "mizumo-db-neon.onrender.com"
+  # config.hosts << "mizumo-db-neon.onrender.com"
+
+  # 【修正】Renderの独自ドメインのホスト名を許可
+  config.hosts << "mizumo-app.com"
 
   # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear
