@@ -132,18 +132,13 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   # Renderのホストを許可
-  config.hosts << 'mizumo.onrender.com'
-  # 【追加】Renderのドメインを許可
+  # config.hosts << 'mizumo.onrender.com'
+
+  # 【修正】Render のホスト名を許可
   config.hosts << "mizumo-db-neon.onrender.com"
 
-<<<<<<< Updated upstream
-=======
-  # Render のホスト名を許可
-  config.hosts << "mizumo-db-neon.onrender.com"
-
-  # 【修正】Renderの独自ドメインのホスト名を許可
+  # 【修正】最新 Renderの独自ドメインのホスト名を許可
   config.hosts << "mizumo-app.com"
->>>>>>> Stashed changes
 
   # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear
