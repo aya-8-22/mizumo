@@ -136,6 +136,14 @@ Rails.application.configure do
   # 【追加】Renderのドメインを許可
   config.hosts << "mizumo-db-neon.onrender.com"
 
+<<<<<<< Updated upstream
+=======
+  # Render のホスト名を許可
+  config.hosts << "mizumo-db-neon.onrender.com"
+
+  # 【修正】Renderの独自ドメインのホスト名を許可
+  config.hosts << "mizumo-app.com"
+>>>>>>> Stashed changes
 
   # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear
