@@ -1,0 +1,57 @@
+<!-- 【作成】app/views/password_settings/complete.html.erb -->
+<!-- 【修正】パスワード変更完了画面の見た目を決めている設計図(Tailwind CSS使用中) -->
+
+<!-- 【修正】メイン画面:画面全体を中央揃えにして、上部に余白を追加 -->
+<!-- items-start: 縦方向の上揃え -->
+<!-- pt-6 sm:pt-8: レスポンシブ対応の上部余白 -->
+<!-- px-4 sm:px-6: レスポンシブ対応の左右余白 -->
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-6 sm:pt-8 px-4 sm:px-6">
+  
+  <!-- 【修正】コンテナ:白い背景のボックスを作成し、影をつけて立体感を出す -->
+  <!-- bg-pure-white: 背景色を白に設定 -->
+  <!-- p-10: 余白を設定 -->
+  <!-- rounded-lg: 角を丸くする -->
+  <!-- shadow-md: 影を付ける -->
+  <!-- max-w-[500px]: 最大幅を500pxに設定 -->
+  <!-- w-full: 幅を100%に設定 -->
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
+    
+    <!-- 【修正】タイトル:パスワード変更完了のお知らせを中央揃えで太字表示 -->
+    <!-- text-center: テキストを中央揃え -->
+    <!-- mb-8: 下の余白を設定 -->
+    <!-- text-charcoal: テキスト色をチャコールに設定 -->
+    <!-- text-3xl: テキストサイズを大きく設定 -->
+    <!-- font-bold: 太字に設定 -->
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">パスワード変更完了のお知らせ</h2>
+
+    <!-- 【修正】メッセージエリア:変更完了メッセージを表示 -->
+    <!-- mb-8: 下の余白を設定 -->
+    <div class="mb-8">
+      <!-- 【修正】メッセージ:次のステップの案内を中央揃えで表示 -->
+      <!-- text-center: テキストを中央揃え -->
+      <!-- text-charcoal: テキスト色をチャコールに設定 -->
+      <!-- text-base: テキストサイズを標準に設定 -->
+      <p class="text-center text-charcoal text-base">下記の「ご利用再開（記録画面へ）」ボタンを押して引き続き、ご利用ください。</p>
+    </div>
+
+    <!-- 【修正】ボタンエリア:ご利用再開ボタンを中央に配置 -->
+    <!-- text-center: ボタンを中央揃え -->
+    <div class="text-center">
+      <!-- 【修正】ご利用再開ボタン:クリックすると記録画面に移動 -->
+      <!-- w-full: 幅を100%に設定 -->
+      <!-- py-3.5: 上下の余白を設定 -->
+      <!-- bg-brand-orange: 背景色をオレンジに設定 -->
+      <!-- text-pure-white: テキスト色を白に設定 -->
+      <!-- border-none: 枠線を削除 -->
+      <!-- rounded-lg: 角を丸くする -->
+      <!-- text-base: テキストサイズを標準に設定 -->
+      <!-- font-bold: 太字に設定 -->
+      <!-- cursor-pointer: カーソルをポインターに変更 -->
+      <!-- transition-colors: 色の変化をアニメーション化 -->
+      <!-- duration-300: アニメーションの時間を設定 -->
+      <!-- hover:bg-[#F27405]: ホバー時の背景色を設定 -->
+      <!-- inline-block: インラインブロック要素に設定 -->
+      <%= link_to "ご利用再開（記録画面へ）", water_intakes_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
+    </div>
+  </div>
+</main>

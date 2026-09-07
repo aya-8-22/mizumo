@@ -1,0 +1,32 @@
+<%# 【追加】app/views/layouts/modal.html.erb %>
+<%# 初回保存時専用のレイアウトファイル(ヘッダー・フッターなし) %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <%# ページタイトルを動的に設定 %>
+    <title><%= page_title(yield(:title)) %></title>
+    <%# レスポンシブ対応のためのビューポート設定 %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%# CSRF トークンを埋め込む(セキュリティ対策) %>
+    <%= csrf_meta_tags %>
+    <%# Content Security Policy を設定(セキュリティ対策) %>
+    <%= csp_meta_tag %>
+    <%# Tailwind CSS を読み込む %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%# アプリケーション固有の CSS を読み込む %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%# JavaScript ファイルを読み込む %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <%# body タグに背景色とテキスト色を設定 %>
+  <body class="bg-ivory text-charcoal">
+    <%# 【修正】フラッシュメッセージを共通パーシャルで表示 %>
+    <%= render 'shared/flash_message' %>
+
+    <%# メインコンテンツエリア %>
+    <main class="pb-4">
+      <%= yield %>
+    </main>
+  </body>
+</html>

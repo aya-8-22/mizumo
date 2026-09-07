@@ -1,0 +1,42 @@
+<%# app/views/water_intakes/destroy.turbo_stream.erb %>
+<%# 【修正】飲水記録の削除成功時に実行される Turbo Stream %>
+
+<%# 【修正】削除した記録だけを削除(removeを使用) %>
+<%= turbo_stream.remove "water-intake-#{@water_intake.id}" %>
+
+<%# 【修正】記録が0件になった場合は「本日の記録はありません」を表示 %>
+<% if @water_intakes.empty? %>
+  <%= turbo_stream.prepend "water-intakes-tbody" do %>
+    <tr id="no-records-message">
+      <td colspan="3" class="text-charcoal text-center py-4 text-base sm:text-lg font-bold" style="font-family: 'Noto Sans JP', sans-serif;">
+        本日の記録はありません
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+
+<%# 今日の合計水分摂取量を更新 %>
+<%= turbo_stream.update "today-total" do %>
+  <%= @today_total %>
+<% end %>
+
+<%# プログレスバーを更新 %>
+<%= turbo_stream.replace "progress-bar" do %>
+  <% progress_percentage = @daily_goal > 0 ? [(@today_total.to_f / @daily_goal * 100).round, 100].min : 0 %>
+  <div
+    id="progress-bar"
+    class="bg-brand-navy h-5 sm:h-6 rounded-full transition-all duration-300"
+    style="width: <%= progress_percentage %>%"
+  ></div>
+<% end %>
+
+<%# 進捗率を更新 %>
+<%= turbo_stream.update "progress-percentage" do %>
+  <% progress_percentage = @daily_goal > 0 ? [(@today_total.to_f / @daily_goal * 100).round, 100].min : 0 %>
+  <%= progress_percentage %>%
+<% end %>
+
+<%# 【修正】フラッシュメッセージを更新 %>
+<%= turbo_stream.replace "flash" do %>
+  <%= render 'shared/flash_message' %>
+<% end %>

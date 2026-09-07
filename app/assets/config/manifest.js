@@ -13,6 +13,3 @@
 
 // ビルドされたファイルを読み込む
 //= link_tree ../builds
-
-// 【追加】application.cssを読み込む(Bootstrap + top.scssを含む)
-//= link application.css

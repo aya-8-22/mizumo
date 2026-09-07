@@ -1,97 +1,16 @@
-/* 【修正】app/assets/stylesheets/application.css */
-/* アプリケーション全体の CSS ファイル */
-
-/* 【修正】Bootstrap は使用していないためコメントアウト */
-/* @import "bootstrap"; */
-
-/* 【修正】top.css は自動的に読み込まれるため @import は不要 */
-/* Rails の Sprockets が自動的に app/assets/stylesheets 配下の CSS を読み込む */
-
-/* 【追加】ヘッダーのスタイル */
-.header {
-  display: flex; /* フレックスボックスでレイアウト */
-  justify-content: space-between; /* 左右に配置 */
-  align-items: center; /* 縦方向の中央揃え */
-  padding: 1rem 2rem; /* 内側の余白 */
-  background-color: #f8f9fa; /* 薄いグレーの背景 */
-  border-bottom: 1px solid #dee2e6; /* 下に薄いグレーの線 */
-}
-
-/* 【追加】ヘッダーのロゴスタイル */
-.header-logo {
-  margin: 0; /* 外側の余白をなくす */
-  font-size: 1.5rem; /* 文字サイズを大きく */
-  font-weight: bold; /* 太字 */
-}
-
-/* 【追加】ヘッダーのボタンエリアスタイル */
-.header-buttons {
-  display: flex; /* フレックスボックスでレイアウト */
-  gap: 1rem; /* ボタン間の余白 */
-}
-
-/* 【追加】ヘッダーのボタンスタイル */
-.header-button {
-  padding: 0.5rem 1rem; /* 内側の余白 */
-  background-color: #007bff; /* 青色の背景 */
-  color: white; /* 白色の文字 */
-  text-decoration: none; /* 下線をなくす */
-  border: none; /* 枠線をなくす */
-  border-radius: 4px; /* 角を丸く */
-  cursor: pointer; /* カーソルをポインターに */
-}
-
-/* 【追加】ヘッダーのボタンホバー時のスタイル */
-.header-button:hover {
-  background-color: #0056b3; /* ホバー時に濃い青色に */
-}
-
-/* 成功メッセージのスタイル */
-.alert-success {
-  background-color: #d4edda; /* 薄い緑色の背景 */
-  color: #155724; /* 濃い緑色の文字 */
-  padding: 15px; /* 内側の余白 */
-  margin-bottom: 20px; /* 下の余白 */
-  border: 1px solid #c3e6cb; /* 薄い緑色の枠線 */
-  border-radius: 4px; /* 角を丸く */
-  font-size: 20px; /* 文字サイズを大きく */
-  line-height: 2.0; /* 行間を広く */
-  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
-}
-
-/* エラーメッセージのスタイル */
-.alert-danger {
-  background-color: #f8d7da; /* 薄い赤色の背景 */
-  color: #721c24; /* 濃い赤色の文字 */
-  padding: 15px; /* 内側の余白 */
-  margin-bottom: 20px; /* 下の余白 */
-  border: 1px solid #f5c6cb; /* 薄い赤色の枠線 */
-  border-radius: 4px; /* 角を丸く */
-  font-size: 20px; /* 文字サイズを大きく */
-  line-height: 2.0; /* 行間を広く */
-  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
-}
-
-/* バリデーションエラーメッセージのスタイル */
-#error_explanation {
-  background-color: #f8d7da; /* 薄い赤色の背景 */
-  color: #721c24; /* 濃い赤色の文字 */
-  padding: 15px; /* 内側の余白 */
-  margin-bottom: 20px; /* 下の余白 */
-  border: 1px solid #f5c6cb; /* 薄い赤色の枠線 */
-  border-radius: 4px; /* 角を丸く */
-  font-size: 20px; /* 文字サイズを大きく */
-  line-height: 2.0; /* 行間を広く */
-  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; /* 見やすいフォント */
-}
-
-/* エラーメッセージのリストスタイル */
-#error_explanation ul {
-  margin: 10px 0 0 0; /* 上の余白のみ設定 */
-  padding-left: 20px; /* 左側の余白 */
-}
-
-/* エラーメッセージの各項目 */
-#error_explanation li {
-  margin-bottom: 5px; /* 下の余白 */
-}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require simple_calendar
+ *= require_tree .
+ *= require_self
+ */

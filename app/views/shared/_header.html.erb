@@ -1,49 +1,19 @@
-<%# 【修正】app/views/shared/_header.html.erb %>
-<%# ヘッダー全体を白背景・影付きで表示 %>
-<header class="bg-white shadow-md">
-  <%# コンテナ: 中央寄せ、左右の余白、上下の余白、要素を横並び・左右に配置 %>
-  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-    
-    <%# === ロゴ（左側） === %>
-    <%# ロゴを囲むコンテナ: 要素を横並びで中央揃え %>
-    <div class="flex items-center">
-      <%# ルートパス（/）へのリンク: 要素を横並びで中央揃え %>
-      <%= link_to root_path, class: "flex items-center" do %>
-        <%# カタカナでロゴを表示: テキストサイズ大、太字、グレー色 %>
-        <span class="text-2xl font-bold text-gray-800">ミズモ</span>
-      <% end %>
-    </div>
+<%# app/views/shared/_header.html.erb %>
+<%# 全画面で使い回す『共通のヘッダー(画面上部のナビゲーション)』 %>
 
-    <%# === ナビゲーションメニュー（右側） === %>
-    <%# ナビゲーション: 要素を横並び・中央揃え、要素間に余白 %>
-    <nav class="flex items-center space-x-4">
-      
-      <%# === ログイン状態の判定 === %>
-      <%# user_signed_in? は Devise が提供するメソッド（ログイン済みなら true） %>
-      <% if user_signed_in? %>
-        
-        <%# --- ログイン済みの場合 --- %>
-        
-        <%# 「記録」リンク: ルートパス（/）へ遷移 %>
-        <%= link_to "記録", root_path, class: "text-gray-600 hover:text-gray-800 font-semibold transition duration-200" %>
-        
-        <%# 「設定」リンク: ユーザー編集ページ（/users/:id/edit）へ遷移 %>
-        <%= link_to "設定", edit_user_path(current_user), class: "text-gray-600 hover:text-gray-800 font-semibold transition duration-200" %>
-        
-        <%# 「ログアウト」ボタン: DELETE メソッドでログアウト処理を実行 %>
-        <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition duration-200" %>
-        
-      <% else %>
-        
-        <%# --- 未ログインの場合 --- %>
-        
-        <%# 「ログイン」リンク: ログインページ（/users/sign_in）へ遷移 %>
-        <%= link_to "ログイン", new_user_session_path, class: "text-gray-600 hover:text-gray-800 font-semibold transition duration-200" %>
-        
-        <%# 「新規登録」リンク: 新規登録ページ（/users/sign_up）へ遷移 %>
-        <%= link_to "新規登録", new_user_registration_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-semibold transition duration-200" %>
-        
-      <% end %>
-    </nav>
+<%# 【修正】ヘッダーを画面上部に固定表示、高さを64pxに固定 %>
+<header class="fixed top-0 left-0 right-0 bg-brand-navy text-pure-white shadow-lg z-40" style="height: 64px;">
+  <%# コンテナ（中央寄せ、左右に余白、上下に余白、横並び、左右に配置） %>
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    
+    <%# ロゴ「ミズモ」を左側に表示 %>
+    <h1 class="text-2xl font-bold">
+      <%= link_to 'ミズモ', root_path, class: 'text-pure-white hover:text-brand-orange transition duration-200' %>
+    </h1>
+    
+    <%# ヘッダー右側のボタン群 %>
+    <div class="flex items-center space-x-4">
+      <%= render 'shared/header_buttons' %>
+    </div>
   </div>
 </header>

@@ -1,0 +1,19 @@
+<%# app/views/shared/_error_messages.html.erb %>
+<%# 通常のエラーメッセージを表示するための共通パーシャル %>
+
+<%# object が nil でない、かつエラーが存在する場合のみ表示 %>
+<% if object.present? && object.errors.any? %>
+  <%# 【修正】エラーメッセージ表示エリア（スクロール可能、最大高さを設定） %>
+  <div id="error_explanation" data-turbo-temporary class="bg-red-50 border-2 border-red-400 text-red-700 px-4 sm:px-6 py-4 rounded-lg mb-6 shadow-lg max-h-[50vh] overflow-y-auto" role="alert" aria-live="assertive">
+    <h2 class="text-2xl sm:text-2xl font-bold text-red-700 mb-3">
+      <%= object.errors.count %>個のエラーがあります
+    </h2>
+    <%# エラーメッセージの一覧（文字サイズを1段階大きく、space-y-2、leading-relaxedを追加） %>
+    <ul class="mb-0 list-disc list-inside text-lg sm:text-xl text-red-700 space-y-2 leading-relaxed">
+      <%# 【修正】全てのエラーメッセージを表示（base エラーも含む） %>
+      <% object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

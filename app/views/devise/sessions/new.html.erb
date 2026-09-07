@@ -1,43 +1,65 @@
-<!-- 【修正】app/views/devise/sessions/new.html.erb -->
+<!-- app/views/devise/sessions/new.html.erb -->
+<!-- ログイン画面の見た目を決めている設計図 -->
 
-<!-- タイトルを i18n で日本語化 -->
-<h2><%= t('.title') %></h2>
+<!-- 【修正】エラーメッセージ表示 -->
+<%= render 'devise/shared/error_messages', resource: resource %>
 
-<!-- ログインフォーム開始 -->
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  
-  <!-- メールアドレス入力欄 -->
-  <div class="field">
-    <!-- メールアドレスのラベル -->
-    <p><%= f.label :email %></p>
-    <!-- メールアドレスの入力フィールド（自動フォーカス、自動補完あり） -->
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
+<!-- メイン画面(フレックスボックス、中央揃え、最小高さ、背景色、上下の余白を設定) -->
+<main class="flex justify-center items-start min-h-screen bg-ivory px-4 sm:px-6 py-8 sm:py-12">
+  <!-- ログインフォームのコンテナ(背景色、余白、角丸、影、最大幅を設定一覧ページと統一) -->
+  <div class="bg-pure-white p-5 sm:p-7 md:p-8 max-w-2xl w-full rounded-2xl shadow-lg">
+    <!-- タイトル(中央揃え、下の余白、文字色、文字サイズをレスポンシブ対応、太字を設定) -->
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-6 sm:mb-8">ログイン</h2>
+
+    <!-- Deviseのログインフォームを開始 -->
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      
+      <!-- メールアドレス入力欄(下の余白を調整、相対位置を設定) -->
+      <div class="mb-5 sm:mb-6 relative">
+       <!-- 【修正】ラベル(for属性を追加してアクセシビリティを向上) -->
+        <%= f.label :email, "メールアドレス", for: "login-email-field", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
+        <!-- 入力欄のラッパー(アイコンと入力欄を囲む、相対位置を設定) -->
+        <div class="relative">
+          <!-- メールアイコン(位置、サイズを調整、色を統一) -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-brand-navy pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <!-- メールアドレス入力フィールド(id属性) -->
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", id: "login-email-field", class: "w-full py-4 sm:py-5 px-3 pl-11 sm:pl-12 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 min-h-[55px] sm:min-h-[60px] focus:outline-none focus:border-brand-orange", placeholder: " " %>
+        </div>
+      </div>
+
+      <!-- パスワード入力欄(下の余白を調整、相対位置を設定) -->
+      <div class="mb-5 sm:mb-6 relative">
+        <!-- 【修正】ラベル(for属性を追加してアクセシビリティを向上) -->
+        <%= f.label :password, "パスワード", for: "password-field", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
+        <!-- 入力欄のラッパー(アイコンと入力欄を囲む、相対位置を設定) -->
+        <div class="relative">
+          <!-- 鍵アイコン(位置、サイズを調整、色を統一) -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-brand-navy pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+         <!-- パスワード入力フィールド(id属性) -->
+          <%= f.password_field :password, autocomplete: "current-password", id: "password-field", class: "w-full py-4 sm:py-5 px-3 pl-11 sm:pl-12 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 min-h-[55px] sm:min-h-[60px] focus:outline-none focus:border-brand-orange", placeholder: " " %>
+        </div>
+      </div>
+
+      <!-- パスワード表示チェックボックス(下の余白を調整、フレックスボックス、縦方向の中央揃えを設定) -->
+      <div class="mb-4 sm:mb-5 flex items-center">
+        <!-- チェックボックス(右の余白、幅、高さを調整、カーソルを設定) -->
+        <input type="checkbox" id="show-password" class="mr-2 w-[18px] h-[18px] sm:w-5 sm:h-5 cursor-pointer">
+        <!-- チェックボックスのラベル(文字色を統一、文字サイズを調整、カーソルを設定) -->
+        <label for="show-password" class="text-brand-navy text-sm sm:text-base cursor-pointer">パスワードを表示する</label>
+      </div>
+
+      <!-- ログインボタン(上の余白を調整、中央揃えを設定) -->
+      <div class="mt-6 sm:mt-8 text-center">
+        <!-- ログインボタン(パディング、文字サイズを調整、角丸を統一) -->
+        <%= f.submit "ログイン", class: "w-full py-4 sm:py-5 bg-brand-orange text-pure-white border-none rounded-xl text-lg sm:text-xl font-bold transition-colors duration-300 hover:bg-[#F27405] cursor-pointer shadow-lg", id: "login-button" %>
+      </div>
+    <% end %>
   </div>
+</main>
 
-  <!-- パスワード入力欄 -->
-  <div class="field">
-    <!-- パスワードのラベル -->
-    <p><%= f.label :password %></p>
-    <!-- パスワードの入力フィールド（自動補完あり） -->
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
-
-  <!-- 【削除】「ログイン状態を保持する」チェックボックスを削除 -->
-  <%# if devise_mapping.rememberable? %>
-    <%# <div class="field"> %>
-      <%# チェックボックス %>
-      <%#= f.check_box :remember_me %>
-      <%# チェックボックスのラベル %>
-      <%#= f.label :remember_me %>
-    <%# </div> %>
-  <%# end %>
-
-  <!-- ログインボタン -->
-  <div class="actions">
-    <!-- ログインボタンのラベルを i18n で日本語化 -->
-    <%= f.submit t('.sign_in') %>
-  </div>
-<% end %>
-
-<!-- 「パスワードを忘れた」「新規登録」などのリンク -->
-<%= render "devise/shared/links" %>
+<!-- 「パスワードを忘れた」「新規登録」などのリンク(コメントアウト中) -->
+<!-- <%= render "devise/shared/links" %> -->

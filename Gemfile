@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 # Gemfile
+# アプリケーションが動作するために必要なライブラリ（Gem）をリストアップした、依存関係の管理ファイル
+
 # gem のダウンロード元を指定（通常は公式の RubyGems を使う）
 source 'https://rubygems.org'
 # GitHub から gem をダウンロードする際の URL 形式を定義
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# このプロジェクトで使用する Ruby のバージョンを指定
-ruby '3.1.4'
+# このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4')
+ruby '3.2.4'
 
 # ===== フレームワーク =====
 # Rails 本体（Web アプリケーションフレームワーク）
@@ -62,13 +64,42 @@ gem 'rails-i18n'
 # - エラーメッセージが自動的に日本語化される
 gem 'devise-i18n'
 
+# ===== カレンダー表示 =====
+# Simple Calendar を使ってカレンダーを簡単に表示できる gem
+gem 'simple_calendar', '~> 2.0'
+
 # ===== Tailwind CSS =====
 # Tailwind CSS を使うための gem
 # ユーティリティファーストの CSS フレームワーク
 # - クラス名を組み合わせてスタイルを適用できる
 # - カスタマイズ性が高く、デザインの自由度が高い
-# 【修正】Sass との互換性のため v2 を使用
+# 互換性のため v2 を使用
 gem 'tailwindcss-rails', '~> 2.0'
+
+# 本番環境でSprocketsがsasscでエラーが出るため、エラー解消のためのダミー
+gem 'sassc'
+
+# ===== バックグラウンドジョブ処理 =====
+# Sidekiq : バックグラウンドでジョブを処理するための gem（メール送信などを非同期で実行）
+gem 'sidekiq', '~> 7.1.0' 
+# Redis の接続をプールして管理するための gem（Sidekiq が内部で使用）
+gem 'connection_pool', '~> 2.5.0'
+
+# Redis : Sidekiq がジョブのキューとして使用するインメモリデータベース
+gem 'redis'
+
+# ===== 環境変数管理 =====
+# dotenv-rails : .env ファイルから環境変数を読み込むための gem（開発環境で使用）
+gem 'dotenv-rails', groups: %i[development test]
+
+# ===== メール送信テスト（開発環境） =====
+# letter_opener_web : 開発環境でメールをブラウザで確認できる gem
+# メールを実際に送信せず、ブラウザで内容を確認できる
+gem 'letter_opener_web', group: :development
+
+# ===== メール配信サービスResendのRuby SDK =====
+# Resend の HTTP API を使用するための gem
+gem 'resend'
 
 # ===== 開発環境とテスト環境の両方で使用する gem =====
 group :development, :test do
@@ -112,6 +143,13 @@ group :development do
   #     ユーザー数分だけデータベースにアクセスしてしまう（無駄が多い）
   # Bullet はこのような問題を検出して警告してくれる
   gem 'bullet'
+
+  # コードの変更を自動で検知してブラウザをリロードしてくれるツール
+  gem 'guard'
+  # Guard と連携してブラウザを自動リロードする gem
+  gem 'guard-livereload', require: false
+  # Rack ミドルウェアとして LiveReload を有効にする gem
+  gem 'rack-livereload'
 end
 
 # ===== テスト環境でのみ使用する gem =====

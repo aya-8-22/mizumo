@@ -36,6 +36,10 @@ ja:
     failure:
       invalid: "メールアドレスまたはパスワードが正しくありません" # ログイン失敗時のエラーメッセージ
 
+  users:
+    registrations:
+      terms_not_agreed: '利用規約とプライバシーポリシーに同意してください'
+
   # ActiveRecord（モデル）の翻訳設定
   activerecord: 
     # バリデーションエラーメッセージの翻訳

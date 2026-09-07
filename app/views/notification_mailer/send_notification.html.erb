@@ -1,0 +1,35 @@
+<%# app/views/notification_mailer/send_notification.html.erb %>
+<%# 通知メールのHTML版テンプレート %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <%# 文字コードをUTF-8に設定 %>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%# メールの本文 %>
+    <p>水分摂取の時間になりました。</p>
+
+    <p>コップ1杯（150ml、200ml、250ml）の水分摂取をしましょう！</p>
+
+    <p><strong>【記録の手順】</strong></p>
+    <ol>
+      <li>①飲水後、下記のURLを押す</li>
+      <li>②ログインする</li>
+      <li>③飲水量に合わせて150〜250mlボタンを押す（必要時のみ時間の変更）</li>
+    </ol>
+   
+    <p>
+      <%# ログイン画面へのリンク %>
+      <%= link_to 'ログイン画面を開く', login_url %>
+    </p>
+
+    <p><strong>【注意】</strong></p>
+    <%# 【修正】古いURLの直書きを動的な login_url に変更 %>
+    <p>リンクが表示されない場合、こちらのURL「<%= login_url %>」をコピーしてブラウザに貼り付けて下さい。</p>
+    <p>無料プランのため、アクセスに少し時間がかかる場合があります。</p>
+    
+    <p>ミズモ運営</p>
+
+    </body>
+</html>
