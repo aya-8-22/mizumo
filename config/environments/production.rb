@@ -52,6 +52,23 @@ Rails.application.configure do
   # プリコンパイル済みアセットのみ使用
   config.assets.compile = false
 
+  # Sass プロセッサーを無効化（sassc エラーを解決）
+  # Sprockets が Sass ファイルを処理しようとするのを防ぐ
+  config.assets.configure do |env|
+    # Sprockets::SassCompressor が定義されている場合のみ登録解除
+    if defined?(Sprockets::SassCompressor)
+      env.unregister_preprocessor('text/css', Sprockets::SassCompressor)
+    end
+    # Sprockets::ScssTemplate が定義されている場合のみ登録解除
+    if defined?(Sprockets::ScssTemplate)
+      env.unregister_preprocessor('text/css', Sprockets::ScssTemplate)
+    end
+    # Sprockets::SasscProcessor が定義されている場合のみ登録解除
+    if defined?(Sprockets::SasscProcessor)
+      env.unregister_preprocessor('text/css', Sprockets::SasscProcessor)
+    end
+  end
+  
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
   # CDN 使用時の設定（コメントアウト中）
@@ -106,8 +123,52 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # メール送信エラーを無視（コメントアウト中）
-  # config.action_mailer.raise_delivery_errors = false
+  # メール送信エラーを通知
+  config.action_mailer.raise_delivery_errors = true
+
+  # 本番環境ではメール送信を有効化
+  config.action_mailer.perform_deliveries = true
+
+  # メール配信方法として Resend の HTTP API を指定
+  config.action_mailer.delivery_method = :resend
+
+  # Resend の API キー設定
+  config.action_mailer.resend_settings = {
+    # 環境変数から Resend の API キーを取得
+    api_key: ENV['RESEND_API_KEY']
+  }
+
+  # 【修正】メール内のリンク生成用ホスト設定（本番環境のURL）
+  # config.action_mailer.default_url_options = { host: 'mizumo-db-neon.onrender.com', protocol: 'https' }
+
+  # 【修正】メール内のリンク生成用ホスト設定を独自ドメインに変更
+  config.action_mailer.default_url_options = { host: 'mizumo-app.com', protocol: 'https' }
+
+  # 【修正】デフォルトの送信元アドレス（From）を独自ドメインのアドレスに設定
+  config.action_mailer.default_options = { from: 'info@mizumo-app.com' }
+
+  # Render の無料プランではポート 587 がブロックされるため、SMTP 方式ではメール送信できません
+  # HTTP API 方式に変更することで、ポート 443（HTTPS）を使用してメール送信できるようにしています
+  # 以下は参考のためコメントアウトして残しています
+  # メール配信方法として SMTP を指定（Resend 使用）
+  # config.action_mailer.delivery_method = :smtp
+  # Resend の SMTP 設定を追加
+  # config.action_mailer.smtp_settings = {
+    # Resend の SMTP サーバーアドレス
+    # address: 'smtp.resend.com',
+    # SMTP ポート番号（587 は TLS 用）
+    # port: 587,
+    # SMTP ドメイン
+    # domain: 'resend.com',
+    # SMTP ユーザー名（Resend では固定で 'resend'）
+    # user_name: 'resend',
+    # Resend の API キー（環境変数から取得）
+    # password: ENV['RESEND_API_KEY'],
+    # 認証方式（plain 認証）
+    # authentication: 'plain',
+     # TLS を自動的に有効化
+     # enable_starttls_auto: true
+  # }
 
   # ===== 国際化設定 =====
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -134,10 +195,10 @@ Rails.application.configure do
   # Renderのホストを許可
   # config.hosts << 'mizumo.onrender.com'
 
-  # 【修正】Render のホスト名を許可
+  # 【修正】Render のホスト名を許可（独自ドメイン導入前のホスト名）
   config.hosts << "mizumo-db-neon.onrender.com"
 
-  # 【修正】最新 Renderの独自ドメインのホスト名を許可
+  # 【修正】Renderの独自ドメインのホスト名を許可
   config.hosts << "mizumo-app.com"
 
   # 開発段階では全て許可（本番では削除推奨）
@@ -146,8 +207,11 @@ Rails.application.configure do
   # ===== 標準出力へのログ設定 =====
   # 環境変数が設定されている場合、標準出力にログを出力
   if ENV['RAILS_LOG_TO_STDOUT'].present?
+    # 標準出力用のロガーを作成
     logger           = ActiveSupport::Logger.new($stdout)
+    # ログフォーマットを設定
     logger.formatter = config.log_formatter
+     # タグ付きロガーを設定
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
