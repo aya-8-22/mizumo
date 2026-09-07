@@ -192,10 +192,10 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  # Renderのホストを許可
+  # Renderのホストを許可（Render DBの時に使用していたが、Neonに変更したので現在は使用してない）
   # config.hosts << 'mizumo.onrender.com'
 
-  # 【修正】Render のホスト名を許可（独自ドメイン導入前のホスト名）
+  # 【修正】Render のホスト名を許可（Neon DBに変更後に使用）
   config.hosts << "mizumo-db-neon.onrender.com"
 
   # 【修正】Renderの独自ドメインのホスト名を許可
