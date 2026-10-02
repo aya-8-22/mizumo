@@ -8,11 +8,14 @@ import "@hotwired/turbo-rails"
 // Stimulus コントローラーを読み込む
 import "controllers"
 
-// 【修正】パスワード表示/非表示機能を読み込む
+// パスワード表示/非表示機能を読み込む
 import "password_toggle"
 
-// 【修正】通知トグル機能を読み込む
+// 通知トグル機能を読み込む
 import "notification_toggle"
 
-// 【修正】飲水記録機能を読み込む
+// 飲水記録機能を読み込む
 import "water_intakes"
+
+// 【追加】お問い合わせの文字数カウントダウン機能を読み込む
+import "contact_counter"

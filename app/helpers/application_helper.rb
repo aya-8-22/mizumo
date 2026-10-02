@@ -40,7 +40,7 @@ module ApplicationHelper
 
   # ヘッダーを表示するかどうかを判定するメソッド
   def show_header?(first_time: false)
-    # 【修正】ヘッダーを非表示にする画面かどうかを判定
+    # ヘッダーを非表示にする画面かどうかを判定
     return false if hide_header_page?
 
     # 通知時間設定画面の場合は first_time で判定
@@ -85,13 +85,16 @@ module ApplicationHelper
     controller_path == 'weight_settings' && action_name == 'edit'
   end
 
-  # 【修正】ヘッダーを非表示にする画面かどうかを判定
+  # ヘッダーを非表示にする画面かどうかを判定
   def hide_header_page?
     # 新規登録完了画面かどうかを判定
     return true if controller_path == 'users/registrations' && action_name == 'complete'
 
     # パスワード変更完了画面かどうかを判定
     return true if password_change_complete_page?
+
+    # 【修正】お問い合わせ完了画面の場合もヘッダーを非表示
+    return true if controller_path == 'contacts' && action_name == 'complete'
 
     # 上記以外の場合は false を返す
     false
@@ -105,11 +108,14 @@ module ApplicationHelper
     # ログイン画面かどうかを判定
     return true if login_page?
 
-    # 【修正】パスワード変更画面かどうかを判定
+    # パスワード変更画面かどうかを判定
     # return true if password_settings_page?
 
-    # 【修正】パスワード変更完了画面かどうかを判定
+    # パスワード変更完了画面かどうかを判定
     return true if password_change_complete_page?
+
+    # 【追加】お問い合わせ完了画面の場合はボトムナビを非表示
+    return true if controller_path == 'contacts' && action_name == 'complete'
 
     # 上記以外の場合は false を返す
     false
@@ -128,13 +134,13 @@ module ApplicationHelper
     controller_path == 'users/sessions' && action_name == 'new'
   end
 
-  # 【修正】パスワード変更画面かどうかを判定
+  # パスワード変更画面かどうかを判定
   def password_settings_page?
     # controller_path が 'password_settings' かつ action_name が 'edit' の場合に true を返す
     controller_path == 'password_settings' && action_name == 'edit'
   end
 
-  # 【修正】パスワード変更完了画面かどうかを判定
+  # パスワード変更完了画面かどうかを判定
   def password_change_complete_page?
     # controller_path が 'password_settings' かつ action_name が 'complete' の場合に true を返す
     controller_path == 'password_settings' && action_name == 'complete'
@@ -142,8 +148,8 @@ module ApplicationHelper
 
   # ログイン前でボトムナビゲーションを表示する画面かどうかを判定
   def static_pages_with_bottom_navigation?
-    # controller_path が 'static_pages' の場合に true を返す
-    # action_name が 'top', 'contact', 'terms', 'privacy' のいずれかの場合に true を返す
-    controller_path == 'static_pages' && %w[top contact terms privacy].include?(action_name)
+    # 【修正】static_pages の top, terms, privacy または contacts の new, create の場合に true を返す
+    (controller_path == 'static_pages' && %w[top terms privacy].include?(action_name)) ||
+      (controller_path == 'contacts' && %w[new create].include?(action_name))
   end
 end

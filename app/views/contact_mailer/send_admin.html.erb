@@ -1,0 +1,10 @@
+<%# app/views/contact_mailer/send_admin.html.erb %>
+<%# サイトの管理者に届くメールの見た目 %>
+
+<h3>新しいお問い合わせがありました</h3>
+
+<p><strong>お名前：</strong><%= @contact.name %></p>
+<p><strong>メールアドレス：</strong><%= @contact.email %></p>
+<p><strong>ご本人様との関係：</strong><%= @contact.relationship %></p>
+<p><strong>お問い合わせの種類：</strong><%= @contact.category %></p>
+<p><strong>お問い合わせの詳細：</strong><br><%= safe_join(@contact.message.split("\n"), tag.br) %></p>

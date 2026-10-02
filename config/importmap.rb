@@ -18,9 +18,12 @@ pin '@hotwired/stimulus-loading', to: 'stimulus-loading.js'
 # controllers ディレクトリ配下のファイルを読み込む設定
 pin_all_from 'app/javascript/controllers', under: 'controllers'
 
-# 【修正】パスワード表示/非表示機能を読み込む設定
+# パスワード表示/非表示機能を読み込む設定
 pin 'password_toggle', to: 'password_toggle.js'
-# 【修正】通知トグル機能を読み込む設定
+# 通知トグル機能を読み込む設定
 pin 'notification_toggle', to: 'notification_toggle.js'
-# 【修正】飲水記録機能を読み込む設定
+# 飲水記録機能を読み込む設定
 pin 'water_intakes', to: 'water_intakes.js'
+
+# 【追加】お問い合わせの文字数カウントダウン機能を読み込む設定
+pin 'contact_counter', to: 'contact_counter.js'
