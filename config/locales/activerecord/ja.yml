@@ -3,6 +3,25 @@
 # モデル名・属性名・バリデーションエラーメッセージを定義
 
 ja: # 日本語設定の開始
+  # 【追加】ActiveModel（非DBモデル用）のエラー・属性名設定
+  activemodel:
+    models:
+      contact: お問い合わせ # 【追加】Contact モデルの日本語名
+    attributes:
+      contact:
+        name: お名前
+        email: メールアドレス
+        relationship: ご本人様との関係
+        category: 問い合わせ種類
+        message: 問い合わせ詳細
+        terms_of_service: 利用規約とプライバシーポリシー
+    errors:
+      messages:
+        blank: を入力してください
+        invalid: は不正な値です
+        accepted: に同意して、レ点チェックを入れてください
+
+  # ActiveRecord の設定（DB保存するモデル用）
   activerecord: # ActiveRecord の設定
     models: # モデル名の日本語化
       user: ユーザー # User モデルの日本語表示名
@@ -53,9 +72,9 @@ ja: # 日本語設定の開始
               confirmation: とパスワードが一致しません # password と password_confirmation が一致しない場合のメッセージ
             terms_of_service: # terms_of_service カラム固有のエラーメッセージ
               accepted: に同意して、レ点チェックを入れてください # 利用規約にチェックが入っていない場合のメッセージ
-            base: # 【修正】base エラー用の翻訳を追加
+            base: # base エラー用の翻訳を追加
               duplicate_notification_times: 同一時刻が設定されていますので変更してください 
-              invalid_login: メールアドレスまたはパスワードが違います。 # 【修正】ログイン失敗時のエラーメッセージを追加
+              invalid_login: メールアドレスまたはパスワードが違います。 # ログイン失敗時のエラーメッセージを追加
 
         water_intake: 
           attributes:
@@ -65,3 +84,4 @@ ja: # 日本語設定の開始
             recorded_at:
               blank: を入力してください # 必須入力エラー
               cannot_be_in_the_future: は未来の時刻を入力できません # 未来の時刻が入力された場合のエラー
+              

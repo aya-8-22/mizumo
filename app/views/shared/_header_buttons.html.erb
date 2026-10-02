@@ -5,7 +5,7 @@
 <% if controller_path == 'users/registrations' && action_name == 'complete' %>
   <%# ボタンなし %>
 
-<%# 【修正】パスワード変更完了画面の場合はボタンなし %>
+<%# パスワード変更完了画面の場合はボタンなし %>
 <% elsif controller_path == 'password_settings' && action_name == 'complete' %>
   <%# ボタンなし %>
 
@@ -33,8 +33,8 @@
   <%= render 'shared/signup_button' %>
   <%= render 'shared/home_button' %>
 
-<%# お問い合わせ画面の場合 %>
-<% elsif controller_path == 'static_pages' && action_name == 'contact' %>
+<%# お問い合わせ入力画面・エラー再表示時（contacts の new または create）の場合 %>
+<% elsif (controller_path == 'static_pages' && action_name == 'contact') || (controller_path == 'contacts' && %w[new create].include?(action_name)) %>
   <%# ログイン状態を確認 %>
   <% if user_signed_in? %>
     <%# ログイン中の場合はログアウトボタンを表示 %>

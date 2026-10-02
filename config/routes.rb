@@ -105,7 +105,17 @@ Rails.application.routes.draw do
 
   # お問い合わせページ
   # URL: /contact
-  get 'contact', to: 'static_pages#contact'
+  # get 'contact', to: 'static_pages#contact'
+
+  # 【修正】お問い合わせ機能のルーティングを設定する
+  # GET /contact → お問い合わせ入力画面を表示する
+  get 'contact', to: 'contacts#new'
+
+  # 【修正】POST /contact → お問い合わせ内容を送信する処理を実行する
+  post 'contact', to: 'contacts#create'
+
+  # 【修正】GET /contact/complete → お問い合わせ送信完了画面を表示する
+  get 'contact/complete', to: 'contacts#complete', as: :contact_complete
 
   # 利用規約ページ
   # URL: /terms

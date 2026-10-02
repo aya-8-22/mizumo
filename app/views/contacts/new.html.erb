@@ -1,6 +1,5 @@
-<%# app/views/static_pages/contact.html.erb 削除予定%>
-<%# app/views/contacts/new.html.erbに追加済 %>
-<%# お問い合わせ画面の見た目を決めているビューのファイル %>
+<%# app/views/contacts/new.html.erb %>
+<%# 【追加】お問い合わせ画面の見た目を決めているビューのファイル %>
 
 <%# ページタイトルを「お問い合わせ」に設定する %>
 <% provide(:title, "お問い合わせ") %>
@@ -8,13 +7,13 @@
 <%# モデルのエラーメッセージを表示するための共通パーシャルを読み込む %>
 <%= render 'shared/error_messages', object: @contact %>
 
-<%# 【修正】画面全体を中央揃えにして背景色や余白を設定するメインのコンテナ（ログイン画面と統一） %>
+<%# 画面全体を中央揃えにして背景色や余白を設定するメインのコンテナ（ログイン画面と統一） %>
 <main class="flex justify-center items-start min-h-screen bg-ivory px-4 sm:px-6 py-8 sm:py-12">
 
-  <%# 【修正】お問い合わせフォーム全体を囲むカード状のコンテナボックス（ログイン画面と統一） %>
+  <%# お問い合わせフォーム全体を囲むカード状のコンテナボックス（ログイン画面と統一） %>
   <div class="bg-pure-white p-5 sm:p-7 md:p-8 max-w-2xl w-full rounded-2xl shadow-lg">
 
-    <%# 【修正】ページの見出しタイトルを中央揃えで表示する（ログイン画面と統一） %>
+    <%# ページの見出しタイトルを中央揃えで表示する（ログイン画面と統一） %>
     <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy text-center mb-6 sm:mb-8">お問い合わせ</h2>
 
     <%# 使用方法や注意事項などの案内文を表示する %>
@@ -43,22 +42,25 @@
         <div class="mb-5 sm:mb-6">
           <%# お名前入力欄のラベル %>
           <%= f.label :name, "①お名前", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
-          <%# 【修正】お名前を入力するためのテキストフィールド %>
+          <%# お名前を入力するためのテキストフィールド %>
           <%= f.text_field :name, class: "w-full py-4 sm:py-5 px-3 sm:px-4 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 min-h-[55px] sm:min-h-[60px] focus:outline-none focus:border-brand-orange" %>
         </div>
 
         <%# メールアドレスの入力欄を囲むボックス %>
         <div class="mb-5 sm:mb-6">
-          <%# メールアドレス入力欄のラベル %>
-          <%= f.label :email, "② メールアドレス (ご返信先を変更されたい方のみご入力)", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
-          <%# 【修正】ログイン中のユーザーのメールアドレスを初期値として自動表示し、必要に応じて変更できるようにするフィールド（ログイン画面に合わせた高さとスタイルに変更） %>
+          <%# 【修正】ログイン状態によってラベルの文言を切り替える %>
+          <%= f.label :email, class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" do %>
+            ② メールアドレス<% if user_signed_in? %><span class="font-normal text-sm sm:text-base"> (ご返信先を変更されたい方のみご入力)</span><% end %>
+          <% end %>
+          
+          <%# メールアドレスを入力するためのテキストフィールド %>
           <%= f.email_field :email, value: current_user&.email, class: "w-full py-4 sm:py-5 px-3 sm:px-4 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 min-h-[55px] sm:min-h-[60px] focus:outline-none focus:border-brand-orange" %>
         </div>
 
         <%# ご本人様との関係を選択する項目を囲むボックス %>
         <div class="mb-2">
-          <%# ご本人様との関係のラベル %>
-          <%= f.label :relationship, "③ ご本人様との関係", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
+          <%# 【修正】f.labelではなくdivとクラスを使って見出しとして表示する %>
+          <div class="block mb-2 text-brand-navy font-bold text-base sm:text-lg">③ ご本人様との関係</div>
           <%# 選択肢を縦に並べるためのラッパー %>
           <div class="space-y-2">
             <%# 「本人」を選べるラジオボタン %>
@@ -89,12 +91,16 @@
 
         <%# お問い合わせの種類を選択する項目を囲むボックス %>
         <div class="mb-6 sm:mb-8">
-          <%# お問い合わせの種類のラベル %>
-          <%= f.label :category, "④問い合わせ種類", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
+          <%# 【修正】f.labelではなくdivとクラスを使って見出しとして表示する %>
+          <div class="block mb-2 text-brand-navy font-bold text-base sm:text-lg">④問い合わせ種類</div>
           <%# 選択肢を縦に並べるためのラッパー %>
           <div class="space-y-3">
-            <%# 使い方についてのラジオボタンと説明文 %>
-            <label class="flex items-start space-x-3 cursor-pointer text-base sm:text-lg text-brand-navy"><%= f.radio_button :category, "使い方", class: "w-5 h-5 mt-1 text-brand-orange" %><span>使い方（例：新規登録の操作）</span></label>
+            <%# 【修正】ログイン状態によって「使い方」の例を切り替える %>
+            <label class="flex items-start space-x-3 cursor-pointer text-base sm:text-lg text-brand-navy">
+              <%= f.radio_button :category, "使い方", class: "w-5 h-5 mt-1 text-brand-orange" %>
+              <span>使い方（例：<%= user_signed_in? ? "記録方法" : "新規登録方法" %>）</span>
+            </label>
+
             <%# 不具合についてのラジオボタンと説明文 %>
             <label class="flex items-start space-x-3 cursor-pointer text-base sm:text-lg text-brand-navy"><%= f.radio_button :category, "不具合", class: "w-5 h-5 mt-1 text-brand-orange" %><span>不具合(例：画面・ボタンが反応しない)</span></label>
             <%# 退会についてのラジオボタンと説明文 %>
@@ -106,10 +112,14 @@
 
         <%# お問い合わせ詳細内容の入力欄を囲むボックス %>
         <div class="mb-2">
-          <%# 詳細内容のラベルと文字数制限の案内 %>
-          <%= f.label :message, "⑤問い合わせ詳細内容（200字以内）", class: "block mb-2 text-brand-navy font-bold text-base sm:text-lg" %>
-          <%# 【修正】詳細内容を入力するためのテキストエリア %>
-          <%= f.text_area :message, rows: 5, class: "w-full p-4 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 focus:outline-none focus:border-brand-orange" %>
+          <%# 詳細内容のラベルと文字数制限の案内、および残り文字数を表示するカウンター %>
+          <div class="flex justify-between items-center mb-2">
+            <%= f.label :message, "⑤問い合わせ詳細", class: "text-brand-navy font-bold text-base sm:text-lg" %>
+            <%# リアルタイムで残り文字数を表示する要素（JavaScriptから操作します） %>
+            <span id="char-count" class="text-sm text-gray-500 font-bold">残り 200 文字</span>
+          </div>
+          <%# 【修正】id: "contact_message" を明示的に指定して、ログイン前後に関わらず確実にJavaScriptから取得できるようにする %>
+          <%= f.text_area :message, rows: 5, id: "contact_message", class: "w-full p-4 border border-brand-navy rounded-xl text-base sm:text-lg text-brand-navy bg-pure-white transition-colors duration-300 focus:outline-none focus:border-brand-orange" %>
         </div>
 
       </section>
@@ -121,16 +131,16 @@
           <%= f.check_box :terms_of_service, class: "w-5 h-5 text-brand-orange rounded border-brand-navy" %>
           <span>
             <%# 利用規約ページへのリンクを生成する %>
-            <%= link_to "利用規約", terms_path, target: "_blank", class: "underline text-brand-orange" %>、
+            <%= link_to "利用規約", terms_path, class: "underline text-brand-orange" %>、
             <%# プライバシーポリシーページへのリンクを生成する %>
-            <%= link_to "プライバシーポリシー", privacy_path, target: "_blank", class: "underline text-brand-orange" %>に同意する
+            <%= link_to "プライバシーポリシー", privacy_path, class: "underline text-brand-orange" %>に同意する
           </span>
         </label>
       </div>
 
-      <%# 【修正】送信ボタンを中央配置するためのラッパー（ログイン画面と合わせた余白に統一） %>
+      <%# 送信ボタンを中央配置するためのラッパー（ログイン画面と合わせた余白に統一） %>
       <div class="mt-6 sm:mt-8 text-center">
-        <%# 【修正】フォームを送信するためのボタン（ログイン画面と同じ横幅いっぱい・高さ・シャドウのスタイルに統一） %>
+        <%# フォームを送信するためのボタン（ログイン画面と同じ横幅いっぱい・高さ・シャドウのスタイルに統一） %>
         <%= f.submit "送信", class: "w-full py-4 sm:py-5 bg-brand-orange text-pure-white border-none rounded-xl text-lg sm:text-xl font-bold transition-colors duration-300 hover:bg-[#F27405] cursor-pointer shadow-lg" %>
       </div>
 

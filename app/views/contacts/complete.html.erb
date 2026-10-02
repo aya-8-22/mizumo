@@ -1,0 +1,46 @@
+<%# app/views/contacts/complete.html.erb %>
+<%# お問い合わせ送信完了画面の見た目を決めている設計図（Tailwind CSS使用中） %>
+
+<%# ページタイトルを「お問い合わせ送信完了」に設定する %>
+<% provide(:title, "お問い合わせ送信完了") %>
+
+<%# メイン画面:画面全体を中央揃えにして、上部に余白を追加（他の完了画面と統一） %>
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-6 sm:pt-8 px-4 sm:px-6">
+  
+  <%# コンテナ:白い背景のボックスを作成し、影をつけて立体感を出す %>
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
+    
+    <%# タイトル:お問い合わせ送信完了のお知らせを中央揃えで太字表示 %>
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">お問い合わせ送信完了</h2>
+
+    <%# メッセージエリア:完了メッセージや案内文を配置 %>
+    <div class="mb-8 space-y-4">
+      <%# メッセージ1:受付完了の旨 %>
+      <p class="text-center text-charcoal text-base">お問い合わせを受け付けました。</p>
+      
+      <%# メッセージ2:返信時期の案内 %>
+      <p class="text-center text-charcoal text-base leading-relaxed">
+        土日祝日を除く3営業日以内にご返信いたします。<br>
+        （個人運営のため、返信が遅れる場合がございます。）
+      </p>
+
+      <%# メッセージ3:メール受信に関する注意書き %>
+      <p class="text-center text-charcoal text-base leading-relaxed">
+        「info@mizumo-app.com」からメールが届きます。<br>
+        迷惑メールフォルダに入っていないか、ご確認ください。
+      </p>
+    </div>
+
+    <%# ボタンエリア:ログイン状態によってボタンの文言とリンク先を切り替える %>
+    <div class="text-center">
+      <% if user_signed_in? %>
+        <%# ログイン中の場合：記録画面へ誘導する %>
+        <%= link_to "ご利用再開（記録画面へ）", water_intakes_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
+      <% else %>
+        <%# 未ログインの場合：トップページ（ホーム）へ誘導する %>
+        <%= link_to "ホームへ", root_path, class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#F27405] inline-block" %>
+      <% end %>
+    </div>
+
+  </div>
+</main>
