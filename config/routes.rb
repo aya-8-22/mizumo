@@ -64,9 +64,9 @@ Rails.application.routes.draw do
   # | index | GET | /water_intakes | 記録一覧を表示 |
   # | create | POST | /water_intakes | 記録を作成 |
   # | destroy | DELETE | /water_intakes/:id | 記録を削除 |
-  resources :water_intakes, only: [:index, :create, :destroy]
+  resources :water_intakes, only: %i[index create destroy]
 
-  # 【修正】開発環境でメールを確認できるようにする
+  # 開発環境でメールを確認できるようにする
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
   # ユーザー編集ページのルート（Devise の registrations で管理されるため不要）
@@ -107,14 +107,14 @@ Rails.application.routes.draw do
   # URL: /contact
   # get 'contact', to: 'static_pages#contact'
 
-  # 【修正】お問い合わせ機能のルーティングを設定する
+  # お問い合わせ機能のルーティングを設定する
   # GET /contact → お問い合わせ入力画面を表示する
   get 'contact', to: 'contacts#new'
 
-  # 【修正】POST /contact → お問い合わせ内容を送信する処理を実行する
+  # POST /contact → お問い合わせ内容を送信する処理を実行する
   post 'contact', to: 'contacts#create'
 
-  # 【修正】GET /contact/complete → お問い合わせ送信完了画面を表示する
+  # GET /contact/complete → お問い合わせ送信完了画面を表示する
   get 'contact/complete', to: 'contacts#complete', as: :contact_complete
 
   # 利用規約ページ
@@ -124,4 +124,7 @@ Rails.application.routes.draw do
   # プライバシーポリシーページ
   # URL: /privacy
   get 'privacy', to: 'static_pages#privacy'
+
+  # 【修正】ワンタイムURLによる自動ログイン用のルーティングを追加する
+  get 'token_login/:token', to: 'token_authentications#show', as: 'token_authentication'
 end

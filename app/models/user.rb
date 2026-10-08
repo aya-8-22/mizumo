@@ -65,12 +65,29 @@ class User < ApplicationRecord
     (weight * 30).to_i
   end
 
+  # 【修正】一意のセキュアなトークンを生成し、有効期限を24時間後に設定して保存するメソッド
+  def generate_one_time_token!
+    # SecureRandomを使用して推測困難なランダムな文字列をトークンとして生成する
+    self.token = SecureRandom.urlsafe_base64
+    # トークンの有効期限を現在の時刻から24時間後に設定する
+    self.token_expires_at = 24.hours.from_now
+    # 【修正】トークン保存時はバリデーションをスキップして確実に保存する
+    save(validate: false)
+  end
+
+  # 【修正】トークンの有効期限が切れているかどうかを判定するメソッド
+  def token_expired?
+    # 有効期限が設定されていない、または現在の時刻が有効期限を過ぎている場合はtrueを返す
+    token_expires_at.nil? || Time.current > token_expires_at
+  end
+
   private
 
+  # 通知時間が重複しないように確認する
   def no_duplicate_notification_times
     # 通知が有効な時間帯のみを取得
     enabled_times = []
-  
+
     # 8つの時間帯について、通知が有効な場合のみ時刻を配列に追加
     enabled_times << wake_up_time if ActiveModel::Type::Boolean.new.cast(wake_up_enabled) && wake_up_time.present?
     enabled_times << breakfast_time if ActiveModel::Type::Boolean.new.cast(breakfast_enabled) && breakfast_time.present?
@@ -88,9 +105,9 @@ class User < ApplicationRecord
     time_strings = enabled_times.map { |t| t.strftime('%H:%M') }
 
     # 重複があるかチェックする（配列のサイズと重複を除いた配列のサイズを比較）
-    if time_strings.size != time_strings.uniq.size
-      # 重複が検出された場合、エラーメッセージを追加
-      errors.add(:base, :duplicate_notification_times)
-    end
+    return unless time_strings.size != time_strings.uniq.size
+
+    # 重複が検出された場合、エラーメッセージを追加
+    errors.add(:base, :duplicate_notification_times)
   end
 end

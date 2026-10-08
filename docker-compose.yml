@@ -35,6 +35,10 @@ services:
     # .envファイルから環境変数を読み込む設定
     env_file:
       - .env
+
+    # 【修正】テスト時や開発時に DATABASE_URL が競合しないよう、必要に応じて環境変数を上書き・クリアする
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/mizumo_development 
     
     # ターミナルを有効化（pry や byebug などのデバッグツールを使えるようにする）
     tty: true

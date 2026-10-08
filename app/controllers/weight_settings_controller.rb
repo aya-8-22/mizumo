@@ -34,7 +34,7 @@ class WeightSettingsController < ApplicationController
 
     # 初回保存かどうかを判定（更新前の体重が空かどうか）
     first_time = @user.weight.blank?
-    
+
     # 【修正】update メソッドで体重を更新（パラメータをそのまま渡す）
     if @user.update(weight_params)
       # 保存成功時の処理をメソッドに分割

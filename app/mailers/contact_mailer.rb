@@ -19,12 +19,12 @@ class ContactMailer < ApplicationMailer
 
   # ユーザー宛てにお問い合わせ受付完了の確認メールを送信するメソッド
   # def send_user(contact)
-    # ビューで参照できるようにインスタンス変数にcontactオブジェクトを代入する
-    # @contact = contact
-    # お問い合わせフォームに入力されたユーザーのメールアドレス宛に受付完了メールを送信する
-    # mail(
-      # to: @contact.email,
-      #subject: '【ミズモ】お問い合わせを受け付けました'
-    #)
-  #end
+  # ビューで参照できるようにインスタンス変数にcontactオブジェクトを代入する
+  # @contact = contact
+  # お問い合わせフォームに入力されたユーザーのメールアドレス宛に受付完了メールを送信する
+  # mail(
+  # to: @contact.email,
+  # subject: '【ミズモ】お問い合わせを受け付けました'
+  # )
+  # end
 end

@@ -29,9 +29,9 @@ class NotificationTimeSettingsController < ApplicationController
 
     # 「時」と「分」を結合して時刻を作成
     # 8つの時間帯のフィールド名を配列で定義
-    time_fields = [
-      :wake_up_time, :breakfast_time, :morning_time, :lunch_time,
-      :afternoon_time, :bath_time, :dinner_time, :bedtime
+    time_fields = %i[
+      wake_up_time breakfast_time morning_time lunch_time
+      afternoon_time bath_time dinner_time bedtime
     ]
 
     # 各時間帯について「時」と「分」を結合
@@ -40,13 +40,13 @@ class NotificationTimeSettingsController < ApplicationController
       hour = params[:user]["#{field}_hour"]
       # パラメータから「分」を取得(例: "wake_up_time_min" => "30")
       min = params[:user]["#{field}_min"]
-      
+
       # 「時」と「分」が両方存在する場合のみ時刻を作成
       if hour.present? && min.present?
         # Time.zone.parseで時刻を作成してパラメータに設定(例: "8:30" → Time型に変換)
         params[:user][field] = Time.zone.parse("#{hour}:#{min}")
       end
-      
+
       # 「時」と「分」のパラメータを削除(不要なため)
       params[:user].delete("#{field}_hour")
       params[:user].delete("#{field}_min")
@@ -54,9 +54,9 @@ class NotificationTimeSettingsController < ApplicationController
 
     # enabled パラメータを boolean 型に変換
     # フォームから送信される "1" または "0" を true または false に変換
-    enabled_fields = [
-      :wake_up_enabled, :breakfast_enabled, :morning_enabled, :lunch_enabled,
-      :afternoon_enabled, :bath_enabled, :dinner_enabled, :bedtime_enabled
+    enabled_fields = %i[
+      wake_up_enabled breakfast_enabled morning_enabled lunch_enabled
+      afternoon_enabled bath_enabled dinner_enabled bedtime_enabled
     ]
 
     # 各 enabled フィールドについて、Rails の標準的な方法で boolean に変換

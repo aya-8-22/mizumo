@@ -4,6 +4,26 @@
 
 # 日本語設定の開始
 ja:
+  # 【修正】コントローラーから呼び出されるフラッシュメッセージをまとめるための階層を追加する
+  controllers:
+    application:
+      security_alert: 'セキュリティのため、パスワード変更や設定画面等へ進むには、通常のログインを行ってください。'
+    contacts:
+      complete: 'お問い合わせを受け付けました。'
+    token_authentications:
+      invalid_token: '無効なURL、または有効期限（24時間）が切れています。通常ログインを行ってください。'
+      already_used: 'このワンタイムURLはすでに使用されています。'
+      success: '自動でログインしました。'
+    water_intakes:
+      missing_weight: '体重を設定してください'
+      invalid_amount: '不正な水分量が送信されました'
+      missing_time: '時刻を入力してください'
+      achievement: '🎉 目標を達成しました! 🎉'
+      recorded: '記録しました!'
+      created: '記録しました'
+      deleted: '記録を削除しました'
+      destroy_failed: '記録を削除できませんでした'
+
   # 通知時間設定画面のメッセージを追加
   notification_time_settings:
     create:
@@ -49,3 +69,4 @@ ja:
     create_failed: '記録できませんでした' # 記録作成失敗時のメッセージ
     destroyed: '記録を削除しました' # 記録削除成功時のメッセージ
     destroy_failed: '記録を削除できませんでした' # 記録削除失敗時のメッセージ
+    

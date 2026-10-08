@@ -81,7 +81,7 @@ gem 'sassc'
 
 # ===== バックグラウンドジョブ処理 =====
 # Sidekiq : バックグラウンドでジョブを処理するための gem（メール送信などを非同期で実行）
-gem 'sidekiq', '~> 7.1.0' 
+gem 'sidekiq', '~> 7.1.0'
 # Redis の接続をプールして管理するための gem（Sidekiq が内部で使用）
 gem 'connection_pool', '~> 2.5.0'
 
@@ -154,6 +154,9 @@ end
 
 # ===== テスト環境でのみ使用する gem =====
 group :test do
+  # 【追加】RailsでRSpecを使用するためのgem
+  gem 'rspec-rails'
+
   # システムテストを実行するためのツール（ブラウザを自動操作してテストできる）
   # 例：ユーザーがログインボタンをクリックして、正しくログインできるかをテストする
   gem 'capybara'

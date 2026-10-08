@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_08_19_062300) do
+ActiveRecord::Schema[7.0].define(version: 2026_10_05_040826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,8 +43,11 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_19_062300) do
     t.boolean "dinner_enabled", default: true
     t.boolean "bedtime_enabled", default: true
     t.boolean "notification_times_confirmed", default: false, null: false
+    t.string "token"
+    t.datetime "token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["token"], name: "index_users_on_token", unique: true
   end
 
   create_table "water_intakes", force: :cascade do |t|

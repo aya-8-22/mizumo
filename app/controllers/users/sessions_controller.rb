@@ -18,7 +18,7 @@ module Users
     def create
       # 親クラスのログイン処理を実行してユーザー情報を取得
       self.resource = warden.authenticate(auth_options)
-      
+
       # ログインに成功した場合の処理
       if resource
         # ログイン成功メッセージを設定
