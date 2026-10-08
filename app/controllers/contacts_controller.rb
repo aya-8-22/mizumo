@@ -25,8 +25,8 @@ class ContactsController < ApplicationController
       ContactMailer.send_admin(@contact).deliver_now
       # ContactMailer.send_user(@contact).deliver_now
 
-      # メール送信が完了したら送信完了画面へリダイレクトし、成功メッセージを表示する
-      redirect_to contact_complete_path, notice: 'お問い合わせを受け付けました。'
+      # 【修正】メール送信が完了したら送信完了画面へリダイレクトし、成功メッセージを表示する
+      redirect_to contact_complete_path, notice: t('controllers.contacts.complete')
     else
       # バリデーションエラーがある場合は入力画面を再度表示する
       render :new, status: :unprocessable_entity

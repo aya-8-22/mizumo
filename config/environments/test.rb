@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# config/environments/test.rb
+
+# 文字列リテラルを凍結（メモリ節約・パフォーマンス向上）
 require 'active_support/core_ext/integer/time'
 
 # The test environment is used exclusively to run your application's

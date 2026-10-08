@@ -1,0 +1,119 @@
+# frozen_string_literal: true
+
+# 【追加】spec/requests/token_authentications_spec.rb
+# トークンを使ったログイン機能やエラー時の動作（リダイレクトやメッセージ）が正しく機能するかを検証するリクエストテストファイル
+
+# Railsのテスト環境とRSpecの設定を読み込む
+require 'rails_helper'
+
+# トークン認証に関するリクエストテスト（画面の動作やルーティングのテスト）を開始します
+RSpec.describe 'TokenAuthentications', type: :request do
+  # 【修正】テスト用のユーザー作成時に体重(weight)を追加して、プロフィール未設定によるリダイレクトを防ぐ
+  let(:user) { User.create!(email: 'test@example.com', password: 'password123', terms_of_service: true, weight: 60) }
+
+  # トークンを使ったログイン機能（GET /token_login/:token）のテストグループ
+  describe 'GET /token_login/:token' do
+    # トークンが正しい状態のときのテストグループ
+    context '有効なトークンの場合' do
+      before do
+        # 有効なトークンを生成
+        user.generate_one_time_token!
+      end
+
+      # 正常にログインできて画面が移動することのテスト
+      it 'ログインに成功し、飲水記録画面にリダイレクトされること' do
+        # 有効なトークン付きURLにアクセス
+        get token_authentication_path(token: user.token)
+
+        # 飲水記録画面に画面が移動（リダイレクト）したことを確認
+        expect(response).to redirect_to(water_intakes_path)
+        # ユーザーが無事にログイン状態になったことを確認
+        expect(controller.user_signed_in?).to be true
+      end
+
+      # トークンが一度使われたら消えることのテスト
+      it '使用後のトークンが無効化（nilに）されること' do
+        # 有効なトークン付きURLにアクセス
+        get token_authentication_path(token: user.token)
+
+        # データベースの情報を最新にして、トークンが空（nil）になっていることを確認
+        expect(user.reload.token).to be_nil
+      end
+    end
+
+    # トークンが間違っている、または古いときのテストグループ
+    context '無効なトークンまたは期限切れの場合' do
+      # 存在しない適当なトークンを使ったときのテスト
+      it '存在しないトークンの場合はログイン画面にリダイレクトされエラーが表示されること' do
+        # 存在しない適当なトークンでアクセス
+        get token_authentication_path(token: 'invalid_token')
+
+        # ログイン画面に戻される（リダイレクトされる）ことを確認
+        expect(response).to redirect_to(new_user_session_path)
+        # 「無効なURL」というエラーメッセージが表示されることを確認
+        expect(flash[:alert]).to include('無効なURL')
+      end
+
+      # トークンの時間が切れているときのテスト
+      it '有効期限切れのトークンの場合はログイン画面にリダイレクトされること' do
+        # 【修正】トークンを生成し、有効期限を過去に書き換える（バリデーションをスルーする update_column を使用）
+        user.generate_one_time_token!
+        user.update_column(:token_expires_at, 1.hour.ago)
+
+        # 期限切れのトークンでアクセス
+        get token_authentication_path(token: user.token)
+
+        # ログイン画面に戻される（リダイレクトされる）ことを確認
+        expect(response).to redirect_to(new_user_session_path)
+        # 「有効期限」に関するエラーメッセージが表示されることを確認
+        expect(flash[:alert]).to include('有効期限')
+      end
+    end
+
+    # トークン認証後のアクセス制限に関するテストグループ
+    context 'トークン認証によるログイン後のアクセス制限について' do
+      before do
+        # トークンを生成して一度ログイン状態を作る
+        user.generate_one_time_token!
+        # トークンを使ってログイン状態を作る
+        get token_authentication_path(token: user.token)
+      end
+
+      it '許可された画面（飲水記録やカレンダー）にはそのままアクセスできること' do
+        # 【修正】あらかじめテスト用の飲水記録データを作成しておくことで、画面表示時のデータ不足（エラーやリダイレクト）を防ぐ
+        user.water_intakes.create!(amount_ml: 200, recorded_at: Time.current, time_slot: 'morning')
+
+        # 【修正】トークン認証からのリダイレクト先に追従（遷移）し、その結果のレスポンスを直接取得する
+        follow_redirect!
+
+        # 【確認のためのコード】
+        # 【追加】ステータスが302になった「まさにその瞬間」の情報をターミナルに表示させる
+        # puts "=== デバッグ情報 ==="
+        # puts "status: #{response.status}"                # 今ステータスがいくつなのか？（302のはず）
+        # puts "location: #{response.headers['Location']}" # どこに飛ばされようとしているのか？
+        # puts "alert: #{flash[:alert]}"                   # メッセージが出ているか？
+        # puts "===================="
+
+        # 【修正】リダイレクト先（飲水記録画面）の表示が成功（ステータス200）していることを確認する
+        get water_intakes_path
+        expect(response).to have_http_status(:success)
+
+        # カレンダー画面に直接アクセスして成功（ステータス200）することを確認
+        get calendar_path
+        expect(response).to have_http_status(:success)
+      end
+
+      it '許可されていない画面（パスワード設定画面など）にアクセスした場合はガードされ、通常ログイン画面へリダイレクトされること' do
+        # 許可されていない機微な画面（例: パスワード設定画面）にアクセス
+        get edit_password_setting_path
+
+        # ログイン画面にリダイレクトされること
+        expect(response).to redirect_to(new_user_session_path)
+        # セキュリティ警告のフラッシュメッセージが表示されること
+        expect(flash[:alert]).to include('セキュリティのため')
+        # 安全のためログアウト（セッション破棄）されていること
+        expect(controller.user_signed_in?).to be false
+      end
+    end
+  end
+end

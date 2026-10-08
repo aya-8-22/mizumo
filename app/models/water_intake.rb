@@ -15,13 +15,13 @@ class WaterIntake < ApplicationRecord
   # バリデーション: 飲水量が必須であること
   validates :amount_ml, presence: true
 
-  # バリデーション: 飲水量が許可された値のみであること
-  validates :amount_ml, inclusion: { in: ALLOWED_AMOUNTS, message: 'は150ml、200ml、250mlのいずれかを選択してください' }
+  # 【修正】バリデーション: 飲水量が許可された値のみであること 'は150ml、200ml、250mlのいずれかを選択してください'
+  validates :amount_ml, inclusion: { in: ALLOWED_AMOUNTS }
 
   # カスタムバリデーション: 未来の時刻は不可
   validate :recorded_at_cannot_be_in_the_future
 
-  # 【追加】指定した日付の合計飲水量を取得する
+  # 指定した日付の合計飲水量を取得する
   # @param user [User] ユーザー
   # @param date [Date] 日付
   # @return [Integer] 合計飲水量（ml）
@@ -32,7 +32,7 @@ class WaterIntake < ApplicationRecord
       .sum(:amount_ml)
   end
 
-  # 【追加】指定した日付の目標達成判定
+  # 指定した日付の目標達成判定
   # @param user [User] ユーザー
   # @param date [Date] 日付
   # @return [Boolean] 目標達成したか（true: 達成、false: 未達成）
@@ -54,7 +54,7 @@ class WaterIntake < ApplicationRecord
     # recorded_at が存在し、かつ現在時刻より未来の場合
     return unless recorded_at.present? && recorded_at > Time.current
 
-    # エラーメッセージを追加
-    errors.add(:recorded_at, 'は未来の時刻を入力できません')
+    # 【修正】エラーメッセージを追加 'は未来の時刻を入力できません'
+    errors.add(:recorded_at, :cannot_be_in_the_future)
   end
 end

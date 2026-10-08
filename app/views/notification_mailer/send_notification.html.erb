@@ -6,7 +6,8 @@
     <%# 文字コードをUTF-8に設定 %>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
-  <body>
+  <%# 【修正】iPhone SEなどの小画面や高齢者の方でも読みやすいよう、全体にベースの文字サイズ（18px）と行間を設定 %>
+  <body style="font-size: 18px; line-height: 1.6; color: #333333; font-family: sans-serif; padding: 16px;">
     <%# メールの本文 %>
     <p>水分摂取の時間になりました。</p>
 
@@ -14,22 +15,25 @@
 
     <p><strong>【記録の手順】</strong></p>
     <ol>
-      <li>①飲水後、下記のURLを押す</li>
-      <li>②ログインする</li>
-      <li>③飲水量に合わせて150〜250mlボタンを押す（必要時のみ時間の変更）</li>
+      <%# 手順の説明を「ログイン不要でワンタイムURLを押す」形に変更 %>
+      <li>①下記のボタンを押して直接記録画面へ移動</li>
+      <li>②記録画面で飲水量に合わせて150〜250mlボタンを押す（必要時のみ時間の変更）</li>
     </ol>
    
     <p>
-      <%# ログイン画面へのリンク %>
-      <%= link_to 'ログイン画面を開く', login_url %>
+      <%# 【修正】スマホ等で押しやすいよう、サイズ感（18px以上）とボタン風のスタイル（余白や影）を適用 %>
+      <%= link_to '飲水記録を行う', @url, style: 'display: block; text-align: center; background-color: #F27405; color: #ffffff; padding: 16px 24px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 18px; min-height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);' %>
     </p>
 
     <p><strong>【注意】</strong></p>
-    <%# 【修正】古いURLの直書きを動的な login_url に変更 %>
-    <p>リンクが表示されない場合、こちらのURL「<%= login_url %>」をコピーしてブラウザに貼り付けて下さい。</p>
-    <p>無料プランのため、アクセスに少し時間がかかる場合があります。</p>
+    <%# リンクが表示されない場合のURLをワンタイムURL（@url）に変更 %>
+    <p>リンクが表示されない場合、こちらのURL「<%= @url %>」をコピーしてブラウザに貼り付けて下さい。</p>
+    <%# 【修正】注意事項はすっきりと見せるため、少し小さめ（14px〜16px相当）のスタイルを適用 %>
+    <p style="font-size: 15px; color: #555555;">このメール通知からログイン不要になるのは、1度のみ（24時間以内）で「記録」「カレンダー」画面のみ記録と参照が可能です。</p>
+    <p style="font-size: 15px; color: #555555;">有効期限後または設定変更は、ログインが必要です。</p>
+    <p style="font-size: 15px; color: #555555;">就寝前は、カレンダー画面で達成状況を確認しましょう！</p>
     
     <p>ミズモ運営</p>
 
-    </body>
+  </body>
 </html>

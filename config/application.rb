@@ -25,7 +25,7 @@ module App
 
     # タイムゾーンを日本時間に設定
     config.time_zone = 'Tokyo'
-    
+
     # データベースのタイムゾーンを 世界標準のUTC に設定
     config.active_record.default_timezone = :utc
 
@@ -46,17 +46,11 @@ module App
     # Sprockets が Sass ファイルを処理しようとするのを防ぐ
     config.assets.configure do |env|
       # Sprockets::SassCompressor が定義されている場合のみ登録解除
-      if defined?(Sprockets::SassCompressor)
-        env.unregister_preprocessor('text/css', Sprockets::SassCompressor)
-      end
+      env.unregister_preprocessor('text/css', Sprockets::SassCompressor) if defined?(Sprockets::SassCompressor)
       # Sprockets::ScssTemplate が定義されている場合のみ登録解除
-      if defined?(Sprockets::ScssTemplate)
-        env.unregister_preprocessor('text/css', Sprockets::ScssTemplate)
-      end
+      env.unregister_preprocessor('text/css', Sprockets::ScssTemplate) if defined?(Sprockets::ScssTemplate)
       # Sprockets::SasscProcessor が定義されている場合のみ登録解除
-      if defined?(Sprockets::SasscProcessor)
-        env.unregister_preprocessor('text/css', Sprockets::SasscProcessor)
-      end
+      env.unregister_preprocessor('text/css', Sprockets::SasscProcessor) if defined?(Sprockets::SasscProcessor)
     end
 
     # Configuration for the application, engines, and railties goes here.

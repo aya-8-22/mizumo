@@ -56,19 +56,13 @@ Rails.application.configure do
   # Sprockets が Sass ファイルを処理しようとするのを防ぐ
   config.assets.configure do |env|
     # Sprockets::SassCompressor が定義されている場合のみ登録解除
-    if defined?(Sprockets::SassCompressor)
-      env.unregister_preprocessor('text/css', Sprockets::SassCompressor)
-    end
+    env.unregister_preprocessor('text/css', Sprockets::SassCompressor) if defined?(Sprockets::SassCompressor)
     # Sprockets::ScssTemplate が定義されている場合のみ登録解除
-    if defined?(Sprockets::ScssTemplate)
-      env.unregister_preprocessor('text/css', Sprockets::ScssTemplate)
-    end
+    env.unregister_preprocessor('text/css', Sprockets::ScssTemplate) if defined?(Sprockets::ScssTemplate)
     # Sprockets::SasscProcessor が定義されている場合のみ登録解除
-    if defined?(Sprockets::SasscProcessor)
-      env.unregister_preprocessor('text/css', Sprockets::SasscProcessor)
-    end
+    env.unregister_preprocessor('text/css', Sprockets::SasscProcessor) if defined?(Sprockets::SasscProcessor)
   end
-  
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
   # CDN 使用時の設定（コメントアウト中）
@@ -135,7 +129,7 @@ Rails.application.configure do
   # Resend の API キー設定
   config.action_mailer.resend_settings = {
     # 環境変数から Resend の API キーを取得
-    api_key: ENV['RESEND_API_KEY']
+    api_key: ENV.fetch('RESEND_API_KEY', nil)
   }
 
   # 【修正】メール内のリンク生成用ホスト設定（本番環境のURL）
@@ -154,20 +148,20 @@ Rails.application.configure do
   # config.action_mailer.delivery_method = :smtp
   # Resend の SMTP 設定を追加
   # config.action_mailer.smtp_settings = {
-    # Resend の SMTP サーバーアドレス
-    # address: 'smtp.resend.com',
-    # SMTP ポート番号（587 は TLS 用）
-    # port: 587,
-    # SMTP ドメイン
-    # domain: 'resend.com',
-    # SMTP ユーザー名（Resend では固定で 'resend'）
-    # user_name: 'resend',
-    # Resend の API キー（環境変数から取得）
-    # password: ENV['RESEND_API_KEY'],
-    # 認証方式（plain 認証）
-    # authentication: 'plain',
-     # TLS を自動的に有効化
-     # enable_starttls_auto: true
+  # Resend の SMTP サーバーアドレス
+  # address: 'smtp.resend.com',
+  # SMTP ポート番号（587 は TLS 用）
+  # port: 587,
+  # SMTP ドメイン
+  # domain: 'resend.com',
+  # SMTP ユーザー名（Resend では固定で 'resend'）
+  # user_name: 'resend',
+  # Resend の API キー（環境変数から取得）
+  # password: ENV['RESEND_API_KEY'],
+  # 認証方式（plain 認証）
+  # authentication: 'plain',
+  # TLS を自動的に有効化
+  # enable_starttls_auto: true
   # }
 
   # ===== 国際化設定 =====
@@ -196,10 +190,10 @@ Rails.application.configure do
   # config.hosts << 'mizumo.onrender.com'
 
   # 【修正】Render のホスト名を許可（Neon DBに変更後に使用）
-  config.hosts << "mizumo-db-neon.onrender.com"
+  config.hosts << 'mizumo-db-neon.onrender.com'
 
   # 【修正】Renderの独自ドメインのホスト名を許可
-  config.hosts << "mizumo-app.com"
+  config.hosts << 'mizumo-app.com'
 
   # 開発段階では全て許可（本番では削除推奨）
   # config.hosts.clear
@@ -211,7 +205,7 @@ Rails.application.configure do
     logger           = ActiveSupport::Logger.new($stdout)
     # ログフォーマットを設定
     logger.formatter = config.log_formatter
-     # タグ付きロガーを設定
+    # タグ付きロガーを設定
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 

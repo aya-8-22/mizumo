@@ -3,26 +3,32 @@
 # app/mailers/notification_mailer.rb
 # 通知メールを送信するメーラー
 class NotificationMailer < ApplicationMailer
-  #【修正】 通知メールを送信するメソッド
+  # 通知メールを送信するメソッド
   # user: 送信対象のユーザー
   # notification_type: 通知タイプ（wake_up, breakfast など）
   def send_notification(user, notification_type)
     # インスタンス変数にユーザー情報を格納
     @user = user
-    
+
     # インスタンス変数に通知タイプを格納
     @notification_type = notification_type
-    
+
+    # 【修正】メール送信用に新しいワンタイムトークンを発行して保存する
+    @user.generate_one_time_token!
+
+    # 【修正】メール本文に記載するワンタイムURLを生成する
+    @url = token_authentication_url(token: @user.token)
+
     # 通知タイプに応じた件名を取得
     subject = notification_subject(notification_type)
-    
+
     # メールを送信
     mail(to: @user.email, subject: subject)
   end
 
   private
 
-  # 【修正】通知タイプに応じた件名を返すメソッド
+  # 通知タイプに応じた件名を返すメソッド
   def notification_subject(notification_type)
     # 通知タイプに応じた件名を定義
     case notification_type

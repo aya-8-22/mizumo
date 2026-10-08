@@ -16,13 +16,13 @@ namespace :notification do
     # 5分刻みでない場合は処理をスキップ
     # 例:8時12分の場合は処理をスキップ
     # 例:8時10分の場合は処理を実行
-    unless current_time.min % 5 == 0
+    unless (current_time.min % 5).zero?
       # ログに記録
       Rails.logger.info "現在時刻が5分刻みではないため、処理をスキップしました: #{current_time}"
       # 処理を終了
       next
     end
-    
+
     # 通知タイプの一覧を定義
     # type: 通知の種類、time_field: 時刻のカラム名、enabled_field: 有効/無効のカラム名
     notification_types = [
@@ -51,11 +51,11 @@ namespace :notification do
         # 【修正】通知時刻の「時」と「分」を取得
         notification_hour = notification_time.hour
         notification_min = notification_time.min
-        
+
         # 【修正】現在時刻の「時」と「分」を取得
         current_hour = current_time.hour
         current_min = current_time.min
-        
+
         # 【修正】通知時刻と現在時刻が完全に一致する場合のみメール送信
         # 例:通知時刻が8時10分で、現在時刻が8時10分の場合のみ送信
         # 例:通知時刻が8時12分で、現在時刻が8時10分の場合は送信しない

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # app/jobs/notification_job.rb
-# 通知メールを送信するバックグラウンドジョブ（Sidekiqジョブ） 
+# 通知メールを送信するバックグラウンドジョブ（Sidekiqジョブ）
 class NotificationJob < ApplicationJob
   # Sidekiq のキューを指定（default キューを使用）
   queue_as :default
@@ -27,8 +27,9 @@ class NotificationJob < ApplicationJob
     end
 
     # 【注意】【修正】無料枠の制限対策：環境変数で指定した自分以外の宛先への送信をここでブロックする（将来課金したらこの行を削除します）
-    # return unless user.email == ENV['ALLOWED_NOTIFICATION_EMAIL']
-    
+    # 【認証チェックのため一旦、他の人のメール通知オフへ】
+    return unless user.email == ENV['ALLOWED_NOTIFICATION_EMAIL']
+
     # 条件をすべてクリアしたら、実際に通知メールを即時配信する
     NotificationMailer.send_notification(user, notification_type).deliver_now
   end
