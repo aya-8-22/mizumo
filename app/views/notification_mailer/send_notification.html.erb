@@ -16,22 +16,30 @@
     <p><strong>【記録の手順】</strong></p>
     <ol>
       <%# 手順の説明を「ログイン不要でワンタイムURLを押す」形に変更 %>
-      <li>①下記のボタンを押して直接記録画面へ移動</li>
-      <li>②記録画面で飲水量に合わせて150〜250mlボタンを押す（必要時のみ時間の変更）</li>
+      <li>①下記のボタンを押す</li>
+      <li>②移動した記録画面で飲水量に合わせて150〜250mlボタンを押す（必要時、時間変更）</li>
     </ol>
    
     <p>
-      <%# 【修正】スマホ等で押しやすいよう、サイズ感（18px以上）とボタン風のスタイル（余白や影）を適用 %>
-      <%= link_to '飲水記録を行う', @url, style: 'display: block; text-align: center; background-color: #F27405; color: #ffffff; padding: 16px 24px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 18px; min-height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);' %>
+      <%# 【修正】高齢者の方でも押しやすく目立つよう、枠線、大きめの余白、影、および18pxの文字サイズを適用 %>
+      <%= link_to '水分摂取記録を行う', @url, style: 'display: block; width: fit-content; margin: 0 auto; text-align: center; background-color: #F27405; color: #ffffff; padding: 18px 28px; border: 2px solid #D66204; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 18px; line-height: 1.5; min-height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.15);' %>
     </p>
 
     <p><strong>【注意】</strong></p>
     <%# リンクが表示されない場合のURLをワンタイムURL（@url）に変更 %>
-    <p>リンクが表示されない場合、こちらのURL「<%= @url %>」をコピーしてブラウザに貼り付けて下さい。</p>
-    <%# 【修正】注意事項はすっきりと見せるため、少し小さめ（14px〜16px相当）のスタイルを適用 %>
-    <p style="font-size: 15px; color: #555555;">このメール通知からログイン不要になるのは、1度のみ（24時間以内）で「記録」「カレンダー」画面のみ記録と参照が可能です。</p>
-    <p style="font-size: 15px; color: #555555;">有効期限後または設定変更は、ログインが必要です。</p>
-    <p style="font-size: 15px; color: #555555;">就寝前は、カレンダー画面で達成状況を確認しましょう！</p>
+    <p>
+      リンクが表示されない場合は、<br>
+      こちらのURLをコピーしてブラウザに貼り付けて下さい。<br>
+      <span style="font-size: 14px; word-break: break-all; color: #555555;"><%= @url %></span>
+    </p>
+
+    <%# 【修正】必要な情報を削らず、箇条書きのようにスッキリと見せるスタイルを適用 %>
+    <div style="background-color: #f9f9f9; padding: 12px; border-radius: 8px; margin-top: 12px;">
+      <p style="font-size: 14px; color: #555555; margin: 0 0 6px 0;">・このURLからの自動ログインは<strong>1度のみ（24時間以内）有効</strong>です。</p>
+      <p style="font-size: 14px; color: #555555; margin: 0 0 6px 0;">・アクセスできるのは「記録」「カレンダー」画面のみです。</p>
+      <p style="font-size: 14px; color: #555555; margin: 0 0 6px 0;">・パスワード変更などの設定時は通常ログインが必要です。</p>
+      <p style="font-size: 14px; color: #555555; margin: 0;">・就寝前はカレンダー画面で達成状況を確認しましょう！</p>
+    </div>
     
     <p>ミズモ運営</p>
 
