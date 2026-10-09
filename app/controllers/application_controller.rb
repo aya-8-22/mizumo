@@ -10,8 +10,9 @@ class ApplicationController < ActionController::Base
   # Deviseのコントローラーが呼ばれる前に configure_permitted_parameters を実行
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  # 【修正】トークン経由でログインしたユーザーのアクセス範囲を制限するフィルタを実行する
-  before_action :restrict_token_authenticated_user_access!
+  # トークン経由でログインしたユーザーのアクセス範囲を制限するフィルタを実行する
+  # 【修正】ログインしている（かつトークン認証された）場合のみアクセス制限フィルターを走らせる
+  before_action :restrict_token_authenticated_user_access!, if: :user_signed_in?
 
   # protected メソッド(このクラスと継承先のクラスからのみ呼び出せる)
   protected
@@ -41,14 +42,14 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # 【修正】トークン経由でログインした場合、許可されたコントローラー（飲水記録・カレンダー）以外へのアクセスを制限するメソッド
+  # トークン経由でログインした場合、許可されたコントローラー（飲水記録・カレンダー）以外へのアクセスを制限するメソッド
   def restrict_token_authenticated_user_access!
     # セッションにトークン認証済みのフラグがあり、かつ、現在のコントローラーが許可されたものでない場合の処理
     return unless session[:token_authenticated] && !token_accessible_controller?
 
     # セッションのフラグをクリアする
     session.delete(:token_authenticated)
-    # 【修正】ユーザーに注意を促すアラートを設定する
+    # ユーザーに注意を促すアラートを設定する
     flash[:alert] = t('controllers.application.security_alert')
     # 安全のため一旦ログアウトさせるか、通常ログイン画面へ誘導する
     sign_out(current_user) if user_signed_in?
@@ -56,9 +57,10 @@ class ApplicationController < ActionController::Base
     redirect_to new_user_session_path
   end
 
-  # 【修正】トークン経由でアクセスが許可されているコントローラーのリストを判定するメソッド
+  # トークン経由でアクセスが許可されているコントローラーのリストを判定するメソッド
   def token_accessible_controller?
     # 【修正】リクエストスペックやテスト環境でも確実に判定できるよう、コントローラー名文字列（controller_name）で比較するように修正
-    controller_name.in?(%w[water_intakes calendars])
+    # Railsの controller_name は単数形を返すため "water_intake", "calendar" で判定する
+    controller_name.in?(%w[water_intake calendar])
   end
 end

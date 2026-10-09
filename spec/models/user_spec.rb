@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# 【追加】spec/models/user_spec.rb
+# spec/models/user_spec.rb
 # Userモデル（ユーザーに関するデータ処理や機能）が正しく動作するかを検証するテストファイル
 
 # Railsのテスト環境とRSpecの設定を読み込む
@@ -9,7 +9,8 @@ require 'rails_helper'
 # Userモデルの単体テスト（モデルスペック）を開始
 RSpec.describe User, type: :model do
   # テスト用のユーザーデータを事前に作成し、変数 user に格納
-  let(:user) { User.create!(email: 'test@example.com', password: 'password123', terms_of_service: true) }
+  # 【修正】ランダムなメールアドレスにする
+  let(:user) { User.create!(email: "test_#{SecureRandom.hex(4)}@example.com", password: 'password123', terms_of_service: true) }
 
   # generate_one_time_token! メソッドのテストグループ
   describe '#generate_one_time_token!' do
