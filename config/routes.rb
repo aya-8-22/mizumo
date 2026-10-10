@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   # URL: /privacy
   get 'privacy', to: 'static_pages#privacy'
 
-  # 【修正】ワンタイムURLによる自動ログイン用のルーティングを追加する
+  # 【修正】メールからのワンタイムURL（GET）で確認画面を表示し、ボタン押下（POST）でログイン処理を実行するルーティング
   get 'token_login/:token', to: 'token_authentications#show', as: 'token_authentication'
+  post 'token_login/:token', to: 'token_authentications#create', as: 'token_authentication_create'
 end

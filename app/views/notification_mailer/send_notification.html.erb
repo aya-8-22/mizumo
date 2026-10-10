@@ -16,13 +16,13 @@
     <p><strong>【記録の手順】</strong></p>
     <ol>
       <%# 手順の説明を「ログイン不要でワンタイムURLを押す」形に変更 %>
-      <li>①下記のボタンを押す</li>
-      <li>②移動した記録画面で飲水量に合わせて150〜250mlボタンを押す（必要時、時間変更）</li>
+      <li>下記のボタンを押す</li>
+      <li>移動した記録画面で飲水量に合わせて150〜250mlボタンを押す（必要時、時間変更）</li>
     </ol>
    
     <p>
       <%# 【修正】高齢者の方でも押しやすく目立つよう、枠線、大きめの余白、影、および18pxの文字サイズを適用 %>
-      <%= link_to '水分摂取記録を行う', @url, style: 'display: block; width: fit-content; margin: 0 auto; text-align: center; background-color: #F27405; color: #ffffff; padding: 18px 28px; border: 2px solid #D66204; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 18px; line-height: 1.5; min-height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.15);' %>
+      <%= link_to '水分摂取記録を行う', @url, style: 'display: inline-block; background-color: #F27405; color: #ffffff; padding: 16px 32px; border: 2px solid #D66204; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 18px; line-height: 1.2; box-shadow: 0 4px 6px rgba(0,0,0,0.15);' %>
     </p>
 
     <p><strong>【注意】</strong></p>

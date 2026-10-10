@@ -20,11 +20,24 @@ RSpec.describe 'TokenAuthentications', type: :request do
         user.generate_one_time_token!
       end
 
-      # 正常にログインできて画面が移動することのテスト
-      it 'ログインに成功し、飲水記録画面にリダイレクトされること' do
-        # 有効なトークン付きURLにアクセス
-        # ① ここで一度トークン認証URLにアクセスしてログインしている（この時、トークンは消費されて nil になる）
+      # 【修正】GET時は確認画面が表示され、トークンがまだ消費されないことのテスト
+      it 'URLにアクセスした際は確認画面が表示され、まだトークンは消費されないこと' do
+        # ① メール内のリンク（GET）にアクセスする
         get token_authentication_path(token: user.token)
+
+        # 確認画面が無事に表示される（ステータス200）ことを確認
+        expect(response).to have_http_status(:success)
+        # まだこの時点ではトークンが消費されておらず、データベースに残っていることを確認
+        expect(user.reload.token).not_to be_nil
+      end
+
+      # 【修正】正常にログインできて画面が移動することのテスト
+      it '確認画面のボタンを押してPOST送信すると、ログインに成功し飲水記録画面にリダイレクトされること' do
+        # ① まず確認画面（GET）にアクセスする
+        get token_authentication_path(token: user.token)
+
+        # ② 確認画面から「記録画面へ」ボタンを押す動作（POST）をシミュレートする
+        post token_authentication_create_path(token: user.token)
 
         # 飲水記録画面に画面が移動（リダイレクト）したことを確認
         expect(response).to redirect_to(water_intakes_path)
@@ -32,10 +45,24 @@ RSpec.describe 'TokenAuthentications', type: :request do
         expect(controller.user_signed_in?).to be true
       end
 
-      # トークンが一度使われたら消えることのテスト
-      it '使用後のトークンが無効化（nilに）されること' do
+
+      # 正常にログインできて画面が移動することのテスト
+      # it 'ログインに成功し、飲水記録画面にリダイレクトされること' do
         # 有効なトークン付きURLにアクセス
+        # ① ここで一度トークン認証URLにアクセスしてログインしている（この時、トークンは消費されて nil になる）
+        #get token_authentication_path(token: user.token)
+
+        # 飲水記録画面に画面が移動（リダイレクト）したことを確認
+        # expect(response).to redirect_to(water_intakes_path)
+        # ユーザーが無事にログイン状態になったことを確認
+         # expect(controller.user_signed_in?).to be true
+      # end
+
+      # 【修正】トークンが一度使われたら消えることのテスト
+      it 'ボタンを押してログインした後のトークンが無効化（nilに）されること' do
+        # GETアクセスを経てからPOSTでログイン処理を実行
         get token_authentication_path(token: user.token)
+        post token_authentication_create_path(token: user.token)
 
         # データベースの情報を最新にして、トークンが空（nil）になっていることを確認
         expect(user.reload.token).to be_nil
@@ -55,8 +82,8 @@ RSpec.describe 'TokenAuthentications', type: :request do
         expect(flash[:alert]).to include('無効なURL')
       end
 
-      # トークンの時間が切れているときのテスト
-      it '有効期限切れのトークンの場合はログイン画面にリダイレクトされること' do
+      # 【修正】トークンの時間が切れているときのテスト
+      it '有効期限切れのトークンの場合は確認画面のGET時点でログイン画面にリダイレクトされること' do
         # トークンを生成し、有効期限を過去に書き換える（バリデーションをスルーする update_column を使用）
         user.generate_one_time_token!
         user.update_column(:token_expires_at, 1.hour.ago)
@@ -83,16 +110,17 @@ RSpec.describe 'TokenAuthentications', type: :request do
       # end
 
       it '許可された画面（飲水記録やカレンダー）にはそのままアクセスできること' do
-        # 【修正】あらかじめトークンを生成
+        # あらかじめトークンを生成
         user.generate_one_time_token!
 
         # テスト用の飲水記録データを作成
         user.water_intakes.create!(amount_ml: 200, recorded_at: Time.current, time_slot: 'morning')
 
-        # トークン認証URLにアクセス
+        # 【修正】トークン認証の確認画面を経由してPOSTでログインを完了させる
         get token_authentication_path(token: user.token)
+        post token_authentication_create_path(token: user.token)
 
-        # 【修正】リダイレクトが発生した場合は、最終的な表示画面まですべて追従する
+        # リダイレクトが発生した場合は、最終的な表示画面まですべて追従する
         while response.redirect?
           follow_redirect!
         end
@@ -125,13 +153,13 @@ RSpec.describe 'TokenAuthentications', type: :request do
       end
 
       it '許可されていない画面（パスワード設定画面など）にアクセスした場合はガードされ、通常ログイン画面へリダイレクトされること' do
-        # 【修正】
         user.generate_one_time_token!
        
-        # トークン認証URLにアクセスし、リダイレクト（飲水記録画面）へ追従してセッションを確立する
+        # 【修正】トークン認証URLにアクセスし、リダイレクト（飲水記録画面）へ追従してセッションを確立する
         get token_authentication_path(token: user.token)
+        post token_authentication_create_path(token: user.token)
 
-        # 【修正】認証完了後のリダイレクト先（飲水記録画面）へ一度追従してログインセッションを完全に定着させる
+        # 認証完了後のリダイレクト先（飲水記録画面）へ一度追従してログインセッションを完全に定着させる
         follow_redirect! if response.redirect?
         
         # 許可されていない機微な画面（例: パスワード設定画面）にアクセス

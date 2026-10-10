@@ -6,10 +6,10 @@ class TokenAuthenticationsController < ApplicationController
   # ログインしていなくてもアクセスできるように認証フィルタをスキップする
   skip_before_action :authenticate_user!, raise: false
 
-  # 【修正】トークン認証コントローラー自体では、トークン認証用のアクセス制限フィルタを実行しないようにスキップする
+  # トークン認証コントローラー自体では、トークン認証用のアクセス制限フィルタを実行しないようにスキップする
   skip_before_action :restrict_token_authenticated_user_access!, raise: false
 
-  # メール内のリンクからアクセスされた際の認証処理を行うアクション
+  # メール内のリンク（GET）からアクセスされた際は、トークンを消費せず「確認画面」を表示する
   def show
     # パラメータのトークンに一致するユーザーをデータベースから検索する
     user = User.find_by(token: params[:token])
@@ -19,6 +19,25 @@ class TokenAuthenticationsController < ApplicationController
       # エラーメッセージをフラッシュに設定する  '無効なURL、または有効期限（24時間）が切れています。通常ログインを行ってください。'
       flash[:alert] = t('controllers.token_authentications.invalid_token')
       # 通常のログイン画面へリダイレクトする
+      redirect_to new_user_session_path
+      return
+    end
+
+    # 【修正】ここではトークンを消費せず、ビュー（確認画面）を表示させるため @token をインスタンス変数に格納する
+    @token = params[:token]
+
+    # 【修正】確認画面を表示する時だけ、ヘッダーやフッターのない専用レイアウト（modal.html.erb）を使用する
+    render layout: 'modal'
+  end
+
+  # 【修正】確認画面のボタンが押された時（POST）に、はじめてトークンを検証・消費してログインするアクション
+  def create
+    # パラメータのトークンに一致するユーザーをデータベースから検索する
+    user = User.find_by(token: params[:token])
+
+    # トークンが存在しない、または有効期限切れの場合の処理
+    if user.nil? || user.token_expired?
+      flash[:alert] = t('controllers.token_authentications.invalid_token')
       redirect_to new_user_session_path
       return
     end
