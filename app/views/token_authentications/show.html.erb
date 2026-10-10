@@ -1,0 +1,27 @@
+<!-- app/views/token_authentications/show.html.erb -->
+<!-- メールからワンタイムURLを踏んだときに最初に表示される確認画面のビュー -->
+
+<!-- メイン画面: 画面全体を中央揃えにして、上部に余白を追加 -->
+<main class="flex justify-center items-start min-h-screen bg-ivory pt-10">
+  
+  <!-- 白い背景のボックスを作成し、影をつけて立体感を出す -->
+  <div class="bg-pure-white p-10 rounded-lg shadow-md max-w-[500px] w-full">
+    
+    <!-- タイトル: 水分摂取記録を行う方へ向けた見出しを大きく表示 -->
+    <h2 class="text-center mb-8 text-charcoal text-3xl font-bold">水分摂取記録を行う方へ</h2>
+
+    <!-- メッセージエリア: 利用者への案内文をわかりやすく表示 -->
+    <div class="mb-8">
+      <p class="text-center text-charcoal text-base leading-relaxed">
+        下記の「記録画面へ」ボタンを押して、<br>記録を行ってください。
+      </p>
+    </div>
+
+    <!-- フォームエリア: ボタンを押したときに POST リクエスト（createアクション）を安全に送るためのフォーム -->
+    <%= form_with url: token_authentication_create_path(token: @token), method: :post, local: true do |f| %>
+      <!-- 記録画面へ進むための、押しやすく目立つオレンジ色の大きなボタン -->
+      <%= f.submit "記録画面へ", class: "w-full py-3.5 bg-brand-orange text-pure-white border-none rounded-lg text-base font-bold cursor-pointer transition-colors duration-300 hover:bg-[#D66204] shadow-md" %>
+    <% end %>
+
+  </div>
+</main>
