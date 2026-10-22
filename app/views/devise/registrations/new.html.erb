@@ -77,11 +77,11 @@
         <%= f.check_box :terms_of_service, class: "mr-2 w-[18px] h-[18px] sm:w-5 sm:h-5 cursor-pointer", id: "terms-checkbox" %>
         <!-- チェックボックスのラベル(リンク付き、文字色を統一、文字サイズを調整) -->
         <label for="terms-checkbox" class="text-brand-navy text-sm sm:text-base cursor-pointer">
-          <!-- 利用規約へのリンク(新しいタブで開く) -->
-          <%= link_to "利用規約", terms_path, target: "_blank", class: "text-brand-orange underline transition-colors duration-300 hover:text-brand-orange" %>
+          <!-- 利用規約へのリンク -->
+          <%= link_to "利用規約", terms_path, class: "text-brand-orange underline transition-colors duration-300 hover:text-brand-orange" %>
           と
-          <!-- プライバシーポリシーへのリンク(新しいタブで開く) -->
-          <%= link_to "プライバシーポリシー", privacy_path, target: "_blank", class: "text-brand-orange underline transition-colors duration-300 hover:text-brand-orange" %>
+          <!-- プライバシーポリシーへのリンク -->
+          <%= link_to "プライバシーポリシー", privacy_path, class: "text-brand-orange underline transition-colors duration-300 hover:text-brand-orange" %>
           に同意する
         </label>
       </div>
