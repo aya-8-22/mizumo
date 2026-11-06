@@ -27,7 +27,7 @@ jobs:
       DATABASE_USER: postgres
       # database.ymlのpasswordをCI用に上書きします(postgresサービスと一致させる)
       DATABASE_PASSWORD: password
-      # 【修正】RAILS_MASTER_KEYをGitHub の Secrets に登録ため記載
+      # RAILS_MASTER_KEYをGitHub の Secrets に登録ため記載
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }} 
 
     # テスト実行時に裏側で動かす外部サービス（データベース）を設定します
@@ -79,12 +79,19 @@ jobs:
       # db:migrateではなくschema.rbから直接読み込むことで、マイグレーション履歴に関係なく最新のテーブル構造を再現できます
       - name: Load schema
         run: bundle exec rails db:schema:load
+      
+      # 【修正】 CSSをビルドするステップを追加する
+      # Git管理対象外( .gitignore ) のため、CI環境では ビルドし直す工程が必要がある
+      - name: Build Tailwind CSS
+        run: bundle exec rails tailwindcss:build
+        env:
+          RAILS_ENV: test
 
       # 自動テスト（RSpec）を実行します
       - name: Run RSpec
         run: bundle exec rspec
     
-      # 【修正】テスト失敗時にログを表示する
+      # テスト失敗時にログを表示する
       - name: テスト失敗時にログを表示する
         if: failure()
         run: cat log/test.log
