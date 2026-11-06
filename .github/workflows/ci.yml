@@ -17,7 +17,7 @@ jobs:
     # テストが長引いたときに10分で自動終了するタイムアウトを設定します
     timeout-minutes: 10
 
-    # 【修正】ジョブ全体で使う環境変数をまとめて定義します
+    # ジョブ全体で使う環境変数をまとめて定義します
     env:
       # database.yml.ciを使わず、既存のdatabase.ymlの環境変数駆動の仕組みをそのまま使います
       RAILS_ENV: test
@@ -27,6 +27,8 @@ jobs:
       DATABASE_USER: postgres
       # database.ymlのpasswordをCI用に上書きします(postgresサービスと一致させる)
       DATABASE_PASSWORD: password
+      # 【修正】RAILS_MASTER_KEYをGitHub の Secrets に登録ため記載
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }} 
 
     # テスト実行時に裏側で動かす外部サービス（データベース）を設定します
     services:
@@ -35,7 +37,7 @@ jobs:
         # ローカルのdocker-compose.ymlに合わせてPostgreSQL 14のイメージを指定します
         image: postgres:14
         
-        # 【修正】テスト用コンテナ内で使用するダミーの環境変数を設定します
+        # テスト用コンテナ内で使用するダミーの環境変数を設定します
         env:
           # 上のenvのDATABASE_USERと値を揃えます
           POSTGRES_USER: postgres
@@ -70,17 +72,22 @@ jobs:
           # trueにするとgemのキャッシュ保存とbundle installを自動で実行してくれます
           bundler-cache: true
 
-      # 【修正】database.yml.ciは削除済みのため、cpコマンドを使わずdatabase.ymlをそのまま使ってDBを作成します
+      # database.yml.ciは削除済みのため、cpコマンドを使わずdatabase.ymlをそのまま使ってDBを作成します
       - name: Create database
         run: bundle exec rails db:create
 
-      # 【修正】db:migrateではなくschema.rbから直接読み込むことで、マイグレーション履歴に関係なく最新のテーブル構造を再現できます
+      # db:migrateではなくschema.rbから直接読み込むことで、マイグレーション履歴に関係なく最新のテーブル構造を再現できます
       - name: Load schema
         run: bundle exec rails db:schema:load
 
       # 自動テスト（RSpec）を実行します
       - name: Run RSpec
         run: bundle exec rspec
+    
+      # 【修正】テスト失敗時にログを表示する
+      - name: テスト失敗時にログを表示する
+        if: failure()
+        run: cat log/test.log
 
       # コードの書き方チェック（RuboCop）を実行します
       - name: Run RuboCop
