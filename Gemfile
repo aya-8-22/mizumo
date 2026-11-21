@@ -8,8 +8,8 @@ source 'https://rubygems.org'
 # GitHub から gem をダウンロードする際の URL 形式を定義
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4')
-ruby '3.2.4'
+# このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4'→'3.2.11')
+ruby '3.2.11'
 
 # ===== フレームワーク =====
 # Rails 本体（Web アプリケーションフレームワーク）

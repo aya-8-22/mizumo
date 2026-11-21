@@ -68,7 +68,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           # Gemfileに記載のバージョンと揃えます
-          ruby-version: '3.2.4'
+          ruby-version: '3.2.11'
           # trueにするとgemのキャッシュ保存とbundle installを自動で実行してくれます
           bundler-cache: true
 
