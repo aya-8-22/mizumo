@@ -10,7 +10,9 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   # テスト用のユーザーデータを事前に作成し、変数 user に格納
   # 【修正】ランダムなメールアドレスにする
-  let(:user) { User.create!(email: "test_#{SecureRandom.hex(4)}@example.com", password: 'password123', terms_of_service: true) }
+  let(:user) do
+    User.create!(email: "test_#{SecureRandom.hex(4)}@example.com", password: 'password123', terms_of_service: true)
+  end
 
   # generate_one_time_token! メソッドのテストグループ
   describe '#generate_one_time_token!' do

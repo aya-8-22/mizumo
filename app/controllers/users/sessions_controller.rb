@@ -18,26 +18,17 @@ module Users
     def create
       # 親クラスのログイン処理を実行してユーザー情報を取得
       self.resource = warden.authenticate(auth_options)
+      # 認証失敗(resourceがnil)の場合は、専用メソッドで処理して以降を抜ける
+      return handle_failed_login unless resource
 
-      # ログインに成功した場合の処理
-      if resource
-        # ログイン成功メッセージを設定
-        set_flash_message!(:notice, :signed_in)
-        # ユーザーをログイン状態にする
-        sign_in(resource_name, resource)
-        # ブロックが渡されていれば実行する
-        yield resource if block_given?
-        # ログイン成功後のリダイレクト先に遷移
-        respond_with resource, location: after_sign_in_path_for(resource)
-      else
-        # ログインに失敗した場合の処理
-        # 新しいユーザーオブジェクトを作成（エラーメッセージ表示用）
-        self.resource = resource_class.new(sign_in_params)
-        # baseエラーとしてinvalid_loginメッセージを追加
-        resource.errors.add(:base, :invalid_login)
-        # ログイン画面を再表示（422ステータスコードで返す）
-        render :new, status: :unprocessable_entity
-      end
+      # ログイン成功メッセージを設定
+      set_flash_message!(:notice, :signed_in)
+      # ユーザーをログイン状態にする
+      sign_in(resource_name, resource)
+      # ブロックが渡されていれば実行する
+      yield resource if block_given?
+      # ログイン成功後のリダイレクト先に遷移
+      respond_with resource, location: after_sign_in_path_for(resource)
     end
 
     # DELETE /resource/sign_out
@@ -45,7 +36,17 @@ module Users
     #   super
     # end
 
-    protected
+    private
+
+    # 【修正】ログイン失敗時の処理をまとめたメソッド
+    def handle_failed_login
+      # エラーメッセージ表示用に新しいユーザーオブジェクトを作成する
+      self.resource = resource_class.new(sign_in_params)
+      # baseエラーとしてinvalid_loginメッセージを追加する
+      resource.errors.add(:base, :invalid_login)
+      # ログイン画面を再表示する(422ステータスコードで返す)
+      render :new, status: :unprocessable_entity
+    end
 
     # ログイン成功後のリダイレクト先を設定
     # ログイン成功後は記録画面に遷移
