@@ -41,6 +41,19 @@ class User < ApplicationRecord
   # 同一時刻のバリデーション（通知時間設定画面でも実行する）
   validate :no_duplicate_notification_times
 
+  # 【修正】通知時刻と有効フラグのカラム名をペアで定義した配列
+  # time_field: 時刻のカラム名、enabled_field: 有効/無効のカラム名
+  NOTIFICATION_TIME_FIELDS = [
+    { time_field: :wake_up_time,    enabled_field: :wake_up_enabled },
+    { time_field: :breakfast_time,  enabled_field: :breakfast_enabled },
+    { time_field: :morning_time,    enabled_field: :morning_enabled },
+    { time_field: :lunch_time,      enabled_field: :lunch_enabled },
+    { time_field: :afternoon_time,  enabled_field: :afternoon_enabled },
+    { time_field: :bath_time,       enabled_field: :bath_enabled },
+    { time_field: :dinner_time,     enabled_field: :dinner_enabled },
+    { time_field: :bedtime,         enabled_field: :bedtime_enabled }
+  ].freeze
+
   # ユーザーは複数の飲水記録を持つ
   has_many :water_intakes, dependent: :destroy
 
@@ -65,17 +78,17 @@ class User < ApplicationRecord
     (weight * 30).to_i
   end
 
-  # 【修正】一意のセキュアなトークンを生成し、有効期限を24時間後に設定して保存するメソッド
+  # 一意のセキュアなトークンを生成し、有効期限を24時間後に設定して保存するメソッド
   def generate_one_time_token!
     # SecureRandomを使用して推測困難なランダムな文字列をトークンとして生成する
     self.token = SecureRandom.urlsafe_base64
     # トークンの有効期限を現在の時刻から24時間後に設定する
     self.token_expires_at = 24.hours.from_now
-    # 【修正】トークン保存時はバリデーションをスキップして確実に保存する
+    # トークン保存時はバリデーションをスキップして確実に保存する
     save(validate: false)
   end
 
-  # 【修正】トークンの有効期限が切れているかどうかを判定するメソッド
+  # トークンの有効期限が切れているかどうかを判定するメソッド
   def token_expired?
     # 有効期限が設定されていない、または現在の時刻が有効期限を過ぎている場合はtrueを返す
     token_expires_at.nil? || Time.current > token_expires_at
@@ -85,18 +98,8 @@ class User < ApplicationRecord
 
   # 通知時間が重複しないように確認する
   def no_duplicate_notification_times
-    # 通知が有効な時間帯のみを取得
-    enabled_times = []
-
-    # 8つの時間帯について、通知が有効な場合のみ時刻を配列に追加
-    enabled_times << wake_up_time if ActiveModel::Type::Boolean.new.cast(wake_up_enabled) && wake_up_time.present?
-    enabled_times << breakfast_time if ActiveModel::Type::Boolean.new.cast(breakfast_enabled) && breakfast_time.present?
-    enabled_times << morning_time if ActiveModel::Type::Boolean.new.cast(morning_enabled) && morning_time.present?
-    enabled_times << lunch_time if ActiveModel::Type::Boolean.new.cast(lunch_enabled) && lunch_time.present?
-    enabled_times << afternoon_time if ActiveModel::Type::Boolean.new.cast(afternoon_enabled) && afternoon_time.present?
-    enabled_times << bath_time if ActiveModel::Type::Boolean.new.cast(bath_enabled) && bath_time.present?
-    enabled_times << dinner_time if ActiveModel::Type::Boolean.new.cast(dinner_enabled) && dinner_time.present?
-    enabled_times << bedtime if ActiveModel::Type::Boolean.new.cast(bedtime_enabled) && bedtime.present?
+    # 【修正】8行の条件分岐を、別メソッドへの呼び出し1行に置き換える
+    enabled_times = collect_enabled_notification_times
 
     # 時刻が1つも設定されていない場合はバリデーションをスキップ
     return if enabled_times.empty?
@@ -109,5 +112,18 @@ class User < ApplicationRecord
 
     # 重複が検出された場合、エラーメッセージを追加
     errors.add(:base, :duplicate_notification_times)
+  end
+
+  # 【修正】通知が有効になっている時刻だけを集めて配列として返すメソッド
+  def collect_enabled_notification_times
+    # 空の配列を受け皿として用意し、ループの中で値を追加していく（each_with_object）
+    NOTIFICATION_TIME_FIELDS.each_with_object([]) do |field, times|
+      # そのフィールドの時刻の値を取得する（例: wake_up_time の値）
+      time_value = send(field[:time_field])
+      # そのフィールドの有効フラグを取得し、真偽値（true/false）に変換する
+      enabled = ActiveModel::Type::Boolean.new.cast(send(field[:enabled_field]))
+      # 有効フラグがtrueで、かつ時刻が入力されている場合のみ配列に追加する
+      times << time_value if enabled && time_value.present?
+    end
   end
 end

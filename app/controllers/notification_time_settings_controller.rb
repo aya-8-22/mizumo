@@ -27,45 +27,9 @@ class NotificationTimeSettingsController < ApplicationController
     # DBの値を使って判定するので、確実に初回かどうかを判定できる
     @first_time = !@user.notification_times_confirmed
 
-    # 「時」と「分」を結合して時刻を作成
-    # 8つの時間帯のフィールド名を配列で定義
-    time_fields = %i[
-      wake_up_time breakfast_time morning_time lunch_time
-      afternoon_time bath_time dinner_time bedtime
-    ]
-
-    # 各時間帯について「時」と「分」を結合
-    time_fields.each do |field|
-      # パラメータから「時」を取得(例: "wake_up_time_hour" => "8")
-      hour = params[:user]["#{field}_hour"]
-      # パラメータから「分」を取得(例: "wake_up_time_min" => "30")
-      min = params[:user]["#{field}_min"]
-
-      # 「時」と「分」が両方存在する場合のみ時刻を作成
-      if hour.present? && min.present?
-        # Time.zone.parseで時刻を作成してパラメータに設定(例: "8:30" → Time型に変換)
-        params[:user][field] = Time.zone.parse("#{hour}:#{min}")
-      end
-
-      # 「時」と「分」のパラメータを削除(不要なため)
-      params[:user].delete("#{field}_hour")
-      params[:user].delete("#{field}_min")
-    end
-
-    # enabled パラメータを boolean 型に変換
-    # フォームから送信される "1" または "0" を true または false に変換
-    enabled_fields = %i[
-      wake_up_enabled breakfast_enabled morning_enabled lunch_enabled
-      afternoon_enabled bath_enabled dinner_enabled bedtime_enabled
-    ]
-
-    # 各 enabled フィールドについて、Rails の標準的な方法で boolean に変換
-    enabled_fields.each do |field|
-      # ActiveModel::Type::Boolean.new.cast で Rails の型変換ルールに従って変換
-      # "1", "true", "t", "yes", "y", "on", 1, true → true
-      # "0", "false", "f", "no", "n", "off", 0, false, nil → false
-      params[:user][field] = ActiveModel::Type::Boolean.new.cast(params[:user][field])
-    end
+    # 【修正】16行あった2つのループ処理を、それぞれ1行の呼び出しに置き換える
+    build_time_params!
+    cast_enabled_params!
 
     # 体重のバリデーションをスキップするフラグを設定
     # skip_weight_validation を true にすることで、体重のバリデーションをスキップする
@@ -74,21 +38,15 @@ class NotificationTimeSettingsController < ApplicationController
     # 通知時間を更新してバリデーションを実行
     @user.assign_attributes(notification_time_params)
 
+    # 初回の場合は notification_times_confirmed も一緒に更新する
+    @user.notification_times_confirmed = true if @first_time
+
     # バリデーションが成功した場合のみ保存する
     if @user.valid?
       # DBに保存
       @user.save
-      # 初回の場合のみ notification_times_confirmed を true にする
-      @user.update_column(:notification_times_confirmed, true) if @first_time
-
-      # @first_time で遷移先を判定
-      if @first_time
-        # 初回の場合は記録画面へ遷移
-        redirect_to water_intakes_path, notice: t('.create.success')
-      else
-        # 2回目以降は同じ画面に留まる
-        redirect_to edit_notification_time_setting_path, notice: t('.update.success')
-      end
+      # 【変更】リダイレクト先の判定もメソッドに切り出す
+      redirect_to success_redirect_path, notice: success_message
     else
       # バリデーション失敗時は編集画面を再表示
       render :edit, status: :unprocessable_entity
@@ -96,6 +54,48 @@ class NotificationTimeSettingsController < ApplicationController
   end
 
   private
+
+  # 【修正】「時」「分」パラメータを結合して時刻パラメータに変換する
+  # User::NOTIFICATION_TIME_FIELDS を再利用することで、フィールド定義を一箇所に集約
+  def build_time_params!
+    User::NOTIFICATION_TIME_FIELDS.each do |field|
+      build_time_param_for(field[:time_field])
+    end
+  end
+
+  # 【修正】1つの時間帯について「時」「分」を結合し、不要なパラメータを削除する
+  def build_time_param_for(time_field)
+    # パラメータから「時」「分」を取得(例: "wake_up_time_hour" => "8")
+    hour = params[:user]["#{time_field}_hour"]
+    min = params[:user]["#{time_field}_min"]
+
+    # 「時」と「分」が両方存在する場合のみ時刻を作成
+    params[:user][time_field] = Time.zone.parse("#{hour}:#{min}") if hour.present? && min.present?
+
+    # 「時」と「分」のパラメータを削除(不要なため)
+    params[:user].delete("#{time_field}_hour")
+    params[:user].delete("#{time_field}_min")
+  end
+
+  # 【修正】enabled パラメータを boolean 型に変換する
+  def cast_enabled_params!
+    User::NOTIFICATION_TIME_FIELDS.each do |field|
+      enabled_field = field[:enabled_field]
+      # Rails の型変換ルールに従って "1"/"0" などを true/false に変換
+      params[:user][enabled_field] = ActiveModel::Type::Boolean.new.cast(params[:user][enabled_field])
+    end
+  end
+
+  # 【修正】保存成功時のリダイレクト先を判定する
+  def success_redirect_path
+    # 初回なら記録画面、2回目以降なら設定画面に留まる
+    @first_time ? water_intakes_path : edit_notification_time_setting_path
+  end
+
+  # 【修正】保存成功時のフラッシュメッセージを判定する
+  def success_message
+    @first_time ? t('.create.success') : t('.update.success')
+  end
 
   # 通知時間パラメータを許可(8つの時間帯 × 2カラム = 16個)
   def notification_time_params
