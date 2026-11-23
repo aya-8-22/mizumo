@@ -152,9 +152,8 @@ group :development do
   gem 'rack-livereload'
 end
 
-#【修正】「開発環境（development）でのみ使う脆弱性チェック用Gem bundle-audit の 0.2.0 系（0.2.x）を、アプリ起動時には自動読み込みしない設定で入れる
-gem "bundle-audit", "~> 0.2.0", :group => :development, :require => false
-
+# 【修正】「開発環境（development）でのみ使う脆弱性チェック用Gem bundle-audit の 0.2.0 系（0.2.x）を、アプリ起動時には自動読み込みしない設定で入れる
+gem 'bundle-audit', '~> 0.2.0', group: :development, require: false
 
 # ===== テスト環境でのみ使用する gem =====
 group :test do
