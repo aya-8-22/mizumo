@@ -8,8 +8,8 @@ source 'https://rubygems.org'
 # GitHub から gem をダウンロードする際の URL 形式を定義
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4'→'3.2.11')
-ruby '3.2.11'
+# 【修正】このプロジェクトで使用する Ruby のバージョンを指定(変更：'3.1.4'→'3.2.4'→'3.2.11'→'3.3.14')
+ruby '3.3.14'
 
 # ===== フレームワーク =====
 # Rails 本体（Web アプリケーションフレームワーク）
@@ -76,7 +76,8 @@ gem 'simple_calendar', '~> 2.0'
 # 互換性のため v2 を使用
 gem 'tailwindcss-rails', '~> 2.0'
 
-# 本番環境でSprocketsがsasscでエラーが出るため、エラー解消のためのダミー
+# 【修正】書きやすいCSS拡張言語「Sass/SCSS」をブラウザが読める通常のCSSへ高速に変換するためのRuby用Gem
+# application.cssのsimple_calendarで使用中
 gem 'sassc'
 
 # ===== バックグラウンドジョブ処理 =====
@@ -152,7 +153,7 @@ group :development do
   gem 'rack-livereload'
 end
 
-# 【修正】「開発環境（development）でのみ使う脆弱性チェック用Gem bundle-audit の 0.2.0 系（0.2.x）を、アプリ起動時には自動読み込みしない設定で入れる
+# 「開発環境（development）でのみ使う脆弱性チェック用Gem bundle-audit の 0.2.0 系（0.2.x）を、アプリ起動時には自動読み込みしない設定で入れる
 gem 'bundle-audit', '~> 0.2.0', group: :development, require: false
 
 # ===== テスト環境でのみ使用する gem =====
