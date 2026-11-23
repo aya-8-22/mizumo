@@ -76,6 +76,9 @@ gem 'simple_calendar', '~> 2.0'
 # 互換性のため v2 を使用
 gem 'tailwindcss-rails', '~> 2.0'
 
+# 本番環境でSprocketsがsasscでエラーが出るため、エラー解消のためのダミー
+gem 'sassc'
+
 # ===== バックグラウンドジョブ処理 =====
 # Sidekiq : バックグラウンドでジョブを処理するための gem（メール送信などを非同期で実行）
 gem 'sidekiq', '~> 7.1.0'
