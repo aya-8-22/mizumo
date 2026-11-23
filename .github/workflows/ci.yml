@@ -67,8 +67,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          # Gemfileに記載のバージョンと揃えます
-          ruby-version: '3.2.11'
+          # 【修正】Gemfileに記載のバージョンと揃えます
+          ruby-version: '3.3.14'
           # trueにするとgemのキャッシュ保存とbundle installを自動で実行してくれます
           bundler-cache: true
 
